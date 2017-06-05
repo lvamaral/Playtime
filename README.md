@@ -1,7 +1,7 @@
 # Playtime
 
 ## Background
- 
+
 Every dog owner knows that the best way to tire his dog out is to let it play with other dogs. A tired dog is a happy dog. Playtime attempts to make it easier to coordinate playtimes by allowing users to follow each other's dogs. When taking your dog out, let the app know and it will automatically alert all your dog's friends, so they can meet up and hang out. Its Playtime, all the time.
 
 ## Functionality & MVP
@@ -16,16 +16,16 @@ With this application, users will be able to:
 
 ## Wireframes
 
-[Loading View](./Docs/Wireframes/LoadingScreen.png)
-[Login View](./Docs/Wireframes/Login.png)
-[Dashboard View](./Docs/Wireframes/Dashboard.png)
-[Create Playtime](./Docs/Wireframes/AddPlaytime.png)
-[Parks View](./Docs/Wireframes/ParkView.png)
-[Park Show View](./Docs/Wireframes/ParkShowView.png)
-[Dog Show View](./Docs/Wireframes/DogShowView.png)
-[User Profile](./Docs/Wireframes/UserProfileView.png)
-[Add Dog Form](./Docs/Wireframes/AddDogView.png)
-[Notifications View](./Docs/Wireframes/NotificationsView.png)
+[Loading View](./Docs/wireframes/LoadingScreen.png)  
+[Login View](./Docs/wireframes/Login.png)  
+[Dashboard View](./Docs/wireframes/Dashboard.png)  
+[Create Playtime](./Docs/wireframes/AddPlaytime.png)  
+[Parks View](./Docs/wireframes/ParkView.png)  
+[Park Show View](./Docs/wireframes/ParkShowView.png)  
+[Dog Show View](./Docs/wireframes/DogShowView.png)  
+[User Profile](./Docs/wireframes/UserProfileView.png)  
+[Add Dog Form](./Docs/wireframes/AddDogView.png)  
+[Notifications View](./Docs/wireframes/NotificationsView.png)  
 
 ## Technologies & Technical Challenges
 
