@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
+import RootNavigation from '../navigation/RootNavigation';
 
 export default class HomeScreen extends React.Component {
   static route = {
