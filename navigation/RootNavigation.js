@@ -7,6 +7,7 @@ import {
   TabNavigationItem,
 } from '@expo/ex-navigation';
 import { FontAwesome } from '@expo/vector-icons';
+import { Foundation } from '@expo/vector-icons';
 
 import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
@@ -27,7 +28,7 @@ export default class RootNavigation extends React.Component {
       <TabNavigation tabBarHeight={56} initialTab="home">
         <TabNavigationItem
           id="home"
-          renderIcon={isSelected => this._renderIcon('home', isSelected)}>
+          renderIcon={isSelected => this._renderFoundationIcon('home', isSelected)}>
           <StackNavigation initialRoute="home" />
         </TabNavigationItem>
 
@@ -54,6 +55,16 @@ export default class RootNavigation extends React.Component {
         color={isSelected ? Colors.tabIconSelected : Colors.tabIconDefault}
       />
     );
+  }
+
+  _renderFoundationIcon(name, isSelected) {
+    return (
+      <Foundation
+        name={name}
+        size={32}
+        color={isSelected ? Colors.tabIconSelected : Colors.tabIconDefault}
+      />
+    )
   }
 
   _registerForPushNotifications() {
