@@ -68,7 +68,7 @@ class AppContainer extends React.Component {
           <NavigationProvider router={Router}>
             <StackNavigation
               id="root"
-              initialRoute={Router.getRoute('addDog')}
+              initialRoute={Router.getRoute('user')}
             />
           </NavigationProvider>
         )
