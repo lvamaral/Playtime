@@ -8,20 +8,22 @@ import {
   Button, Image
 } from 'react-native';
 import { ImagePicker } from 'expo';
-import * as Firebase from 'firebase';
+import * as firebase from 'firebase';
 
 export default class AddDogScreen extends React.Component {
   constructor(props) {
     super(props)
-
+    let user = firebase.auth().currentUser
     this.state = {
       // uid: Firebase.UserInfo.uid,
+      ownerName: user.displayName,
+      ownerId: user.uid,
       dogName: "",
       age: "",
       breed: "",
       image: null
     }
-    this.dogsRef = new Firebase("<MY-FIREBASE-APP>/dogs");
+
   }
   // static route = {
   //   navigationBar: {
