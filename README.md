@@ -71,22 +71,23 @@ Ian's primary responsibilites will be:
 **Day 1** Set up basic dashboard and facebook/google authentication using firebase and expo's facebook and google auth components. By the end of the day, we will have:
 * An app that we can log into from the simulator
 
-**Day 2** Create user profile and allow users to create and edit their dogs. By the end of the day, we will have:
+**Day 2** Create user profile and allow users to create and edit their dogs. Create parks search page and parks index. Write a basic script to seed the database with parks from the google API. By the end of the day, we will have:
 * The ability to CRUD dogs on our app.
 * Basic show pages for dogs.
-
-**Day 3** Create parks search page and parks index. Write a basic script to seed the database with parks from the google API. By the end of the day, we will have:
 * Working search functionality for parks.
 * A database at least partially seeded with parks.
 * Users that can follow parks.
 
-**Day 4** Enable users to follow parks and dogs. Create show page for parks with all the dogs that go to them. By the end of the day, we will have:
+**Day 3** Enable users to follow parks and dogs. Create show page for parks with all the dogs that go to them. By the end of the day, we will have:
 * Show pages for parks
 * Working follow/unfollow functionality for parks and dogs
 
-**Day 5** CRUD for walks and push notifications. Create notifications page. By the end of the day, we will have:
+**Day 4** CRUD for walks and push notifications. Create notifications page. By the end of the day, we will have:
 * A working notifications page where users can approve and deny follows requests
 * Functional push notifications
+
+**Day 5** Websocket messaging. Users can let each other know they're headed to a park. By the end of the day, we will have:
+* Functional websocket messaging.
 
 **Day 6** Create loading screen. Preload cached assets. Put finishing touches on app. Deploy. By the end of the day, we will have:
 * An app we could use on our phones.
