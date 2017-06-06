@@ -16,10 +16,31 @@ export default class UserScreen extends React.Component {
   }
 
   render(){
+    var dogsList = []
+
+
+    firebase.database().ref(`/users/${this.user.uid}/dogs`).once('value').then(function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+        var childKey = childSnapshot.key;
+        var childData = childSnapshot.val();
+        // console.log("KEY", childKey);
+        // console.log("DATA", childData);
+        dogsList.push(childData.dogName)
+        console.log(dogsList);
+        });
+    });
+    dogsList = dogsList.map( dog => <Text>{dog}</Text>)
+    console.log("LIST", dogsList);
+
+    // firebase.database().ref(`/users/${this.user.uid}/dogs`).once('value').then(function(snapshot) {
+    //   var dogs = snapshot.val()
+    //   dogsList = dogs.keys().map( dog => <li>{dog.dogName}</li>)
+    // });
+
     return(
       <View style={styles.container}>
         <Text style={styles.text}>Hi, {this.user.displayName}</Text>
-        <Text>Can you see this?</Text>
+        <Text>{dogsList}</Text>
       </View>
     )
 

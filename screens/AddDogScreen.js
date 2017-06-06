@@ -20,11 +20,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 export default class AddDogScreen extends React.Component {
   constructor(props) {
     super(props)
-    let user = firebase.auth().currentUser
+    this.user = firebase.auth().currentUser
     this.state = {
       dog: {
-        ownerName: user.displayName,
-        ownerId: user.uid,
+        ownerName: this.user.displayName,
+        ownerId: this.user.uid,
         dogName: "",
         age: "",
         breed: "",
@@ -48,7 +48,9 @@ handleFormFocus(e, component){
 
  handleSubmit(){
    firebase.database().ref('dogs/').push(this.state.dog)
-   this.setState({ready: true})
+   firebase.database().ref(`users/${this.user.uid}/dogs`).push(this.state.dog)
+  //  this.setState({ready: true})
+   this.props.navigator.push('user');
  }
 
  _pickImage = async () => {
@@ -57,12 +59,13 @@ handleFormFocus(e, component){
     aspect: [3, 3],
   });
   if (!result.cancelled) {
-    this.setState( {dog: {image: result.uri} });
+    let oldState = this.state
+    oldState.dog.image = result.uri
+    this.setState( {oldState} );
   }
 
-  console.log(result);
   let dogName = "";
-  var storageRef = firebase.storage().ref('images/' + dogName)
+  // var storageRef = firebase.storage().ref('images/' + dogName)
 
   // const Blob = RNFetchBlob.polyfill.Blob;
   // const fs = RNFetchBlob.fs;
@@ -78,19 +81,14 @@ handleFormFocus(e, component){
   //   })
 };
 
+update(category, text){
+  let oldState = this.state
+  oldState.dog[category] = text
+  this.setState( {oldState} );
+}
+
 
   render() {
-    if (this.state.ready === true) {
-      console.log("hey");
-      return (
-        <View>
-          <StackNavigation
-            id="root"
-            initialRoute={Router.getRoute('user')}
-          />
-        </View>
-      )
-    }
 
     let image = this.state.dog.image;
     return (
@@ -108,17 +106,17 @@ handleFormFocus(e, component){
               <TextInput
                  style={{height: 40}}
                  placeholder="Dog Name"
-                 onChangeText={(text) => this.setState({["dogName"]: text})}
+                 onChangeText={(text) => this.update("dogName", text)}
                />
                <TextInput
                   style={{height: 40}}
                   placeholder="Breed"
-                  onChangeText={(text) => this.setState({["breed"]: text})}
+                  onChangeText={(text) => this.update("breed", text)}
                 />
                 <TextInput keyboardType={'numeric'}
                    style={{height: 40}}
                    placeholder="Age"
-                   onChangeText={(text) => this.setState({["age"]: text})}
+                   onChangeText={(text) => this.update("age", text)}
                 />
               <Button title="Add Dog" color="#841584" onPress={this.handleSubmit.bind(this)}></Button>
         </View>
