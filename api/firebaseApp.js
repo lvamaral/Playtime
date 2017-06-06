@@ -1,3 +1,4 @@
+import secrets from '../secrets';
 import * as firebase from 'firebase';
 
 var config = {
