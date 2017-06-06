@@ -56,7 +56,6 @@ handleFormFocus(e, component){
 
 
   render() {
-    console.log(this.state);
     let { image } = this.state;
     return (
       <View style={styles.container}>

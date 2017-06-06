@@ -9,26 +9,15 @@ import * as firebase from 'firebase';
 import { StackNavigation, NavigationProvider } from '@expo/ex-navigation';
 import Router from './navigation/Router';
 import secrets from './secrets';
+import firebaseApp from './api/firebaseApp';
 
 class AppContainer extends React.Component {
   state = {
-    appIsReady: false,
-    loggedIn: false
+    appIsReady: false
   };
 
   componentWillMount() {
-    var config = {
-      apiKey: secrets.apiKey,
-      authDomain: secrets.apiKey,
-      databaseURL: secrets.databaseURL,
-      projectId: secrets.projectId,
-      storageBucket: secrets.storageBucket,
-      messagingSenderId: secrets.messagingSenderId
-    };
-    firebase.initializeApp(config);
-
     const that = this;
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user != null) {
         console.log("We are authenticated now!");
@@ -75,7 +64,7 @@ class AppContainer extends React.Component {
       } else {
         return (
           <View style={styles.container}>
-          <LoginScreen />
+            <LoginScreen />
 
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           {Platform.OS === 'android' &&
