@@ -6,7 +6,7 @@ export default class ParkScreen extends React.Component {
   render() {
     return(
       <View>
-
+        
       </View>
     )
   }

@@ -1,28 +1,44 @@
 import React from 'react';
 import Expo from 'expo';
 import { View, Text, StyleSheet, TouchableHighlight, Alert, Button } from 'react-native';
-import * as firebase from 'firebase';
 import { logInToFacebook, signInWithGoogleAsync } from '../api/logIn';
-import { StackNavigation, NavigationProvider } from '@expo/ex-navigation';
-import Router from '../navigation/Router';
+import firebaseApp from '../api/firebaseApp';
+import * as firebase from 'firebase';
 
 class LoginScreen extends React.Component {
   state = {
-    loggedIn: false,
-    loadingInfo: true
+    noUser: false
   };
 
+  componentWillMount(){
+    const that = this;
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user != null) {
+        console.log("We are authenticated now!");
+        this.props.navigator.push('rootNavigation');
+      } else {
+        this.setState({noUser: true});
+      }
+    });
+  }
+
   render(){
-    return(
-      <View style={styles.container}>
-        <Button
-          title='Continue with Facebook'
-          onPress={logInToFacebook} />
-        <Button
-          title='Continue with Google'
-          onPress={signInWithGoogleAsync} />
-      </View>
-    );
+    if(this.state.noUser) {
+      return(
+        <View style={styles.container}>
+          <Button
+            title='Continue with Facebook'
+            onPress={logInToFacebook} />
+          <Button
+            title='Continue with Google'
+            onPress={signInWithGoogleAsync} />
+        </View>
+      );
+    } else {
+      return(
+        <View></View>
+      )
+    }
   }
 }
 

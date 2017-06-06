@@ -5,39 +5,15 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import LoginScreen from './screens/LoginScreen';
 import cacheAssetsAsync from './utilities/cacheAssetsAsync';
-import * as firebase from 'firebase';
 import { StackNavigation, NavigationProvider } from '@expo/ex-navigation';
 import Router from './navigation/Router';
-import secrets from './secrets';
 
 class AppContainer extends React.Component {
   state = {
-    appIsReady: false,
-    loggedIn: false
+    appIsReady: false
   };
 
   componentWillMount() {
-    var config = {
-      apiKey: secrets.apiKey,
-      authDomain: secrets.apiKey,
-      databaseURL: secrets.databaseURL,
-      projectId: secrets.projectId,
-      storageBucket: secrets.storageBucket,
-      messagingSenderId: secrets.messagingSenderId
-    };
-    firebase.initializeApp(config);
-
-    const that = this;
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user != null) {
-        console.log("We are authenticated now!");
-        that.setState({loggedIn: true});
-      } else if (user == null) {
-        that.setState({loggedIn: false});
-      }
-    });
-
     this._loadAssetsAsync();
   }
 
@@ -63,26 +39,15 @@ class AppContainer extends React.Component {
 
   render() {
     if (this.state.appIsReady) {
-      if (this.state.loggedIn) {
-        return (
-          <NavigationProvider router={Router}>
-            <StackNavigation
-              id="root"
-              initialRoute={Router.getRoute('user')}
-            />
-          </NavigationProvider>
-        )
-      } else {
-        return (
-          <View style={styles.container}>
-          <LoginScreen />
 
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          {Platform.OS === 'android' &&
-          <View style={styles.statusBarUnderlay} />}
-          </View>
-        );
-      }
+      return (
+        <NavigationProvider router={Router}>
+          <StackNavigation
+            id="root"
+            initialRoute={Router.getRoute('login')}
+          />
+        </NavigationProvider>
+      )
     } else {
       return <Expo.AppLoading />;
     }

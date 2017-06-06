@@ -90,6 +90,7 @@ update(category, text){
 
   render() {
 
+
     let image = this.state.dog.image;
     return (
       <KeyboardAwareScrollView>
