@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { ImagePicker } from 'expo';
 import * as firebase from 'firebase';
-import RNFetchBlob from 'react-native-fetch-blob'
+// import RNFetchBlob from 'react-native-fetch-blob';
 
 
 
@@ -18,13 +18,15 @@ export default class AddDogScreen extends React.Component {
   constructor(props) {
     super(props)
     let user = firebase.auth().currentUser
-    this.state = {
+    this.state = { dog: {
       ownerName: user.displayName,
       ownerId: user.uid,
       dogName: "",
       age: "",
       breed: "",
       image: null
+    },
+    ready: false
     }
 
   }
@@ -41,7 +43,8 @@ handleFormFocus(e, component){
  }
 
  handleSubmit(){
-   firebase.database().ref('dogs/').push(this.state)
+   firebase.database().ref('dogs/').push(this.state.dog)
+   this.setState({ready: true})
  }
 
  _pickImage = async () => {
@@ -50,57 +53,47 @@ handleFormFocus(e, component){
     aspect: [3, 3],
   });
   if (!result.cancelled) {
-    this.setState({ image: result.uri });
+    this.setState( this.state.dog.image: result.uri );
   }
 
   console.log(result);
-  const Blob = RNFetchBlob.polyfill.Blob;
-  const fs = RNFetchBlob.fs;
-  window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
-  window.Blob = Blob;
-
-  var storageRef = firebase.storage().ref();
   let dogName = "";
-  const blob = RNFetchBlob.wrap(result.uri)
-  storageRef.child('images/' + dogName).put(blob)
+  var storageRef = firebase.storage().ref('images/' + dogName)
 
-//   const uploadImage = (uri, imageName, mime = 'image/jpg') => {
-//   return new Promise((resolve, reject) => {
-//     const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-//       let uploadBlob = null
-//       const imageRef = firebaseApp.storage().ref('images').child(dogName)
-//       fs.readFile(uploadUri, 'base64')
-//       .then((data) => {
-//         return Blob.build(data, { type: `${mime};BASE64` })
-//       })
-//       .then((blob) => {
-//         uploadBlob = blob
-//         return imageRef.put(blob, { contentType: mime })
-//       })
-//       .then(() => {
-//         uploadBlob.close()
-//         return imageRef.getDownloadURL()
-//       })
-//       .then((url) => {
-//         resolve(url)
-//       })
-//       .catch((error) => {
-//         reject(error)
-//       })
-//   })
-// }
+  // const Blob = RNFetchBlob.polyfill.Blob;
+  // const fs = RNFetchBlob.fs;
+  // window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+  // window.Blob = Blob;
+  // let rnfbURI = RNFetchBlob.wrap(result.uri)
+  // // create Blob from file path
+  // Blob
+  //   .build(rnfbURI, { type : 'image/png;'})
+  //   .then((blob) => {
+  //     // upload image using Firebase SDK
+  //     storageRef.put(blob, { contentType : 'image/png' })
+  //   })
 };
 
 
   render() {
-    console.log(this.state);
+    if (this.state.ready === true) {
+      return (
+        <NavigationProvider router={Router}>
+          <StackNavigation
+            id="root"
+            initialRoute={Router.getRoute('home')}
+          />
+        </NavigationProvider>
+      )
+    }
+
     let { image } = this.state;
     return (
       <View style={styles.container}>
         <Text>Tell us about your little guy!</Text>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Button
-              title="Pick an image from camera roll "
+              title="Pick an image from camera roll"
               onPress={this._pickImage}
             />
             {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
