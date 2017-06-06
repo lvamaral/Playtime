@@ -12,7 +12,6 @@ import UserScreen from '../screens/UserScreen';
 export default createRouter(() => ({
   home: () => HomeScreen,
   parks: () => ParksScreen,
-  settings: () => SettingsScreen,
   rootNavigation: () => RootNavigation,
   login: () => LoginScreen,
   addDog: () => AddDogScreen,

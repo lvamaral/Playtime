@@ -50,6 +50,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
-
-// Initialize Firebase
-// Listen for authentication state to change.
