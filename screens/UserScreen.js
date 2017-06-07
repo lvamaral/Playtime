@@ -92,6 +92,6 @@ const styles = StyleSheet.create({
   fontSize: 30,
 },
   list_container: {
-    flex: 1,
+    
   }
 });

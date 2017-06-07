@@ -32,22 +32,27 @@ export default class DogViewScreen extends React.Component {
       var breed = snapshot.val().breed
       var image = snapshot.val().image
       var owner = snapshot.val().ownerName
-      _this.setState({id: id, dogName: name, age: age, breed: breed, image: image, owner: owner, follow: ""})
+      var ownerId = snapshot.val().ownerId
+      _this.setState({id: id, dogName: name, age: age, breed: breed, image: image, owner: owner, ownerId: ownerId, follow: ""})
       _this.checkFollow();
     })
   }
 
   checkFollow(){
-    ///check if userId is in FollowDogToUser.keys
      let _this = this
+     var owned = false
+     if (_this.state.ownerId === this.user.uid) {
+       owned = true
+     } else {
+       owned = false
+     }
      firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`)
      .once('value', function(snapshot) {
-
-       if (snapshot.val() === null) {
+       if (snapshot.val() === null && !owned) {
          let newState = _this.state;
          newState.follow = false;
          _this.setState(newState)
-       } else {
+       } else if (snapshot.val() !== null) {
          let newState = _this.state;
          newState.follow = true;
          _this.setState(newState)
@@ -86,7 +91,7 @@ export default class DogViewScreen extends React.Component {
   }
 
   render() {
-    let followComponent
+    let followComponent = (<Text></Text>)
     if (this.state.follow === true) {
       followComponent = (<Button title="Unfollow" color="#841584" onPress={this.handleUnfollow.bind(this)}></Button>)
     } else if (this.state.follow === false) {
