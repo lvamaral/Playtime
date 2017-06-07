@@ -8,10 +8,10 @@ import {
 
 export default class ParksIndexItem extends React.Component {
     render() {
-      const { park } = this.props;
+      const { park, navigator } = this.props;
 
       return(
-        <TouchableHighlight onPress={() => this.props.navigator.push('dogView')}>
+        <TouchableHighlight onPress={() => navigator.push('parksView', {park: park})}>
           <View>
             <Text>{park.name}</Text>
             <Text>{park.address}</Text>

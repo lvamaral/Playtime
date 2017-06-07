@@ -41,6 +41,7 @@ export default class UserScreen extends React.Component {
       snapshot.forEach(function(childSnapshot) {
         let childKey = childSnapshot.key;
         let childData = childSnapshot.val();
+
         newState[childKey] = childData
         dogsList.push(childData)
         });

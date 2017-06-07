@@ -62,7 +62,7 @@ export default class DogViewScreen extends React.Component {
   }
 
   render() {
-    console.log("STATE", this.state);
+
     return(
       <View style={styles.container}>
         <View><Image source={{ uri: this.state.image}} style={{ width: 200, height: 200 }} /></View>
