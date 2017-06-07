@@ -36,11 +36,10 @@ export default class UserScreen extends React.Component {
         console.log("HEY");
         let childKey = childSnapshot.key;
         let childData = childSnapshot.val();
-        dogsList.push(childData)
-
-        });
-        console.log("LIST BEFORE", dogsList)
-        _this.setState({dogsList})
+        dogsList.push(childData);
+      });
+      console.log("LIST BEFORE", dogsList);
+      _this.setState({dogsList});
     });
 
     //

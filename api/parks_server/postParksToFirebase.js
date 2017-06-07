@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   service.radarSearch(request, (results, status) => {
     if (status === 'OK') {
-      for(let i = 0; i < 1; i++) {
+      for(let i = 0; i < 5; i++) {
         (function (j) {
           let request = {
             placeId: results[i]['place_id']
@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
               address: place.formatted_address.slice(0, place.formatted_address.length - 15),
               photoUrl: photoUrl,
               lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng()
+              lng: place.geometry.location.lng(),
+              parkId: parkId
             });
           } else {
             console.log(status);
