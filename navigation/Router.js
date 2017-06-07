@@ -8,6 +8,7 @@ import LoginScreen from '../screens/LoginScreen';
 import ParksScreen from '../screens/ParksScreen';
 import AddDogScreen from '../screens/AddDogScreen';
 import UserScreen from '../screens/UserScreen';
+import DogViewScreen from '../screens/DogViewScreen';
 
 export default createRouter(() => ({
   home: () => HomeScreen,
@@ -15,5 +16,6 @@ export default createRouter(() => ({
   rootNavigation: () => RootNavigation,
   login: () => LoginScreen,
   addDog: () => AddDogScreen,
-  user: () => UserScreen
+  user: () => UserScreen,
+  dogView: () => DogViewScreen
 }));

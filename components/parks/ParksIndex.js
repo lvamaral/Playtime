@@ -14,12 +14,13 @@ export default class ParksIndex extends React.Component {
 
     if(parks !== null) {
       var parkItems = [];
-      parks.forEach(function(park, i) {
+      parks.forEach((park, i) => {
         if(park.name.toLowerCase().includes(keyword) || park.address.toLowerCase().includes(keyword)) {
           parkItems.push(
             <ParksIndexItem
-            key={`park${i}`}
-            park={park}
+              key={`park${i}`}
+              park={park}
+              navigator={this.props.navigator}
             />
           );
         }
@@ -28,7 +29,7 @@ export default class ParksIndex extends React.Component {
       if(parkItems.length > 0) {
         return(
           <ScrollView>
-          {parkItems}
+            {parkItems}
           </ScrollView>
         )
       }

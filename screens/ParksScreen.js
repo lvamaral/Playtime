@@ -24,6 +24,7 @@ export default class ParkScreen extends React.Component {
   }
 
   render() {
+    
     return(
       <View>
         <TextInput
@@ -33,6 +34,7 @@ export default class ParkScreen extends React.Component {
         />
 
         <ParksIndex
+          navigator={this.props.navigator}
           parks={this.state.parks}
           keyword={this.state.keyword}
         />
