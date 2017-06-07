@@ -18,8 +18,13 @@ export default class UserScreen extends React.Component {
     this.user = firebase.auth().currentUser;
     this.state = {}
     this.dogsList = []
-
   }
+
+  static route = {
+    navigationBar: {
+      title: "User Profile"
+    },
+  };
 
   componentDidMount(){
     if (this.user) {
@@ -28,7 +33,7 @@ export default class UserScreen extends React.Component {
   }
 
   getDogList(){
-    _this = this
+    let _this = this
     var dogsList = []
 
     firebaseApp.database().ref(`/users/${this.user.uid}/dogs`).once('value').then(function(snapshot) {
@@ -69,7 +74,9 @@ export default class UserScreen extends React.Component {
     return(
       <View style={styles.container}>
         <Text style={styles.text}>Hi, {this.user.displayName}</Text>
-        <View>{list}</View>
+        <View><Text>Your Dogs</Text></View>
+        <ScrollView>{list}</ScrollView>
+        <View><Text>Followers/Following</Text></View>
       </View>
     )
 
@@ -89,15 +96,3 @@ const styles = StyleSheet.create({
     flex: 1,
   }
 });
-
-// if (this.state.dogsList !== []) {
-//   var list =
-//   <FlatList
-//     data={this.state.dogsList}
-//     renderItem={({ item }) => (
-//       <View><Text>{item.name}</Text></View>
-//     )}
-//   />
-// console.log("LIST", list);
-//
-// }
