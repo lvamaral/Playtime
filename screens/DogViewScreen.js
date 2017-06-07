@@ -32,22 +32,31 @@ export default class DogViewScreen extends React.Component {
       var breed = snapshot.val().breed
       var image = snapshot.val().image
       var owner = snapshot.val().ownerName
-      _this.setState({id: id, dogName: name, age: age, breed: breed, image: image, owner: owner, follow: _this.checkFollow()})
+      _this.setState({id: id, dogName: name, age: age, breed: breed, image: image, owner: owner, follow: ""})
+      _this.checkFollow();
     })
   }
 
   checkFollow(){
     ///check if userId is in FollowDogToUser.keys
      let _this = this
-     firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/`)
-     .once('value').then(function(snapshot) {
-       console.log("FOLLOW",snapshot)
+     firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`)
+     .once('value', function(snapshot) {
+
+       if (snapshot.val() === null) {
+         let newState = _this.state;
+         newState.follow = false;
+         _this.setState(newState)
+       } else {
+         let newState = _this.state;
+         newState.follow = true;
+         _this.setState(newState)
+       }
      })
   }
 
   handleFollow(){
     let _this = this
-    console.log("THIS", this);
     firebaseApp.database().ref(`/followUserToDog/${_this.user.uid}/${_this.state.id}`).set({
     dogName: _this.state.dogName, age: _this.state.age, breed: _this.state.breed,
     image: _this.state.image, ownerName: _this.state.owner});
@@ -58,18 +67,38 @@ export default class DogViewScreen extends React.Component {
         firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).set(userDogs)
       })
     })
+    let newState = _this.state;
+    newState.follow = true;
+    _this.setState(newState)
+  }
 
+  handleUnfollow(){
+  let _this = this;
+  firebaseApp.database().ref(`/followUserToDog/${_this.user.uid}/${_this.state.id}`).remove().then(function(){
+    firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).remove().then(function(){
+      console.log("follow",_this.state.follow);
+      let newState = _this.state;
+      newState.follow = false;
+      _this.setState(newState)
+        })
+      }
+    )
   }
 
   render() {
-    console.log("STATE", this.state);
+    let followComponent
+    if (this.state.follow === true) {
+      followComponent = (<Button title="Unfollow" color="#841584" onPress={this.handleUnfollow.bind(this)}></Button>)
+    } else if (this.state.follow === false) {
+      followComponent = (<Button title="Follow" color="#841584" onPress={this.handleFollow.bind(this)}></Button>)
+    }
     return(
       <View style={styles.container}>
         <View><Image source={{ uri: this.state.image}} style={{ width: 200, height: 200 }} /></View>
         <View><Text>{`Owner: ${this.state.owner}`}</Text></View>
         <View><Text>{`Breed: ${this.state.breed}`}</Text></View>
         <View><Text>{`Age: ${this.state.age}`}</Text></View>
-        <View><Button title="Follow Dog" color="#841584" onPress={this.handleFollow.bind(this)}></Button></View>
+        <View>{followComponent}</View>
       </View>
     )
   }

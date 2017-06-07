@@ -51,7 +51,6 @@ export default class UserScreen extends React.Component {
   }
 
   goTo(id, name) {
-
     this.props.navigator.push('dogView', {id: id, name: name});
   }
 
@@ -86,7 +85,7 @@ export default class UserScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 45,
+    paddingTop: 15,
   },
   text: {
   fontWeight: 'bold',
