@@ -47,9 +47,10 @@ handleFormFocus(e, component){
  }
 
  handleSubmit(){
-   firebase.database().ref('dogs/').push(this.state.dog)
-   firebase.database().ref(`users/${this.user.uid}/dogs`).push(this.state.dog)
-  //  this.setState({ready: true})
+   var lastDog = firebase.database().ref('dogs/').push(this.state.dog).key
+
+   firebase.database().ref(`users/${this.user.uid}/dogs/${lastDog}`).set(this.state.dog)
+
    this.props.navigator.push('user');
  }
 
