@@ -15,7 +15,7 @@ class LoginScreen extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user != null) {
         console.log("We are authenticated now!");
-        this.props.navigator.push('rootNavigation');
+        this.props.navigator.push('user');
       } else {
         this.setState({noUser: true});
       }

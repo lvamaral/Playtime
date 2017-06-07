@@ -5,42 +5,69 @@ import {
   StyleSheet,
   Text,
   View, ScrollView, TextInput,
-  Button, Image
+  Button, Image, FlatList
 } from 'react-native';
+import { List, ListItem } from "react-native-elements";
 import * as firebase from 'firebase';
+import firebaseApp from '../api/firebaseApp';
+import {isEqual} from 'lodash';
 
 export default class UserScreen extends React.Component {
   constructor(props){
     super(props);
     this.user = firebase.auth().currentUser;
+    this.state = {dogsList: []}
+    this.dogsList = []
+  }
+
+  componentDidMount(){
+    if (this.user) {
+      this.getDogList();
+    }
+
+  }
+
+  getDogList(){
+    _this = this
+    var dogsList = []
+    firebaseApp.database().ref(`/users/${this.user.uid}/dogs`).once('value').then(function(snapshot) {
+
+      snapshot.forEach(function(childSnapshot) {
+        console.log("HEY");
+        let childKey = childSnapshot.key;
+        let childData = childSnapshot.val();
+        dogsList.push(childData)
+
+        });
+        console.log("LIST BEFORE", dogsList)
+        _this.setState({dogsList})
+    });
+
+    //
   }
 
   render(){
-    var dogsList = []
+    console.log("DogsList", this.state)
+    // if (!_.isEqual(this.state), {}) {
+    //   console.log("not equal")
+    //
+    // }
+    if (this.state.dogsList !== []) {
+      var list =
+      <FlatList
+        data={this.state.dogsList}
+        renderItem={({ item }) => (
+          <ListItem name={item.name}/>
+        )}
+      />
+    console.log("LIST", list);
 
-
-    firebase.database().ref(`/users/${this.user.uid}/dogs`).once('value').then(function(snapshot) {
-      snapshot.forEach(function(childSnapshot) {
-        var childKey = childSnapshot.key;
-        var childData = childSnapshot.val();
-        // console.log("KEY", childKey);
-        // console.log("DATA", childData);
-        dogsList.push(childData.dogName)
-        console.log(dogsList);
-        });
-    });
-    dogsList = dogsList.map( dog => <Text>{dog}</Text>)
-    console.log("LIST", dogsList);
-
-    // firebase.database().ref(`/users/${this.user.uid}/dogs`).once('value').then(function(snapshot) {
-    //   var dogs = snapshot.val()
-    //   dogsList = dogs.keys().map( dog => <li>{dog.dogName}</li>)
-    // });
+    }
 
     return(
       <View style={styles.container}>
         <Text style={styles.text}>Hi, {this.user.displayName}</Text>
-        <Text>{dogsList}</Text>
+        <View>{list}</View>
       </View>
     )
 
