@@ -11,6 +11,12 @@ export default class ParkScreen extends React.Component {
     keyword: ''
   };
 
+  static route = {
+    navigationBar: {
+      title: "Parks"
+    },
+  };
+
   componentWillMount() {
     const that = this;
     const ref = firebaseApp.database().ref('/parks');

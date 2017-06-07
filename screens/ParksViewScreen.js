@@ -12,6 +12,14 @@ export default class ParksViewScreen extends React.Component {
     dogs: []
   };
 
+  static route = {
+    navigationBar: {
+      title(params) {
+        return params.park.name
+      }
+    },
+  };
+
   componentWillMount() {
     _this = this;
     _dogList = [];
