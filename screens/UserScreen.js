@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Text,
   View, ScrollView, TextInput,
-  Button, Image, FlatList
+  Button, Image, FlatList, TouchableHighlight
 } from 'react-native';
 
 import * as firebase from 'firebase';
@@ -16,57 +16,68 @@ export default class UserScreen extends React.Component {
   constructor(props){
     super(props);
     this.user = firebase.auth().currentUser;
-    this.state = {dogsList: []}
+    this.state = {}
     this.dogsList = []
   }
+
+  static route = {
+    navigationBar: {
+      title: "User Profile"
+    },
+  };
 
   componentDidMount(){
     if (this.user) {
       this.getDogList();
     }
-
   }
 
   getDogList(){
-    _this = this
+    let _this = this
     var dogsList = []
-    firebaseApp.database().ref(`/users/${this.user.uid}/dogs`).once('value').then(function(snapshot) {
 
+    firebaseApp.database().ref(`/users/${this.user.uid}/dogs`).once('value').then(function(snapshot) {
+      let newState = _this.state
       snapshot.forEach(function(childSnapshot) {
-        console.log("HEY");
         let childKey = childSnapshot.key;
         let childData = childSnapshot.val();
-        dogsList.push(childData);
-      });
-      console.log("LIST BEFORE", dogsList);
-      _this.setState({dogsList});
-    });
 
-    //
+        newState[childKey] = childData
+        dogsList.push(childData)
+        });
+        // console.log("NEW STATE", newState)
+        _this.setState(newState)
+
+    });
+  }
+
+  goTo(id, name) {
+
+    this.props.navigator.push('dogView', {id: id, name: name});
   }
 
   render(){
-    console.log("DogsList", this.state)
-    if (!isEqual(this.state.dogsList, [])) {
+    if (!isEqual(this.state, {})) {
+      let ids = Object.keys(this.state)
+      let dogs = Object.values(this.state)
       var list =
-      this.state.dogsList.map( (dog, i) => (
-        <View key={i}>
-          <Text>{dog.dogName}</Text>
-
-        </View>
+      dogs.map( (dog, i) => {
+        return (
+        <TouchableHighlight key={ids[i]} onPress={ () => this.goTo(ids[i], dog.dogName)}>
+          <View>
+            <Text style={styles.text} >{dog.dogName}</Text>
+          </View>
+       </TouchableHighlight>
+      )}
       )
-
-    )
     }
-    // if (!_.isEqual(this.state), {}) {
-    //   console.log("not equal")
-    //
-    // }
 
     return(
       <View style={styles.container}>
         <Text style={styles.text}>Hi, {this.user.displayName}</Text>
-        <View>{list}</View>
+        <View><Text>Your Dogs</Text></View>
+        <ScrollView>{list}</ScrollView>
+        <View><Text>Followers/Following</Text></View>
       </View>
     )
 
@@ -81,17 +92,8 @@ const styles = StyleSheet.create({
   text: {
   fontWeight: 'bold',
   fontSize: 30,
+},
+  list_container: {
+    flex: 1,
   }
 });
-
-// if (this.state.dogsList !== []) {
-//   var list =
-//   <FlatList
-//     data={this.state.dogsList}
-//     renderItem={({ item }) => (
-//       <View><Text>{item.name}</Text></View>
-//     )}
-//   />
-// console.log("LIST", list);
-//
-// }

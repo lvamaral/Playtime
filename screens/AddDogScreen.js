@@ -32,24 +32,20 @@ export default class AddDogScreen extends React.Component {
       },
     ready: false
     }
-
   }
-  // static route = {
-  //   navigationBar: {
-  //     title: 'Links',
-  //   },
-  // };
-
-
+  static route = {
+    navigationBar: {
+      title: "Add Dog"
+    },
+  };
 
 handleFormFocus(e, component){
 
  }
 
  handleSubmit(){
-   firebase.database().ref('dogs/').push(this.state.dog)
-   firebase.database().ref(`users/${this.user.uid}/dogs`).push(this.state.dog)
-  //  this.setState({ready: true})
+   var lastDog = firebase.database().ref('dogs/').push(this.state.dog).key
+   firebase.database().ref(`users/${this.user.uid}/dogs/${lastDog}`).set(this.state.dog)
    this.props.navigator.push('user');
  }
 
@@ -87,10 +83,7 @@ update(category, text){
   this.setState( {oldState} );
 }
 
-
   render() {
-
-
     let image = this.state.dog.image;
     return (
       <KeyboardAwareScrollView>
