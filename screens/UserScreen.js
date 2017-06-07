@@ -45,9 +45,9 @@ export default class UserScreen extends React.Component {
     });
   }
 
-  goTo(id) {
+  goTo(id, name) {
 
-    this.props.navigator.push('dogView', {id: id});
+    this.props.navigator.push('dogView', {id: id, name: name});
   }
 
   render(){
@@ -57,7 +57,7 @@ export default class UserScreen extends React.Component {
       var list =
       dogs.map( (dog, i) => {
         return (
-        <TouchableHighlight key={ids[i]} onPress={ () => this.goTo(ids[i])}>
+        <TouchableHighlight key={ids[i]} onPress={ () => this.goTo(ids[i], dog.dogName)}>
           <View>
             <Text style={styles.text} >{dog.dogName}</Text>
           </View>
