@@ -39,7 +39,7 @@ export default class DogViewScreen extends React.Component {
   checkFollow(){
     ///check if userId is in FollowDogToUser.keys
      let _this = this
-     firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`)
+     firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/`)
      .once('value').then(function(snapshot) {
        console.log("FOLLOW",snapshot)
      })
