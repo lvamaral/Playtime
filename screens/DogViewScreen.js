@@ -91,12 +91,14 @@ export default class DogViewScreen extends React.Component {
   }
 
   render() {
+
     let followComponent = (<Text></Text>)
     if (this.state.follow === true) {
       followComponent = (<Button title="Unfollow" color="#841584" onPress={this.handleUnfollow.bind(this)}></Button>)
     } else if (this.state.follow === false) {
       followComponent = (<Button title="Follow" color="#841584" onPress={this.handleFollow.bind(this)}></Button>)
     }
+
     return(
       <View style={styles.container}>
         <View><Image source={{ uri: this.state.image}} style={{ width: 200, height: 200 }} /></View>
