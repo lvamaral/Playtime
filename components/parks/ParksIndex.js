@@ -9,27 +9,38 @@ export default class ParksIndex extends React.Component {
 
   render() {
     const { parks } = this.props;
+    let { keyword } = this.props;
+    keyword = keyword.toLowerCase();
 
     if(parks !== null) {
       var parkItems = [];
       parks.forEach(function(park, i) {
-        parkItems.push(
-          <ParksIndexItem
+        if(park.name.toLowerCase().includes(keyword) || park.address.toLowerCase().includes(keyword)) {
+          parkItems.push(
+            <ParksIndexItem
             key={`park${i}`}
             park={park}
-          />
-        );
+            />
+          );
+        }
       });
-      return(
-        <ScrollView>
+
+      if(parkItems.length > 0) {
+        return(
+          <ScrollView>
           {parkItems}
-        </ScrollView>
-      )
+          </ScrollView>
+        )
+      }
+      else{
+        return(
+          <View></View>
+        )
+      }
+
     } else {
       return(
-        <ScrollView>
-          <View></View>
-        </ScrollView>
+        <View></View>
       );
     }
   }
