@@ -83,7 +83,6 @@ export default class DogViewScreen extends React.Component {
   let _this = this;
   firebaseApp.database().ref(`/followUserToDog/${_this.user.uid}/${_this.state.id}`).remove().then(function(){
     firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).remove().then(function(){
-      console.log("follow",_this.state.follow);
       let newState = _this.state;
       newState.follow = false;
       _this.setState(newState)

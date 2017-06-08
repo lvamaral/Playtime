@@ -12,7 +12,9 @@ import * as firebase from 'firebase';
 import { StackNavigation, NavigationProvider } from '@expo/ex-navigation';
 import Router from '../navigation/Router';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-// import RNFetchBlob from 'react-native-fetch-blob';
+import Styles from '../assets/stylesheets/pageLayout';
+import { Ionicons } from '@expo/vector-icons';
+import Colors from '../constants/Colors';
 
 
 
@@ -35,7 +37,7 @@ export default class AddDogScreen extends React.Component {
   }
   static route = {
     navigationBar: {
-      title: "Add Dog"
+      title: "New Dog"
     },
   };
 
@@ -85,35 +87,54 @@ update(category, text){
 
   render() {
     let image = this.state.dog.image;
-    return (
-      <KeyboardAwareScrollView>
-        <View style={styles.container}>
-          <Text>Tell us about your little guy!</Text>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <Button
-                title="Pick an image from camera roll"
-                onPress={this._pickImage}
-              />
-              {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-            </View>
+    let hasImage = <Text></Text>
+    if (image === null) {
+      hasImage = (
+        <View style={styles.imageWait}>
+          <Button
+            color={Colors.white}
+            title="Pick an image from camera roll"
+            onPress={this._pickImage}
+          />
+        </View>
+              )
+    } else {
+    hasImage =
+     (<View style={styles.container}>
+        <View style={styles.centerContainer}>
+          <Image source={{ uri: image }} style={styles.imageStyle} />
+        </View>
+      </View>)
+    }
 
+    return (
+      <KeyboardAwareScrollView style={styles.container}>
+        <View style={styles.mainContainer}>
+            <View style={styles.container}>
+              {hasImage}
+            </View>
+            <View style={styles.container}>
               <TextInput
-                 style={{height: 40}}
+                 style={styles.textInput}
                  placeholder="Dog Name"
                  onChangeText={(text) => this.update("dogName", text)}
                />
                <TextInput
-                  style={{height: 40}}
+                  style={styles.textInput}
                   placeholder="Breed"
                   onChangeText={(text) => this.update("breed", text)}
                 />
                 <TextInput keyboardType={'numeric'}
-                   style={{height: 40}}
+                   style={styles.textInput}
                    placeholder="Age"
                    onChangeText={(text) => this.update("age", text)}
                 />
-              <Button title="Add Dog" color="#841584" onPress={this.handleSubmit.bind(this)}></Button>
-        </View>
+            </View>
+            <View style={styles.lastContainer}>
+              <Button title="Add Dog" color={Colors.orange} onPress={this.handleSubmit.bind(this)}></Button>
+            </View>
+          </View>
+
       </KeyboardAwareScrollView>
     );
   }
@@ -122,6 +143,40 @@ update(category, text){
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 45,
+  },
+  mainConatiner: {
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  imageWait: {
+    height: 220,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.black,
+    alignSelf: 'stretch',
+  },
+  imageStyle: {
+    margin: 10,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textInput: {
+    color: Colors.black,
+    paddingLeft: 5,
+    height: 50,
+    borderBottomWidth: 1,
+    borderBottomColor: 'black',
+  },
+  centerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  lastContainer: {
+    flex: 1,
+    margin: 80,
+    justifyContent: 'flex-end'
   },
 });

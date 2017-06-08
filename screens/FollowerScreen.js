@@ -48,7 +48,6 @@ export default class FollowerScreen extends React.Component {
 
 
   render(){
-    console.log("DOGSSSS", this.state.dogs);
     let dogIndex = (<View></View>)
     if (this.state.dogs !== undefined) {
       dogIndex = (
