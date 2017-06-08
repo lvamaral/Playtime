@@ -4,7 +4,8 @@ import { View, Text, Image, TouchableHighlight } from 'react-native';
 export default class DogIndexItem extends React.Component {
   render() {
     const { dog, navigator } = this.props;
-    console.log("DOG",dog);
+    
+
     return(
       <TouchableHighlight onPress={() => navigator.push('dogView', {id: dog.id, name: dog.dogName})}>
         <View>

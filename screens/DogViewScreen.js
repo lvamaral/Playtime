@@ -68,8 +68,10 @@ export default class DogViewScreen extends React.Component {
     var userDogs = []
     firebaseApp.database().ref(`/users/${_this.user.uid}/dogs`).once('value').then(function(snapshot){
       snapshot.forEach(function(childSnapshot) {
-        userDogs.push(childSnapshot.val())
-        firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).set(userDogs)
+        // userDogs.push(childSnapshot.val())
+        let childKey = childSnapshot.key;
+        let childData = childSnapshot.val();
+        firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}/${childKey}`).set(childData)
       })
     })
     let newState = _this.state;

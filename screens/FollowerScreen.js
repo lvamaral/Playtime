@@ -8,11 +8,14 @@ import {
 } from 'react-native';
 import * as firebase from 'firebase';
 import firebaseApp from '../api/firebaseApp';
+import DogsIndex from '../components/dogs/DogsIndex';
 
 export default class FollowerScreen extends React.Component {
   constructor(props){
     super(props);
-    this.userId = this.props.route.params.id
+    this.userId = this.props.route.params.id;
+    this.yourDogs = Object.keys(this.props.route.params.dogs);
+    this.state = {dogs: []}
   }
 
   static route = {
@@ -21,27 +24,46 @@ export default class FollowerScreen extends React.Component {
     },
   };
 
-  componentDidMount(){
-    let dogs = []
-    let _this = this
-    firebaseApp.database().ref(`/followUserToDog/${this.userId}`).once('value').then(function(snapshot){
-      let newState = _this.state
-      snapshot.forEach(function(childSnapshot) {
-          let childKey = childSnapshot.key;
-          let childData = childSnapshot.val();
-          let newDog = childData
-          newDog["id"] = childKey
-          newState.dogs.push(newDog)
+  componentDidMount() {
+    var _this = this
+    this.yourDogs.forEach( (dog) => {
+      firebaseApp.database().ref(`/followDogToUser/${dog}`).once('value').then(function(snapshot){
+        if (snapshot.val() !== null) {
+          let newState = []
+          snapshot.forEach(function(childSnapshot) {
+            childSnapshot.forEach(function(childSnapshot2){
+                let childKey = childSnapshot2.key;
+                let childData = childSnapshot2.val();
+                let newDog = childData
+                newDog["id"] = childKey
+                newState.push(newDog)
+              _this.setState({dogs: newState})
+            })
           })
-          _this.setState(newState)
-        })
-    }
-    
+        }
+      })
+    })
+  }
+
+
 
   render(){
+    console.log("DOGSSSS", this.state.dogs);
+    let dogIndex = (<View></View>)
+    if (this.state.dogs !== undefined) {
+      dogIndex = (
+         <DogsIndex
+          dogs={this.state.dogs}
+          navigator={this.props.navigator} />
+      )
+    }
+
     return (
-      <View></View>
+      <View>
+        {dogIndex}
+      </View>
     )
+
   }
 
 }

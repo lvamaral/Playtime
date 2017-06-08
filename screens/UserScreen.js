@@ -56,7 +56,7 @@ export default class UserScreen extends React.Component {
   }
 
   goToFollowers(user_id){
-    this.props.navigator.push('followerView', {id: user_id, name: this.firstName});
+    this.props.navigator.push('followerView', {id: user_id, name: this.firstName, dogs: this.state.dogList});
   }
 
   render(){
