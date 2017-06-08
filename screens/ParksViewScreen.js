@@ -82,6 +82,10 @@ export default class ParksViewScreen extends React.Component {
 
     firebaseApp.database().ref(`/users/${currUser.uid}`).once(`value`).then(function(snapshot) {
       if(snapshot.exists()) {
+        firebaseApp.database().ref().child(`/users/${firebaseApp.auth().currentUser.uid}/parks/${_this.props.park.parkId}`).set({
+          name: _this.props.park.name
+        });
+
         snapshot.child('/dogs').forEach(childSnap => {
           const parkRef = firebaseApp.database().ref(`/parks/${_this.props.park.parkId}`);
           const dog = childSnap.val()
@@ -108,5 +112,6 @@ export default class ParksViewScreen extends React.Component {
         parkRef.child(`${dog.id}`).remove();
       }
     });
+    firebaseApp.database().ref().child(`users/${uid}/parks/${_this.props.park.parkId}`).remove();
   }
 }

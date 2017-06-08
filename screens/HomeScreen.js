@@ -6,20 +6,24 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   TouchableHighlight,
   View,
+  Modal
 } from 'react-native';
 
-import { MonoText } from '../components/StyledText';
+import PlaytimeForm from '../components/playtimes/PlaytimeForm';
 import RootNavigation from '../navigation/RootNavigation';
 
 export default class HomeScreen extends React.Component {
   static route = {
     navigationBar: {
-      visible: false,
+      visible: false
     },
   };
+
+  state = {
+    modalVisible: false
+  }
 
   render() {
     return (
@@ -36,16 +40,32 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <View style={styles.getStartedContainer}>
-            <TouchableHighlight>
+            <TouchableHighlight onPress={this._toggleModal.bind(this)}>
               <Text style={styles.getStartedText}>
                 {`It's Playtime!`}
               </Text>
             </TouchableHighlight>
           </View>
 
+          <Modal
+            animationType={'slide'}
+            transparent={false}
+            visible={this.state.modalVisible}
+            onRequestClose={this._toggleModal.bind(this)}>
+            <PlaytimeForm
+              closeModal={this._toggleModal.bind(this)}
+            />
+          </Modal>
+
         </ScrollView>
       </View>
     );
+  }
+
+  _toggleModal() {
+    this.state.modalVisible ?
+      this.setState({modalVisible: false}) :
+      this.setState({modalVisible: true})
   }
 
   _handleLearnMorePress = () => {

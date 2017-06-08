@@ -21,7 +21,8 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-17.0.0.tar.gz",
     "react-native-fetch": "^1.0.0",
     "react-native-fetch-blob": "^0.10.5",
-    "react-native-keyboard-aware-scroll-view": "^0.2.9"
+    "react-native-keyboard-aware-scroll-view": "^0.2.9",
+    "react-native-modal-datetime-picker": "^4.6.0"
   },
   "devDependencies": {
     "jest-expo": "~1.0.1"
