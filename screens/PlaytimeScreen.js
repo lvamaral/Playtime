@@ -15,6 +15,7 @@ export default class PlaytimeScreen extends React.Component {
       dogs: []
     }
     this._handleCheck = this._handleCheck.bind(this);
+    this._handleNotifications = this._handleNotifications.bind(this);
     this._createPlaytime = this._createPlaytime.bind(this);
   }
 
@@ -224,5 +225,27 @@ export default class PlaytimeScreen extends React.Component {
       }
     }
 
+    this._handleNotifications();
+  }
+
+  _handleNotifications() {
+    _this = this;
+    this.state.dogs.forEach(dog => {
+      firebaseApp.database().ref(`/followDogToUser/${dog.id}`).once('value')
+        .then(snapshot => {
+        snapshot.forEach(childSnap => {
+          let userRef = firebaseApp.database().ref(`/users/${childSnap.key}`);
+          userRef.once('value').then(snap => {
+            debugger
+            snap.val().parks.forEach(park => {
+              debugger
+              // if(park.key === _this.state.park.id) {
+              // do stuff
+              // }
+            })
+          });
+        });
+      });
+    });
   }
 }
