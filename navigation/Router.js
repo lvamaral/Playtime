@@ -12,7 +12,8 @@ import ParksViewScreen from '../screens/ParksViewScreen';
 import DogViewScreen from '../screens/DogViewScreen';
 import FollowerScreen from '../screens/FollowerScreen';
 import FollowingScreen from '../screens/FollowingScreen';
-import PlaytimeScreen from '../screens/PlaytimeScreen'
+import PlaytimeScreen from '../screens/PlaytimeScreen';
+import NotificationsScreen from '../screens/NotificationsScreen'
 
 export default createRouter(() => ({
   home: () => HomeScreen,
@@ -25,5 +26,6 @@ export default createRouter(() => ({
   dogView: ()=> DogViewScreen,
   followerView: () => FollowerScreen,
   followingView: () => FollowingScreen,
-  playtimeView: () => PlaytimeScreen
+  playtimeView: () => PlaytimeScreen,
+  notificationsView: () => NotificationsScreen
 }));

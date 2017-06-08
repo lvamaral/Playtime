@@ -17,6 +17,7 @@ export default class PlaytimeScreen extends React.Component {
     this._handleCheck = this._handleCheck.bind(this);
     this._handleNotifications = this._handleNotifications.bind(this);
     this._createPlaytime = this._createPlaytime.bind(this);
+    this._postNotification = this._postNotification.bind(this);
   }
 
   static route = {
@@ -231,21 +232,31 @@ export default class PlaytimeScreen extends React.Component {
   _handleNotifications() {
     _this = this;
     this.state.dogs.forEach(dog => {
+      _dog = dog;
       firebaseApp.database().ref(`/followDogToUser/${dog.id}`).once('value')
         .then(snapshot => {
         snapshot.forEach(childSnap => {
           let userRef = firebaseApp.database().ref(`/users/${childSnap.key}`);
           userRef.once('value').then(snap => {
-            debugger
-            snap.val().parks.forEach(park => {
-              debugger
-              // if(park.key === _this.state.park.id) {
-              // do stuff
-              // }
-            })
+            if(snap.val().parks !== undefined) {
+              snap.child('parks').forEach(park => {
+                if(park.key === _this.state.park.id) {
+                  _this._postNotification(snap.key, park, _dog);
+                }
+              });
+            }
           });
         });
       });
+    });
+  }
+
+  _postNotification(uid, parkSnap, dog) {
+    let park = parkSnap.val();
+    park.id = parkSnap.key;
+    firebaseApp.database().ref(`users/${uid}/notifications`).push().set({
+      dog: dog,
+      park: park
     });
   }
 }

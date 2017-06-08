@@ -39,9 +39,9 @@ export default class RootNavigation extends React.Component {
         </TabNavigationItem>
 
         <TabNavigationItem
-          id="notifications"
+          id="notificationsView"
           renderIcon={isSelected => this._renderIcon('bell', 'entypo', isSelected)}>
-          <StackNavigation initialRoute="notifications" />
+          <StackNavigation initialRoute="notificationsView" />
         </TabNavigationItem>
 
         <TabNavigationItem
