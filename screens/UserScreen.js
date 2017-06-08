@@ -12,6 +12,7 @@ import * as firebase from 'firebase';
 import firebaseApp from '../api/firebaseApp';
 import {isEqual} from 'lodash';
 import Styles from '../assets/stylesheets/pageLayout';
+import Colors from '../constants/Colors';
 
 export default class UserScreen extends React.Component {
   constructor(props){
@@ -68,9 +69,11 @@ export default class UserScreen extends React.Component {
       dogs.map( (dog, i) => {
         return (
         <TouchableHighlight key={ids[i]} onPress={ () => this.goTo(ids[i], dog.dogName)}>
-          <View>
-            <Image source={{ uri: dog.image}} style={{ width: 100, height: 100, borderRadius: 50, }} />
-            <Text style={styles.text}>{dog.dogName}</Text>
+          <View style={styles.dogsList}>
+            <View style={styles.dogsListItem}>
+              <Image source={{ uri: dog.image}} style={{ width: 100, height: 100, borderRadius: 50, }} />
+              <Text style={styles.text}>{dog.dogName}</Text>
+            </View>
           </View>
        </TouchableHighlight>
       )}
@@ -79,13 +82,14 @@ export default class UserScreen extends React.Component {
 
     return(
       <View style={styles.container}>
-        <Text style={styles.text}>Hi, {this.firstName}!</Text>
-        <ScrollView style={styles.dogsList}>{list}</ScrollView>
-        <View style={Styles.row}>
-          <Button title="Following" color="#841584" onPress={() => this.goToFollowing(this.user.uid)}></Button>
-          <Button title="Followers" color="#841584" onPress={() => this.goToFollowers(this.user.uid)}></Button>
-        </View>
-        <ScrollView></ScrollView>
+          <Text style={styles.text}>Hi, {this.firstName}!</Text>
+            <View style={styles.following}>
+              <Button title="Following" color={Colors.white} onPress={() => this.goToFollowing(this.user.uid)}></Button>
+              <Button title="Followers" color={Colors.white} onPress={() => this.goToFollowers(this.user.uid)}></Button>
+            </View>
+
+        <View  style={{ alignItems: 'center', alignSelf: 'stretch', height: 400}}><ScrollView>{list}</ScrollView></View>
+
       </View>
     )
 
@@ -95,17 +99,32 @@ export default class UserScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
-    justifyContent: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
   },
     text: {
     fontWeight: 'bold',
     fontSize: 30,
   },
   dogsList: {
-    flex: 8,
-    flexDirection: 'row',
+    flex: 4,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    alignSelf: 'stretch',
 
+  },
+  dogsListItem: {
+    margin: 5,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  following: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    backgroundColor: Colors.black,
+    alignSelf: 'stretch',
   }
+
 });
