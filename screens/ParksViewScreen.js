@@ -23,32 +23,38 @@ export default class ParksViewScreen extends React.Component {
 
   componentWillMount() {
     _this = this;
-    _dogList = [];
 
     const parkRef = firebaseApp.database().ref(`/parks/${this.props.park.parkId}/dogs`);
-    parkRef.on('child_added', snapshot => {
-      _this.state.dogs.push(snapshot.val());
-      _this.state.dogs[_this.state.dogs.length - 1].id = snapshot.key;
-      if(_this.state.following === false &&
-        snapshot.val().ownerId === firebaseApp.auth().currentUser.uid) {
-        _this.setState({following: true});
-      }
-      _this.setState({dogs: _this.state.dogs});
+    parkRef.on('value', snapshot => {
+      _dogList = [];
+      _isFollowing = false;
+      snapshot.forEach(dog => {
+        _dogList.push(dog.val());
+        _dogList[_dogList.length - 1].id = dog.key;
+        if(dog.val().ownerId === firebaseApp.auth().currentUser.uid) {
+          _isFollowing = true;
+        }
+      });
+      _this.setState({
+        dogs: _dogList,
+        following: _isFollowing
+      });
     });
 
-    parkRef.on('child_removed', snapshot => {
-      _this.state.dogs.forEach((dog, idx) => {
-        if(dog.id === snapshot.key) {
-          var firstHalf = _this.state.dogs.slice(0, idx);
-          var secondHalf = _this.state.dogs.slice(idx + 1, _this.state.dogs.length);
-          var newDogs = firstHalf.concat(secondHalf);
-          _this.setState({
-            dogs: newDogs,
-            following: false
-          });
-        }
-      })
-    });
+    // parkRef.on('child_removed', snapshot => {
+    //   debugger
+    //   _this.state.dogs.forEach((dog, idx) => {
+    //     if(dog.id === snapshot.key) {
+    //       var firstHalf = _this.state.dogs.slice(0, idx);
+    //       var secondHalf = _this.state.dogs.slice(idx + 1, _this.state.dogs.length);
+    //       var newDogs = firstHalf.concat(secondHalf);
+    //       _this.setState({
+    //         dogs: newDogs,
+    //         following: false
+    //       });
+    //     }
+    //   })
+    // });
   }
 
   render() {
