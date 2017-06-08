@@ -10,11 +10,12 @@ export default class PlaytimeScreen extends React.Component {
     this.state = {
       timePickerVisible: false,
       datePickerVisible: false,
-      park: null,
       date: new Date(),
-      dogs: null
+      parks: [],
+      dogs: []
     }
     this._handleCheck = this._handleCheck.bind(this);
+    this._createPlaytime = this._createPlaytime.bind(this);
   }
 
   static route = {
@@ -37,11 +38,18 @@ export default class PlaytimeScreen extends React.Component {
           dog.id = key;
           dog.checked = true;
           dogList.push(dog);
-        })
+        });
+        var parkList = [];
+        Object.keys(user.parks).forEach(key => {
+          let park = user.parks[key];
+          park.id = key;
+          parkList.push(park);
+        });
         _this.setState({
           user: user,
-          park: user.parks[0],
-          dogs: dogList
+          parks: parkList,
+          dogs: dogList,
+          park: parkList[0]
         });
       } else {
         _this.setState({user: user});
@@ -50,17 +58,16 @@ export default class PlaytimeScreen extends React.Component {
   }
 
   _showPicker() {
-    const parks = this.state.user.parks;
     return(
       <Picker
         selectedValue={this.state.park}
         onValueChange={(itemValue, itemIndex) => this.setState({park: itemValue})}
       >
-        { Object.keys(parks).map(key => (
+        { this.state.parks.map(park => (
           <Picker.Item
-            key={`${key}`}
-            label={`${parks[key].name}`}
-            value={`${parks[key].name}`} />
+            key={`park${park.id}`}
+            label={`${park.name}`}
+            value={`${park.id}`} />
         ))}
       </Picker>
     );
@@ -86,34 +93,41 @@ export default class PlaytimeScreen extends React.Component {
   _handleCheck(checked, id) {
     for(let i = 0; i < this.state.dogs.length; i++) {
       if(id === this.state.dogs[i].id) {
+        let atLeastOneChecked = false;
         this.state.dogs[i].checked = !this.state.dogs[i].checked;
-        this.setState({dogs: this.state.dogs});
+        for(let j = 0; j < this.state.dogs.length; j++) {
+          if(this.state.dogs[j].checked) {
+            atLeastOneChecked = true;
+          }
+        }
+        if(atLeastOneChecked) {
+          this.setState({dogs: this.state.dogs});
+        } else {
+          // rollback
+          this.state.dogs[i].checked = !this.state.dogs[i].checked;
+        }
       }
     }
   }
 
   render() {
     // user has dogs and has parks
-    if(this.state.user !== undefined && this.state.user.parks !== undefined) {
+    if(this.state.user !== undefined && this.state.parks.length > 0) {
 
       return(
         <View>
           <ScrollView>
-            <TouchableHighlight style={{paddingTop: 40}}
-                                onPress={this.props.closeModal}>
-              <Text>Click to exit</Text>
-            </TouchableHighlight>
 
             { this._showPicker() }
 
             <TouchableHighlight style={{paddingTop: 40}}
                                 onPress={this._showTimePicker.bind(this)}>
-              <Text>{this.state.date.getMinutes() + ' ' + this.state.date.getHours()}</Text>
+              <Text>{this.state.date.toLocaleTimeString()}</Text>
             </TouchableHighlight>
 
             <TouchableHighlight style={{paddingTop: 40}}
                                 onPress={this._showDatePicker.bind(this)}>
-              <Text>Choose a different date</Text>
+              <Text>{this.state.date.toLocaleDateString()}</Text>
             </TouchableHighlight>
 
             { this._showCheckboxes() }
@@ -192,11 +206,23 @@ export default class PlaytimeScreen extends React.Component {
   }
 
   _createPlaytime() {
-    console.log(this.state.date);
-    console.log(this.state.park);
-    firebaseApp.database().ref('/playtimes').push().set({
+    const playRef = firebaseApp.database().ref('/playtimes').push();
+
+    playRef.set({
       date: this.state.date,
-      park: this.state.park
+      park: this.state.park,
+      user: this.state.dogs[0].ownerId
     });
+
+    let dog;
+    for(let i = 0; i < this.state.dogs.length; i++ ) {
+      dog = this.state.dogs[i];
+      if(dog.checked) {
+        playRef.child(`dogs/${dog.id}`).set({
+          dogName: dog.dogName
+        });
+      }
+    }
+
   }
 }
