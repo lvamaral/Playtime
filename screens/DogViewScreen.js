@@ -68,8 +68,10 @@ export default class DogViewScreen extends React.Component {
     var userDogs = []
     firebaseApp.database().ref(`/users/${_this.user.uid}/dogs`).once('value').then(function(snapshot){
       snapshot.forEach(function(childSnapshot) {
-        userDogs.push(childSnapshot.val())
-        firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).set(userDogs)
+        // userDogs.push(childSnapshot.val())
+        let childKey = childSnapshot.key;
+        let childData = childSnapshot.val();
+        firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}/${childKey}`).set(childData)
       })
     })
     let newState = _this.state;
@@ -81,7 +83,6 @@ export default class DogViewScreen extends React.Component {
   let _this = this;
   firebaseApp.database().ref(`/followUserToDog/${_this.user.uid}/${_this.state.id}`).remove().then(function(){
     firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).remove().then(function(){
-      console.log("follow",_this.state.follow);
       let newState = _this.state;
       newState.follow = false;
       _this.setState(newState)

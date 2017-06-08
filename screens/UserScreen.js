@@ -11,6 +11,7 @@ import {
 import * as firebase from 'firebase';
 import firebaseApp from '../api/firebaseApp';
 import {isEqual} from 'lodash';
+import Styles from '../assets/stylesheets/pageLayout';
 
 export default class UserScreen extends React.Component {
   constructor(props){
@@ -56,7 +57,7 @@ export default class UserScreen extends React.Component {
   }
 
   goToFollowers(user_id){
-    this.props.navigator.push('followerView', {id: user_id, name: this.firstName});
+    this.props.navigator.push('followerView', {id: user_id, name: this.firstName, dogs: this.state.dogList});
   }
 
   render(){
@@ -79,9 +80,8 @@ export default class UserScreen extends React.Component {
     return(
       <View style={styles.container}>
         <Text style={styles.text}>Hi, {this.firstName}!</Text>
-        <View><Text>Your Dogs</Text></View>
-        <ScrollView>{list}</ScrollView>
-        <View>
+        <ScrollView style={styles.dogsList}>{list}</ScrollView>
+        <View style={Styles.row}>
           <Button title="Following" color="#841584" onPress={() => this.goToFollowing(this.user.uid)}></Button>
           <Button title="Followers" color="#841584" onPress={() => this.goToFollowers(this.user.uid)}></Button>
         </View>
@@ -96,12 +96,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
+    justifyContent: 'center',
+    alignContent: 'center',
   },
-  text: {
-  fontWeight: 'bold',
-  fontSize: 30,
-},
-  list_container: {
+    text: {
+    fontWeight: 'bold',
+    fontSize: 30,
+  },
+  dogsList: {
+    flex: 8,
+    flexDirection: 'row',
 
   }
 });

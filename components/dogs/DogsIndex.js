@@ -7,9 +7,11 @@ export default class DogsIndex extends React.Component {
     const { dogs, navigator } = this.props;
 
     if(dogs.length > 0) {
+
       return(
         <ScrollView>
           { dogs.map((dog, i) => {
+        
             return(
               <DogIndexItem
                 key={`dog${i}`}
