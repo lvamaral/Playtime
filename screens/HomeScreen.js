@@ -6,18 +6,16 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   TouchableHighlight,
-  View,
+  View
 } from 'react-native';
 
-import { MonoText } from '../components/StyledText';
 import RootNavigation from '../navigation/RootNavigation';
 
 export default class HomeScreen extends React.Component {
   static route = {
     navigationBar: {
-      visible: false,
+      visible: false
     },
   };
 
@@ -36,7 +34,7 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <View style={styles.getStartedContainer}>
-            <TouchableHighlight>
+            <TouchableHighlight onPress={this._goToPlaytime.bind(this)}>
               <Text style={styles.getStartedText}>
                 {`It's Playtime!`}
               </Text>
@@ -46,6 +44,10 @@ export default class HomeScreen extends React.Component {
         </ScrollView>
       </View>
     );
+  }
+
+  _goToPlaytime() {
+    this.props.navigator.push('playtimeView');
   }
 
   _handleLearnMorePress = () => {
