@@ -9,7 +9,8 @@ import DogsIndex from '../components/dogs/DogsIndex';
 
 export default class ParksViewScreen extends React.Component {
   state = {
-    dogs: []
+    dogs: [],
+    following: false
   };
 
   static route = {
@@ -28,7 +29,25 @@ export default class ParksViewScreen extends React.Component {
     parkRef.on('child_added', snapshot => {
       _this.state.dogs.push(snapshot.val());
       _this.state.dogs[_this.state.dogs.length - 1].id = snapshot.key;
+      if(_this.state.following === false &&
+        snapshot.val().ownerId === firebaseApp.auth().currentUser.uid) {
+        _this.setState({following: true});
+      }
       _this.setState({dogs: _this.state.dogs});
+    });
+
+    parkRef.on('child_removed', snapshot => {
+      _this.state.dogs.forEach((dog, idx) => {
+        if(dog.id === snapshot.key) {
+          var firstHalf = _this.state.dogs.slice(0, idx);
+          var secondHalf = _this.state.dogs.slice(idx + 1, _this.state.dogs.length);
+          var newDogs = firstHalf.concat(secondHalf);
+          _this.setState({
+            dogs: newDogs,
+            following: false
+          });
+        }
+      })
     });
   }
 
@@ -42,8 +61,8 @@ export default class ParksViewScreen extends React.Component {
         <Text>{park.name}</Text>
         <Text>{park.address}</Text>
 
-        <TouchableHighlight onPress={this._joinPark.bind(this)}>
-          <Text>Join Park</Text>
+        <TouchableHighlight onPress={this._handleClick.bind(this)}>
+          <Text>{ this.state.following ? `Unfollow` : `Join Park`}</Text>
         </TouchableHighlight>
 
         <DogsIndex
@@ -51,6 +70,10 @@ export default class ParksViewScreen extends React.Component {
           navigator={this.props.navigator} />
       </View>
     );
+  }
+
+  _handleClick() {
+    this.state.following ? this._unfollowPark() : this._joinPark();
   }
 
   _joinPark() {
@@ -71,6 +94,18 @@ export default class ParksViewScreen extends React.Component {
             ownerId: dog.ownerId
           });
         });
+      }
+    });
+  }
+
+  _unfollowPark() {
+    // remove user's dogs from park
+    const uid = firebaseApp.auth().currentUser.uid;
+    const parkRef = firebaseApp.database().ref(`/parks/${_this.props.park.parkId}/dogs`);
+
+    this.state.dogs.forEach(dog => {
+      if(dog.ownerId === uid) {
+        parkRef.child(`${dog.id}`).remove();
       }
     });
   }
