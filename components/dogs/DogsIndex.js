@@ -4,7 +4,7 @@ import DogIndexItem from './DogIndexItem';
 
 export default class DogsIndex extends React.Component {
   render() {
-    const { dogs } = this.props;
+    const { dogs, navigator } = this.props;
 
     if(dogs.length > 0) {
       return(
@@ -13,7 +13,8 @@ export default class DogsIndex extends React.Component {
             return(
               <DogIndexItem
                 key={`dog${i}`}
-                dog={dog} />
+                dog={dog}
+                navigator={navigator} />
             )
           }) }
         </ScrollView>

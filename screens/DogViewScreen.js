@@ -91,7 +91,6 @@ export default class DogViewScreen extends React.Component {
   }
 
   render() {
-
     let followComponent = (<Text></Text>)
     if (this.state.follow === true) {
       followComponent = (<Button title="Unfollow" color="#841584" onPress={this.handleUnfollow.bind(this)}></Button>)
