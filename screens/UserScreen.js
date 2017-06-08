@@ -16,8 +16,8 @@ export default class UserScreen extends React.Component {
   constructor(props){
     super(props);
     this.user = firebase.auth().currentUser;
-    this.state = {}
-    this.dogsList = []
+    this.firstName = this.user.displayName.split(" ")[0]
+    this.state = {dogList: {}, following: {}, followers: {}}
   }
 
   static route = {
@@ -34,18 +34,14 @@ export default class UserScreen extends React.Component {
 
   getDogList(){
     let _this = this
-    var dogsList = []
-
     firebaseApp.database().ref(`/users/${this.user.uid}/dogs`).once('value').then(function(snapshot) {
       let newState = _this.state
       snapshot.forEach(function(childSnapshot) {
         let childKey = childSnapshot.key;
         let childData = childSnapshot.val();
+        newState.dogList[childKey] = childData
 
-        newState[childKey] = childData
-        dogsList.push(childData)
         });
-        // console.log("NEW STATE", newState)
         _this.setState(newState)
 
     });
@@ -55,16 +51,25 @@ export default class UserScreen extends React.Component {
     this.props.navigator.push('dogView', {id: id, name: name});
   }
 
+  goToFollowing(user_id){
+    this.props.navigator.push('followingView', {id: user_id, name: this.firstName});
+  }
+
+  goToFollowers(user_id){
+    this.props.navigator.push('followerView', {id: user_id, name: this.firstName});
+  }
+
   render(){
-    if (!isEqual(this.state, {})) {
-      let ids = Object.keys(this.state)
-      let dogs = Object.values(this.state)
+    if (!isEqual(this.state.dogList, {})) {
+      let ids = Object.keys(this.state.dogList)
+      let dogs = Object.values(this.state.dogList)
       var list =
       dogs.map( (dog, i) => {
         return (
         <TouchableHighlight key={ids[i]} onPress={ () => this.goTo(ids[i], dog.dogName)}>
           <View>
-            <Text style={styles.text} >{dog.dogName}</Text>
+            <Image source={{ uri: dog.image}} style={{ width: 100, height: 100, borderRadius: 50, }} />
+            <Text style={styles.text}>{dog.dogName}</Text>
           </View>
        </TouchableHighlight>
       )}
@@ -73,10 +78,14 @@ export default class UserScreen extends React.Component {
 
     return(
       <View style={styles.container}>
-        <Text style={styles.text}>Hi, {this.user.displayName}</Text>
+        <Text style={styles.text}>Hi, {this.firstName}!</Text>
         <View><Text>Your Dogs</Text></View>
         <ScrollView>{list}</ScrollView>
-        <View><Text>Followers/Following</Text></View>
+        <View>
+          <Button title="Following" color="#841584" onPress={() => this.goToFollowing(this.user.uid)}></Button>
+          <Button title="Followers" color="#841584" onPress={() => this.goToFollowers(this.user.uid)}></Button>
+        </View>
+        <ScrollView></ScrollView>
       </View>
     )
 
@@ -93,6 +102,6 @@ const styles = StyleSheet.create({
   fontSize: 30,
 },
   list_container: {
-    
+
   }
 });
