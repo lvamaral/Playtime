@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableHighlight,
   View,
 } from 'react-native';
 
@@ -35,9 +36,11 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <View style={styles.getStartedContainer}>
-            <Text style={styles.getStartedText}>
-              Going to the park
-            </Text>
+            <TouchableHighlight>
+              <Text style={styles.getStartedText}>
+                {`It's Playtime!`}
+              </Text>
+            </TouchableHighlight>
           </View>
 
         </ScrollView>

@@ -24,5 +24,4 @@ export default createRouter(() => ({
   dogView: ()=> DogViewScreen,
   followerView: () => FollowerScreen,
   followingView: () => FollowingScreen
-
 }));

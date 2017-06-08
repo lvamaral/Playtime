@@ -39,7 +39,7 @@ export default class AddDogScreen extends React.Component {
     },
   };
 
-handleFormFocus(e, component){
+ handleFormFocus(e, component){
 
  }
 
