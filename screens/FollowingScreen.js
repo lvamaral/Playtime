@@ -33,7 +33,7 @@ export default class FollowingScreen extends React.Component {
       let newState = _this.state
       snapshot.forEach(function(childSnapshot) {
           let childKey = childSnapshot.key;
-          let childData = childSnapshot.val();
+          let childData = childSnapshot.val().dog;
           let newDog = childData
           newDog["id"] = childKey
           newState.dogs.push(newDog)
