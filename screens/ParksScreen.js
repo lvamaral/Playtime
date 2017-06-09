@@ -1,9 +1,11 @@
 import React from 'react';
 import Expo from 'expo';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 import ParksIndex from '../components/parks/ParksIndex';
 import * as firebase from 'firebase';
 import firebaseApp from '../api/firebaseApp';
+import { FontAwesome } from '@expo/vector-icons';
+import Colors from '../constants/Colors';
 
 export default class ParkScreen extends React.Component {
   state = {
@@ -32,12 +34,21 @@ export default class ParkScreen extends React.Component {
   render() {
 
     return(
-      <View>
+      <View style={styles.container}>
+        <View style={styles.searchBox}>
+          <FontAwesome
+            name={"search"}
+            size={30}
+            color={Colors.orange}
+          />
         <TextInput
-          style={{marginTop: 20, height: 40, borderColor: 'gray', borderWidth: 1}}
+          style={styles.input}
           onChangeText={(text) => this.setState({keyword: text})}
           value={this.state.keyword}
+          defaultValue={"Search for parks..."}
+          maxLength={15}
         />
+      </View>
 
         <ParksIndex
           navigator={this.props.navigator}
@@ -48,3 +59,24 @@ export default class ParkScreen extends React.Component {
     )
   }
 };
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flex: 1,
+  },
+  input: {
+    flex: 1,
+     height: 50,
+     paddingLeft: 5,
+     fontSize: 30,
+   },
+   searchBox: {
+     paddingLeft: 5,
+     display: 'flex',
+     flexDirection: 'row',
+     borderColor: Colors.black,
+     borderBottomWidth: 1,
+     height: 50,
+     alignItems: 'center',
+   }
+})

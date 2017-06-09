@@ -3,9 +3,12 @@ import {
   View,
   Image,
   Text,
-  TouchableHighlight} from 'react-native';
+  TouchableHighlight,
+  StyleSheet
+} from 'react-native';
 import firebaseApp from '../api/firebaseApp';
 import DogsIndex from '../components/dogs/DogsIndex';
+import Colors from '../constants/Colors';
 
 export default class ParksViewScreen extends React.Component {
   state = {
@@ -57,26 +60,6 @@ export default class ParksViewScreen extends React.Component {
     // });
   }
 
-  render() {
-    const { park } = this.props;
-
-    return(
-      <View>
-        <Image source={{uri: park.photoUrl}}
-               style={{width: 100, height: 100}} />
-        <Text>{park.name}</Text>
-        <Text>{park.address}</Text>
-
-        <TouchableHighlight onPress={this._handleClick.bind(this)}>
-          <Text>{ this.state.following ? `Unfollow` : `Join Park`}</Text>
-        </TouchableHighlight>
-
-        <DogsIndex
-          dogs={this.state.dogs}
-          navigator={this.props.navigator} />
-      </View>
-    );
-  }
 
   _handleClick() {
     this.state.following ? this._unfollowPark() : this._joinPark();
@@ -120,4 +103,68 @@ export default class ParksViewScreen extends React.Component {
     });
     firebaseApp.database().ref().child(`users/${uid}/parks/${_this.props.park.parkId}`).remove();
   }
+
+
+  render() {
+    const { park } = this.props;
+
+    return(
+      <View style={styles.mainContainer}>
+        <View style={styles.infoContainer}>
+          <Image source={{uri: park.photoUrl}}
+                 style={styles.parkImage} />
+               <View style={styles.parkTextBox}>
+            <Text style={styles.parkText}>{park.name}</Text>
+            <Text style={styles.parkText}>{park.address}</Text>
+          </View>
+        </View>
+
+        <TouchableHighlight style={styles.joinPark} onPress={this._handleClick.bind(this)}>
+          <Text>{ this.state.following ? `Unfollow` : `Join Park`}</Text>
+        </TouchableHighlight>
+
+        <View style={styles.dogList}>
+          <Text>Dogs that go here:</Text>
+        </View>
+        <DogsIndex
+          dogs={this.state.dogs}
+          navigator={this.props.navigator} />
+      </View>
+    );
+  }
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    display: 'flex',
+    flex: 1,
+  },
+  infoContainer: {
+    flex: 2,
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+  parkImage: {
+    alignSelf: 'stretch',
+    height: 200,
+  },
+  parkTextBox: {
+    backgroundColor: Colors.white,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    padding: 5
+  },
+  parkText: {
+    fontSize: 20,
+  },
+  joinPark: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+  },
+  dogList: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+  }
+})
