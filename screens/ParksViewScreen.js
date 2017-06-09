@@ -129,6 +129,7 @@ export default class ParksViewScreen extends React.Component {
 
 
   render() {
+    var {height, width} = Dimensions.get('window')
     const { park } = this.props;
 
     return(
@@ -138,12 +139,8 @@ export default class ParksViewScreen extends React.Component {
           <Image source={{uri: park.photoUrl}}
                  style={styles.parkImage} />
                <View style={styles.joinPark} >
-                 <TouchableOpacity onPress={this._handleClick.bind(this)}>
-                   <View style={styles.mainContainer}>
-                  </View>
-                  <View style={styles.mainContainer}>
+                 <TouchableOpacity style={{alignSelf: 'stretch', alignItems: 'center'}} onPress={this._handleClick.bind(this)}>
                     <Text style={styles.joinParkText}>{ this.state.following ? `Unfollow` : `Join Park`}</Text>
-                  </View>
                </TouchableOpacity>
                </View>
           <View style={styles.parkTextBox}>
@@ -163,8 +160,8 @@ export default class ParksViewScreen extends React.Component {
     );
   }
 }
-var {height, width} = Dimensions.get('window')
 
+  var {height, width} = Dimensions.get('window')
 const styles = StyleSheet.create({
   mainContainer: {
     display: 'flex',
@@ -177,7 +174,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    // paddingBottom: 10,
   },
   parkImage: {
     alignSelf: 'stretch',
@@ -199,18 +195,19 @@ const styles = StyleSheet.create({
     color: Colors.orange,
     alignItems: 'center',
     justifyContent: 'center',
-    alignSelf: 'stretch',
+    textAlign: 'center',
+    width: width,
   },
   joinPark: {
+    width: width,
     padding: 5,
     display: 'flex',
     alignItems: 'center',
     position: 'absolute',
     justifyContent: 'center',
-    alignSelf: 'stretch',
     zIndex: 20,
     top: 100,
-    left: 100,
+    // left: 110,
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   dogList: {
