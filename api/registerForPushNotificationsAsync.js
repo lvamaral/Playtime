@@ -2,10 +2,9 @@ import { Platform } from 'react-native';
 import { Permissions, Notifications } from 'expo';
 import firebaseApp from './firebaseApp';
 
-export default (async function registerForPushNotificationsAsync() {
+export default async function registerForPushNotificationsAsync() {
   // Android remote notification permissions are granted during the app
   // install, so this will only ask on iOS
-  debugger
   let { status } = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
 
   // Stop here if the user did not grant permissions
@@ -31,4 +30,4 @@ export default (async function registerForPushNotificationsAsync() {
     }),
   });
 
-});
+};

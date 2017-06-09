@@ -26,6 +26,7 @@
     "react-native-modal-datetime-picker": "^4.6.0"
   },
   "devDependencies": {
-    "jest-expo": "~1.0.1"
+    "jest-expo": "~1.0.1",
+    "webpack-dev-server": "^2.4.5"
   }
 }
