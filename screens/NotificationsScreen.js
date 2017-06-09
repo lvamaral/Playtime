@@ -1,13 +1,15 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import firebaseApp from '../api/firebaseApp';
-
+import NewPlaytime from '../components/notifications/NewPlaytime';
+import FollowRequest from '../components/notifications/FollowRequest';
 
 export default class NotificationsScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      notifications: []
+      notifications: [],
+      loading: true
     }
     this.renderNotifications = this.renderNotifications.bind(this);
   }
@@ -23,33 +25,56 @@ export default class NotificationsScreen extends React.Component {
     const noteRef = firebaseApp.database().ref(`users/${currUID}/notifications`);
     _this = this;
 
-    noteRef.on('child_added', snapshot => {
-      debugger
-      _this.state.notifications.push(snapshot.val());
-      _this.state.notifications[_this.state.notifications.length - 1].id = snapshot.key;
-      _this.setState({notifications: _this.state.notifications});
+    noteRef.on('value', snapshot => {
+      _notifs = [];
+      snapshot.forEach(notif => {
+        _notifs.push(notif.val());
+        _notifs[_notifs.length - 1].id = notif.key;
+      });
+      _this.setState({
+        notifications: _notifs,
+        loading: false
+      });
     });
   }
 
   render() {
-    return(
-      <View>
-        <ScrollView>
+    if (this.state.loading === false) {
+      return(
+        <View>
           { this.renderNotifications() }
-        </ScrollView>
-      </View>
-    );
+        </View>
+      );
+    } else {
+      return(
+        <View>
+        </View>
+      );
+    }
   }
 
   renderNotifications() {
     if(this.state.notifications.length > 0) {
-      // debugger
+      return(
+        <ScrollView>
+          {this.state.notifications.map((notif, idx) => {
+            if(notif.type === 'NEW_PLAYTIME') {
+              return(
+                <NewPlaytime
+                  key={`notif${idx}`}
+                  notif={notif} />
+              );
+            } else {
+              return(
+                <FollowRequest
+                  key={`notif${idx}`}
+                  notif={notif} />
+              );
+            }
+          })}
+        </ScrollView>
+      );
 
-      // return(
-      //   {this.state.notifications.map(notif => (
-      //     <Text>{notif.dog.dogName} is going to {notif.park.parkName}</Text>
-      //   ))}
-      // );
     } else {
       return(
         <Text>No notifications!</Text>

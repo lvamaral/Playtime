@@ -12,7 +12,9 @@ import firebaseApp from '../api/firebaseApp';
 export default class DogViewScreen extends React.Component {
   constructor(props){
     super(props)
-    this.state = {}
+    this.state = {
+      loading: true
+    };
     this.user = firebase.auth().currentUser
   }
   static route = {
@@ -36,6 +38,7 @@ export default class DogViewScreen extends React.Component {
       _this.setState({id: id, dogName: name, age: age, breed: breed, image: image, owner: owner, ownerId: ownerId, follow: ""})
       _this.checkFollow();
     })
+
   }
 
   checkFollow(){
@@ -46,18 +49,21 @@ export default class DogViewScreen extends React.Component {
      } else {
        owned = false
      }
+
      firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`)
      .once('value', function(snapshot) {
        if (snapshot.val() === null && !owned) {
          let newState = _this.state;
          newState.follow = false;
+         newState.loading = false;
          _this.setState(newState)
        } else if (snapshot.val() !== null) {
          let newState = _this.state;
          newState.follow = snapshot.val().status === 'PENDING' ? 'PENDING' : 'APPROVED';
-         _this.setState(newState)
+         newState.loading = false;
+         _this.setState(newState);
        }
-     })
+     });
   }
 
   handleFollow(){
@@ -67,24 +73,27 @@ export default class DogViewScreen extends React.Component {
     image: _this.state.image, ownerName: _this.state.owner});
     var userDogs = [];
     firebaseApp.database().ref(`/users/${_this.user.uid}/dogs`).once('value').then(function(snapshot){
+      firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).set({status: 'PENDING'});
       snapshot.forEach(function(childSnapshot) {
         // userDogs.push(childSnapshot.val())
         let childKey = childSnapshot.key;
         let childData = childSnapshot.val();
-        firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}/${childKey}`).set({
-          dog: childData,
-          status: 'PENDING'
-        });
+        firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}/dogs/${childKey}`).set(childData);
       });
     });
-    firebaseApp.database().ref(`/users/${_this.state.ownerId}/notifications`).push().set({
+
+    ref = firebaseApp.database().ref(`/users/${_this.state.ownerId}/notifications`).push()
+    ref.set({
       user: firebaseApp.auth().currentUser.uid,
-      dog: {
-        dogName: _this.state.dogName,
-        id: _this.state.id,
-        type: 'follow_request'
-      }
+      type: 'FOLLOW_REQUEST'
     });
+
+    // firebaseApp.database().ref(`/users/${firebaseApp.auth().currentUser.uid}`).once('value').then(snapshot => {
+    //   snapshot.child('dogs').forEach(dog => {
+    //     firebaseApp.database().ref(`/users/${_this.state.ownerId}/notifications`)
+    //   });
+    // });
+
     let newState = _this.state;
     newState.follow = 'PENDING';
     _this.setState(newState);
@@ -99,7 +108,7 @@ export default class DogViewScreen extends React.Component {
       _this.setState(newState);
         })
       }
-    )
+    );
   }
 
   doNothing() {
@@ -117,15 +126,21 @@ export default class DogViewScreen extends React.Component {
       followComponent = (<Button title="Follow" color="#841584" onPress={this.handleFollow.bind(this)}></Button>)
     }
 
-    return(
-      <View style={styles.container}>
+    if(this.state.loading === false) {
+      return(
+        <View style={styles.container}>
         <View><Image source={{ uri: this.state.image}} style={{ width: 200, height: 200 }} /></View>
         <View><Text>{`Owner: ${this.state.owner}`}</Text></View>
         <View><Text>{`Breed: ${this.state.breed}`}</Text></View>
         <View><Text>{`Age: ${this.state.age}`}</Text></View>
         <View>{followComponent}</View>
-      </View>
-    )
+        </View>
+      )
+    } else {
+      return(
+        <View></View>
+      )
+    }
   }
 }
 

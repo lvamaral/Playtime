@@ -257,7 +257,7 @@ export default class PlaytimeScreen extends React.Component {
     firebaseApp.database().ref(`users/${uid}/notifications`).push().set({
       dog: dog,
       park: park,
-      type: 'new_playtime'
+      type: 'NEW_PLAYTIME'
     });
   }
 }
