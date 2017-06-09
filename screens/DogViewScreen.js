@@ -86,10 +86,14 @@ export default class DogViewScreen extends React.Component {
       });
     });
 
-    ref = firebaseApp.database().ref(`/users/${_this.state.ownerId}/notifications`).push()
+    ref = firebaseApp.database().ref(`/users/${_this.state.ownerId}/notifications`).push();
     ref.set({
       user: firebaseApp.auth().currentUser.uid,
-      type: 'FOLLOW_REQUEST'
+      type: 'FOLLOW_REQUEST',
+      dog: {
+        name: this.state.dogName,
+        id: this.state.id
+      }
     });
 
     // firebaseApp.database().ref(`/users/${firebaseApp.auth().currentUser.uid}`).once('value').then(snapshot => {
@@ -155,7 +159,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     display: 'flex',
     flex: 1,
-    
+
     alignItems: 'center'
   }
 });

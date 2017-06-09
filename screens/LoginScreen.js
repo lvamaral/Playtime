@@ -5,7 +5,6 @@ import { logInToFacebook, signInWithGoogleAsync } from '../api/logIn';
 import firebaseApp from '../api/firebaseApp';
 import * as firebase from 'firebase';
 
-
 class LoginScreen extends React.Component {
   state = {
     noUser: false
