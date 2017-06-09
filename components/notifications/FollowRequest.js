@@ -42,8 +42,28 @@ export default class FollowRequest extends React.Component {
       }
 
       return(
+        <View>
         <Text>{`${text} to follow ${this.props.notif.dog.name}`}</Text>
+        <TouchableHighlight onPress={this._approveRequest.bind(this)}>
+          <Text>Approve</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this._denyRequest.bind(this)}>
+          <Text>Deny</Text>
+        </TouchableHighlight>
+        </View>
       );
     }
+  }
+
+  _approveRequest() {
+    const notif = this.props.notif;
+    const currUser = firebaseApp.auth().currentUser.uid;
+    firebaseApp.database().ref(`/followDogToUser/${notif.dog.id}/${notif.user}`)
+      .update({status: 'APPROVED'});
+    firebaseApp.database().ref(`/users/${currUser}/notifications/${notif.id}`).remove();
+  }
+
+  _denyRequest() {
+
   }
 }
