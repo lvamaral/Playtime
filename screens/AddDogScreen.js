@@ -118,16 +118,19 @@ update(category, text){
                  style={styles.textInput}
                  placeholder="Dog Name"
                  onChangeText={(text) => this.update("dogName", text)}
+                 maxLength={15}
                />
                <TextInput
                   style={styles.textInput}
                   placeholder="Breed"
                   onChangeText={(text) => this.update("breed", text)}
+                  maxLength={20}
                 />
                 <TextInput keyboardType={'numeric'}
                    style={styles.textInput}
                    placeholder="Age"
                    onChangeText={(text) => this.update("age", text)}
+                   maxLength={2}
                 />
             </View>
             <View style={styles.lastContainer}>
