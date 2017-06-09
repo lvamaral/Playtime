@@ -57,6 +57,7 @@ export default class NotificationsScreen extends React.Component {
     } else {
       return(
         <View>
+          <Text>No new notifications!</Text>
         </View>
       );
     }

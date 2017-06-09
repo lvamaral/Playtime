@@ -46,7 +46,6 @@ export default class AddDogScreen extends React.Component {
  handleSubmit(){
    var lastDog = firebase.database().ref('dogs/').push(this.state.dog).key
    firebase.database().ref(`users/${this.user.uid}/dogs/${lastDog}`).set(this.state.dog)
-   registerForPushNotificationsAsync();
    this.props.navigator.push('rootNavigation');
  }
 

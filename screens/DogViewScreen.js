@@ -101,6 +101,7 @@ export default class DogViewScreen extends React.Component {
     ref.set({
       user: firebaseApp.auth().currentUser.uid,
       type: 'FOLLOW_REQUEST',
+      status: "UNSEEN",
       dog: {
         name: this.state.dogName,
         id: this.state.id
@@ -133,11 +134,6 @@ export default class DogViewScreen extends React.Component {
   doNothing() {
     return;
   }
-
-
-  //  (<Button title="Follow Pending" color="#841584" disabled={true} onPress={this.doNothing.bind(this)}></Button>)
-// (<Button title="Follow" color="#841584" onPress={this.handleFollow.bind(this)}></Button>)
-// <Button title="Unfollow" color="#841584" onPress={this.handleUnfollow.bind(this)}></Button>
 
   render() {
     let followComponent = (<Text></Text>)
