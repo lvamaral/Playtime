@@ -73,9 +73,16 @@ export default class DogViewScreen extends React.Component {
   handleFollow(){
     let _this = this
     firebaseApp.database().ref(`/followUserToDog/${_this.user.uid}/${_this.state.id}`).set({
-    dogName: _this.state.dogName, age: _this.state.age, breed: _this.state.breed,
-    image: _this.state.image, ownerName: _this.state.owner});
-    var userDogs = [];
+      status: 'PENDING',
+      dog: {
+        dogName: _this.state.dogName,
+        age: _this.state.age,
+        breed: _this.state.breed,
+        image: _this.state.image,
+        ownerName: _this.state.owner
+      }
+    });
+
     firebaseApp.database().ref(`/users/${_this.user.uid}/dogs`).once('value').then(function(snapshot){
       firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).set({status: 'PENDING'});
       snapshot.forEach(function(childSnapshot) {

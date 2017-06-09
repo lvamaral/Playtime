@@ -59,6 +59,8 @@ export default class FollowRequest extends React.Component {
     const currUser = firebaseApp.auth().currentUser.uid;
     firebaseApp.database().ref(`/followDogToUser/${notif.dog.id}/${notif.user}`)
       .update({status: 'APPROVED'});
+    firebaseApp.database().ref(`/followUserToDog/${notif.user}/${notif.dog.id}`)
+      .update({status: 'APPROVED'});
     firebaseApp.database().ref(`/users/${currUser}/notifications/${notif.id}`).remove();
   }
 
@@ -66,6 +68,7 @@ export default class FollowRequest extends React.Component {
     const notif = this.props.notif;
     const currUser = firebaseApp.auth().currentUser.uid;
     firebaseApp.database().ref(`/followDogToUser/${notif.dog.id}/${notif.user}`).remove();
+    firebaseApp.database().ref(`/followUserToDog/${notif.user}/${notif.dog.id}`).remove();
     firebaseApp.database().ref(`/users/${currUser}/notifications/${notif.id}`).remove();
   }
 }
