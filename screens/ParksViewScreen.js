@@ -68,7 +68,7 @@ export default class ParksViewScreen extends React.Component {
         <Text>{park.address}</Text>
 
         <TouchableHighlight onPress={this._handleClick.bind(this)}>
-          <Text>{ this.state.following ? `Unfollow` : `Join Park`}</Text>
+          <Text>{ this.state.following ? `Unfollow` : `Join this park`}</Text>
         </TouchableHighlight>
 
         <DogsIndex

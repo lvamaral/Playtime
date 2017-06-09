@@ -43,7 +43,7 @@ export default class NotificationsScreen extends React.Component {
           _this.state.notifications.splice(idx, 1);
           this.setState({notifications: _this.state.notifications});
         }
-      })
+      });
     });
   }
 
@@ -70,13 +70,13 @@ export default class NotificationsScreen extends React.Component {
             if(notif.type === 'NEW_PLAYTIME') {
               return(
                 <NewPlaytime
-                  key={`notif${idx}`}
+                  key={`playtime${idx}`}
                   notif={notif} />
               );
             } else {
               return(
                 <FollowRequest
-                  key={`notif${idx}`}
+                  key={`follow${idx}`}
                   notif={notif} />
               );
             }

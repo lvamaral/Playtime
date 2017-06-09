@@ -9,16 +9,15 @@ export default class FollowRequest extends React.Component {
   }
 
   componentWillMount() {
-    _this = this;
+    _that = this;
     const notif = this.props.notif;
     firebaseApp.database().ref(`/followDogToUser/${notif.dog.id}/${notif.user}`)
       .once('value').then(snapshot => {
         _dogs = [];
         snapshot.child('dogs').forEach(dog => {
-          _dogs.push(dog.val());
-          _dogs[_dogs.length - 1].id = dog.key;
+          _dogs.push(dog.val().dogName);
         });
-        _this.setState({dogs: _dogs, loading: false});
+        _that.setState({dogs: _dogs, loading: false});
       });
   }
 
@@ -30,15 +29,15 @@ export default class FollowRequest extends React.Component {
     } else {
       let text = ''
       if(this.state.dogs.length === 1) {
-        text = this.state.dogs[0].dogName;
+        text = this.state.dogs[0];
         text += ' wants'
       }
       else if(this.state.dogs.length === 2) {
         text = this.state.dogs.join(' and ');
         text += ' want'
       } else {
-        text = this.state.dogs.slice(0, this.state.dogs.length - 2).join(', ');
-        text += `and ${this.state.dogs[this.state.dogs.length - 1]} want`;
+        text = this.state.dogs.slice(0, this.state.dogs.length - 1).join(', ');
+        text += ` and ${this.state.dogs[this.state.dogs.length - 1]} want`;
       }
 
       return(
