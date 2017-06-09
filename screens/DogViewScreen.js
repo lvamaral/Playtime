@@ -9,6 +9,8 @@ import {
 import * as firebase from 'firebase';
 import firebaseApp from '../api/firebaseApp';
 import Colors from '../constants/Colors';
+import { Platform } from 'react-native';
+import { Permissions, Notifications } from 'expo';
 const icon = require('../assets/icons/app-icon.png');
 import { Foundation, Entypo } from '@expo/vector-icons';
 
