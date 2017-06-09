@@ -1,6 +1,7 @@
 import React from 'react';
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import DogIndexItem from './DogIndexItem';
+
 
 export default class DogsIndex extends React.Component {
   render() {
@@ -11,7 +12,7 @@ export default class DogsIndex extends React.Component {
       return(
         <ScrollView>
           { dogs.map((dog, i) => {
-        
+
             return(
               <DogIndexItem
                 key={`dog${i}`}
@@ -29,3 +30,7 @@ export default class DogsIndex extends React.Component {
     }
   }
 }
+
+const styles = StyleSheet.create({
+
+})

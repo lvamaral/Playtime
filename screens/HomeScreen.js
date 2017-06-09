@@ -36,7 +36,7 @@ export default class HomeScreen extends React.Component {
           <View style={styles.getStartedContainer}>
             <TouchableHighlight onPress={this._goToPlaytime.bind(this)}>
               <Text style={styles.getStartedText}>
-                {`It's Playtime!`}
+                {"It's Playtime!"}
               </Text>
             </TouchableHighlight>
           </View>

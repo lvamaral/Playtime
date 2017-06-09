@@ -4,12 +4,13 @@ import {
   StyleSheet,
   Text,
   View, ScrollView, TextInput,
-  Button, Image
+  Button, Image, TouchableOpacity
 } from 'react-native';
 import * as firebase from 'firebase';
 import firebaseApp from '../api/firebaseApp';
 import Colors from '../constants/Colors';
 const icon = require('../assets/icons/app-icon.png');
+import { Foundation, Entypo } from '@expo/vector-icons';
 
 
 export default class DogViewScreen extends React.Component {
@@ -41,6 +42,7 @@ export default class DogViewScreen extends React.Component {
       var ownerId = snapshot.val().ownerId
       _this.setState({id: id, dogName: name, age: age, breed: breed, image: image, owner: owner, ownerId: ownerId, follow: ""})
       _this.checkFollow();
+
     })
 
   }
@@ -53,7 +55,7 @@ export default class DogViewScreen extends React.Component {
      } else {
        owned = false
      }
-
+    _this.state.loading = false;
      firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`)
      .once('value', function(snapshot) {
        if (snapshot.val() === null && !owned) {
@@ -130,28 +132,54 @@ export default class DogViewScreen extends React.Component {
     return;
   }
 
+
+  //  (<Button title="Follow Pending" color="#841584" disabled={true} onPress={this.doNothing.bind(this)}></Button>)
+// (<Button title="Follow" color="#841584" onPress={this.handleFollow.bind(this)}></Button>)
+// <Button title="Unfollow" color="#841584" onPress={this.handleUnfollow.bind(this)}></Button>
+
   render() {
     let followComponent = (<Text></Text>)
 
     if (this.state.follow === 'APPROVED') {
-      followComponent = (<Button title="Unfollow" color="#841584" onPress={this.handleUnfollow.bind(this)}></Button>)
+      followComponent = (
+        <TouchableOpacity onPress={this.handleUnfollow.bind(this)} style={styles.follow}>
+          <Foundation
+            name={"no-dogs"}
+            size={64}
+            color={Colors.orange}
+          />
+          <Text style={styles.followText}>Pending</Text>
+        </TouchableOpacity>
+      )
     } else if (this.state.follow === 'PENDING') {
-      followComponent = (<Button title="Follow Pending" color="#841584" disabled={true} onPress={this.doNothing.bind(this)}></Button>)
+      followComponent = (
+        <TouchableOpacity disabled={true} style={styles.follow}>
+          <Image source={require('../assets/icons/004-couple-of-dogs.png')} style={{opacity: 0.5}}/>
+          <Text style={styles.followText2}>Pending</Text>
+        </TouchableOpacity>
+      )
     } else if (this.state.ownerId !== firebaseApp.auth().currentUser.uid){
-      followComponent = (<Button title="Follow" color="#841584" onPress={this.handleFollow.bind(this)}></Button>)
+      followComponent = (
+      <TouchableOpacity onPress={this.handleFollow.bind(this)} style={styles.follow}>
+        <Image source={require('../assets/icons/orange7-animals.png')}/>
+        <Text style={styles.followText}>Follow</Text>
+      </TouchableOpacity>
+      )
     }
+// if(this.state.loading === false)
+   if(true) {
 
-   if(this.state.loading === false) {
     return(
       <View style={styles.mainContainer}>
-        <View><Image source={{ uri: this.state.image}} style={{ width: 100, height: 100, borderRadius: 50 }} /></View>
-        <View><Text>{`Owner: ${this.state.owner}`}</Text></View>
-        <View><Text>{`Breed: ${this.state.breed}`}</Text></View>
-        <View><Text>{`Age: ${this.state.age}`}</Text></View>
-        <View>{followComponent}</View>
-        </View>
+        <View><Image source={{ uri: this.state.image}} style={styles.dogImage} /></View>
+        <View><Text style={styles.dogText}>{`Owner: ${this.state.owner}`}</Text></View>
+        <View><Text style={styles.dogText}>{`Breed: ${this.state.breed}`}</Text></View>
+        <View><Text style={styles.dogText}>{`Age: ${this.state.age}`}</Text></View>
+        <View style={styles.container}>{followComponent}</View>
+      </View>
       )
     } else {
+
       return(
         <View></View>
       )
@@ -166,7 +194,31 @@ const styles = StyleSheet.create({
   mainContainer: {
     display: 'flex',
     flex: 1,
+    paddingTop: 10,
+    alignItems: 'center',
+  },
+  dogImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    margin: 10,
+  },
+  dogText: {
+    fontSize: 24,
 
-    alignItems: 'center'
+  },
+  follow: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  followText: {
+    color: Colors.orange,
+    fontSize: 22,
+  },
+  followText2: {
+    color: 'black',
+    fontSize: 22,
+    opacity: 0.5
   }
 });
