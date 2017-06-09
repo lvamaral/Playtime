@@ -1,12 +1,74 @@
 import React from 'react';
-import { TouchableHighlight, Text } from 'react-native';
+import { TouchableHighlight, Text, View } from 'react-native';
 import firebaseApp from '../../api/firebaseApp';
 
 export default class FollowRequest extends React.Component {
+  state = {
+    loading: true,
+    dogs: []
+  }
+
+  componentWillMount() {
+    _that = this;
+    const notif = this.props.notif;
+    firebaseApp.database().ref(`/followDogToUser/${notif.dog.id}/${notif.user}`)
+      .once('value').then(snapshot => {
+        _dogs = [];
+        snapshot.child('dogs').forEach(dog => {
+          _dogs.push(dog.val().dogName);
+        });
+        _that.setState({dogs: _dogs, loading: false});
+      });
+  }
+
   render() {
-    debugger
-    return(
-      <Text></Text>
-    );
+    if(this.state.loading) {
+      return(
+        <View></View>
+      )
+    } else {
+      let text = ''
+      if(this.state.dogs.length === 1) {
+        text = this.state.dogs[0];
+        text += ' wants'
+      }
+      else if(this.state.dogs.length === 2) {
+        text = this.state.dogs.join(' and ');
+        text += ' want'
+      } else {
+        text = this.state.dogs.slice(0, this.state.dogs.length - 1).join(', ');
+        text += ` and ${this.state.dogs[this.state.dogs.length - 1]} want`;
+      }
+
+      return(
+        <View>
+        <Text>{`${text} to follow ${this.props.notif.dog.name}`}</Text>
+        <TouchableHighlight onPress={this._approveRequest.bind(this)}>
+          <Text>Approve</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this._denyRequest.bind(this)}>
+          <Text>Deny</Text>
+        </TouchableHighlight>
+        </View>
+      );
+    }
+  }
+
+  _approveRequest() {
+    const notif = this.props.notif;
+    const currUser = firebaseApp.auth().currentUser.uid;
+    firebaseApp.database().ref(`/followDogToUser/${notif.dog.id}/${notif.user}`)
+      .update({status: 'APPROVED'});
+    firebaseApp.database().ref(`/followUserToDog/${notif.user}/${notif.dog.id}`)
+      .update({status: 'APPROVED'});
+    firebaseApp.database().ref(`/users/${currUser}/notifications/${notif.id}`).remove();
+  }
+
+  _denyRequest() {
+    const notif = this.props.notif;
+    const currUser = firebaseApp.auth().currentUser.uid;
+    firebaseApp.database().ref(`/followDogToUser/${notif.dog.id}/${notif.user}`).remove();
+    firebaseApp.database().ref(`/followUserToDog/${notif.user}/${notif.dog.id}`).remove();
+    firebaseApp.database().ref(`/users/${currUser}/notifications/${notif.id}`).remove();
   }
 }

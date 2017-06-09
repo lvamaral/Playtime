@@ -61,6 +61,28 @@ export default class ParksViewScreen extends React.Component {
   }
 
 
+  render() {
+    const { park } = this.props;
+
+    return(
+      <View>
+        <Image source={{uri: park.photoUrl}}
+               style={{width: 100, height: 100}} />
+        <Text>{park.name}</Text>
+        <Text>{park.address}</Text>
+
+        <TouchableHighlight onPress={this._handleClick.bind(this)}>
+          <Text>{ this.state.following ? `Unfollow` : `Join this park`}</Text>
+        </TouchableHighlight>
+
+        <DogsIndex
+          dogs={this.state.dogs}
+          navigator={this.props.navigator} />
+      </View>
+    );
+  }
+
+
   _handleClick() {
     this.state.following ? this._unfollowPark() : this._joinPark();
   }

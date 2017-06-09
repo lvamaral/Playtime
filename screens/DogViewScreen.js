@@ -75,9 +75,16 @@ export default class DogViewScreen extends React.Component {
   handleFollow(){
     let _this = this
     firebaseApp.database().ref(`/followUserToDog/${_this.user.uid}/${_this.state.id}`).set({
-    dogName: _this.state.dogName, age: _this.state.age, breed: _this.state.breed,
-    image: _this.state.image, ownerName: _this.state.owner});
-    var userDogs = [];
+      status: 'PENDING',
+      dog: {
+        dogName: _this.state.dogName,
+        age: _this.state.age,
+        breed: _this.state.breed,
+        image: _this.state.image,
+        ownerName: _this.state.owner
+      }
+    });
+
     firebaseApp.database().ref(`/users/${_this.user.uid}/dogs`).once('value').then(function(snapshot){
       firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).set({status: 'PENDING'});
       snapshot.forEach(function(childSnapshot) {
@@ -88,10 +95,14 @@ export default class DogViewScreen extends React.Component {
       });
     });
 
-    ref = firebaseApp.database().ref(`/users/${_this.state.ownerId}/notifications`).push()
+    ref = firebaseApp.database().ref(`/users/${_this.state.ownerId}/notifications`).push();
     ref.set({
       user: firebaseApp.auth().currentUser.uid,
-      type: 'FOLLOW_REQUEST'
+      type: 'FOLLOW_REQUEST',
+      dog: {
+        name: this.state.dogName,
+        id: this.state.id
+      }
     });
 
     // firebaseApp.database().ref(`/users/${firebaseApp.auth().currentUser.uid}`).once('value').then(snapshot => {
