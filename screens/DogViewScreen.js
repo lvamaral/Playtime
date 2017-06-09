@@ -148,7 +148,7 @@ export default class DogViewScreen extends React.Component {
             size={64}
             color={Colors.orange}
           />
-          <Text style={styles.followText}>Pending</Text>
+        <Text style={styles.followText}>Unfollow</Text>
         </TouchableOpacity>
       )
     } else if (this.state.follow === 'PENDING') {

@@ -15,7 +15,8 @@ export default class DogIndexItem extends React.Component {
                  style={{width: 50, height: 50, borderRadius: 25}} />
           </View>
           <View style={styles.container}>
-            <Text style={styles.dogText}>{dog.dogName}</Text>
+            <Text style={styles.dogText}>{dog.dogName} the {dog.breed}</Text>
+            <Text style={styles.dogText2}>Owner: {dog.ownerName}</Text>
           </View>
         </View>
       </TouchableHighlight>
@@ -30,17 +31,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 65,
     padding: 5,
-    borderBottomWidth: 1,
-    borderColor: Colors.white
+    borderBottomWidth: 2,
+    borderColor: Colors.white,
   },
   container: {
     flex: 3,
+
   },
   container2: {
     flex: 1,
   },
   dogText: {
-    fontSize: 24
+    fontSize: 18,
+  },
+  dogText2: {
+    fontSize: 12,
   }
 
 })
