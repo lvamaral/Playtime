@@ -24,6 +24,7 @@ export default class NotificationsScreen extends React.Component {
     _this = this;
 
     noteRef.on('child_added', snapshot => {
+      debugger
       _this.state.notifications.push(snapshot.val());
       _this.state.notifications[_this.state.notifications.length - 1].id = snapshot.key;
       _this.setState({notifications: _this.state.notifications});

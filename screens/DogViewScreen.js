@@ -54,7 +54,7 @@ export default class DogViewScreen extends React.Component {
          _this.setState(newState)
        } else if (snapshot.val() !== null) {
          let newState = _this.state;
-         newState.follow = true;
+         newState.follow = snapshot.val().status === 'PENDING' ? 'PENDING' : 'APPROVED';
          _this.setState(newState)
        }
      })
@@ -65,18 +65,29 @@ export default class DogViewScreen extends React.Component {
     firebaseApp.database().ref(`/followUserToDog/${_this.user.uid}/${_this.state.id}`).set({
     dogName: _this.state.dogName, age: _this.state.age, breed: _this.state.breed,
     image: _this.state.image, ownerName: _this.state.owner});
-    var userDogs = []
+    var userDogs = [];
     firebaseApp.database().ref(`/users/${_this.user.uid}/dogs`).once('value').then(function(snapshot){
       snapshot.forEach(function(childSnapshot) {
         // userDogs.push(childSnapshot.val())
         let childKey = childSnapshot.key;
         let childData = childSnapshot.val();
-        firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}/${childKey}`).set(childData)
-      })
-    })
+        firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}/${childKey}`).set({
+          dog: childData,
+          status: 'PENDING'
+        });
+      });
+    });
+    firebaseApp.database().ref(`/users/${_this.state.ownerId}/notifications`).push().set({
+      user: firebaseApp.auth().currentUser.uid,
+      dog: {
+        dogName: _this.state.dogName,
+        id: _this.state.id,
+        type: 'follow_request'
+      }
+    });
     let newState = _this.state;
-    newState.follow = true;
-    _this.setState(newState)
+    newState.follow = 'PENDING';
+    _this.setState(newState);
   }
 
   handleUnfollow(){
@@ -85,17 +96,24 @@ export default class DogViewScreen extends React.Component {
     firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).remove().then(function(){
       let newState = _this.state;
       newState.follow = false;
-      _this.setState(newState)
+      _this.setState(newState);
         })
       }
     )
   }
 
+  doNothing() {
+    return;
+  }
+
   render() {
     let followComponent = (<Text></Text>)
-    if (this.state.follow === true) {
+
+    if (this.state.follow === 'APPROVED') {
       followComponent = (<Button title="Unfollow" color="#841584" onPress={this.handleUnfollow.bind(this)}></Button>)
-    } else if (this.state.follow === false) {
+    } else if (this.state.follow === 'PENDING') {
+      followComponent = (<Button title="Follow Pending" color="#841584" disabled={true} onPress={this.doNothing.bind(this)}></Button>)
+    } else if (this.state.ownerId !== firebaseApp.auth().currentUser.uid){
       followComponent = (<Button title="Follow" color="#841584" onPress={this.handleFollow.bind(this)}></Button>)
     }
 

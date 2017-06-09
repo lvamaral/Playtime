@@ -33,7 +33,7 @@ export default class FollowerScreen extends React.Component {
           snapshot.forEach(function(childSnapshot) {
             childSnapshot.forEach(function(childSnapshot2){
                 let childKey = childSnapshot2.key;
-                let childData = childSnapshot2.val();
+                let childData = childSnapshot2.val().dog;
                 let newDog = childData
                 newDog["id"] = childKey
                 newState.push(newDog)
