@@ -24,7 +24,7 @@ export default class UserScreen extends React.Component {
 
   static route = {
     navigationBar: {
-      title: "User Profile"
+      title: "Your Profile",
     },
   };
 
@@ -71,8 +71,8 @@ export default class UserScreen extends React.Component {
         <TouchableHighlight key={ids[i]} onPress={ () => this.goTo(ids[i], dog.dogName)}>
           <View style={styles.dogsList}>
             <View style={styles.dogsListItem}>
-              <Image source={{ uri: dog.image}} style={{ width: 100, height: 100, borderRadius: 50, }} />
-              <Text style={styles.text}>{dog.dogName}</Text>
+              <View style={styles.container}><Image source={{ uri: dog.image}} style={{ width: 100, height: 100, borderRadius: 50, }}/></View>
+              <View style={styles.container}><Text style={styles.text}>{dog.dogName}</Text></View>
             </View>
           </View>
        </TouchableHighlight>
@@ -81,14 +81,18 @@ export default class UserScreen extends React.Component {
     }
 
     return(
-      <View style={styles.container}>
+      <View style={styles.mainContainer}>
+        <View style={styles.following}>
+          <Button title="Following" color={Colors.white} onPress={() => this.goToFollowing(this.user.uid)}></Button>
+          <Text style={styles.followingText}>|</Text>
+          <Button title="Followers" color={Colors.white} onPress={() => this.goToFollowers(this.user.uid)}></Button>
+        </View>
+        <View style={styles.container}>
           <Text style={styles.text}>Hi, {this.firstName}!</Text>
-            <View style={styles.following}>
-              <Button title="Following" color={Colors.white} onPress={() => this.goToFollowing(this.user.uid)}></Button>
-              <Button title="Followers" color={Colors.white} onPress={() => this.goToFollowers(this.user.uid)}></Button>
-            </View>
-
-        <View  style={{ alignItems: 'center', alignSelf: 'stretch', height: 400}}><ScrollView>{list}</ScrollView></View>
+        </View>
+        <View style={{ alignItems: 'center', alignSelf: 'stretch', height: 400}}>
+          <ScrollView style={{alignSelf: 'stretch'}}>{list}</ScrollView>
+        </View>
 
       </View>
     )
@@ -100,6 +104,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+
+  },
+  mainContainer: {
+    display: 'flex',
+    flex: 1,
+    alignItems: 'center',
   },
     text: {
     fontWeight: 'bold',
@@ -107,24 +118,35 @@ const styles = StyleSheet.create({
   },
   dogsList: {
     flex: 4,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    alignSelf: 'stretch',
+    display: 'flex',
+    flexDirection: 'row',
 
   },
   dogsListItem: {
-    margin: 5,
+    padding: 5,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    borderBottomWidth: 0.5,
+    borderColor: '#d6d7da',
+    // backgroundColor: Colors.white,
   },
+
   following: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 50,
-    backgroundColor: Colors.black,
+    height: 60,
+    backgroundColor: Colors.orange,
     alignSelf: 'stretch',
+  },
+  followingText: {
+    fontSize: 25,
+    color: Colors.white
   }
+
+
 
 });
