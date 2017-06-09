@@ -6,41 +6,40 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   View
 } from 'react-native';
+import Colors from '../constants/Colors';
 
 import RootNavigation from '../navigation/RootNavigation';
 
 export default class HomeScreen extends React.Component {
   static route = {
     navigationBar: {
-      visible: false
+      title: 'Playtime'
     },
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}>
-
+        <TouchableOpacity onPress={this._goToPlaytime.bind(this)}>
           <View style={styles.welcomeContainer}>
             <Image
-              source={require('../assets/images/expo-wordmark.png')}
+              source={require('../assets/icons/orange2-dog-and-doggie.png')}
               style={styles.welcomeImage}
             />
-          </View>
-
           <View style={styles.getStartedContainer}>
-            <TouchableHighlight onPress={this._goToPlaytime.bind(this)}>
-              <Text style={styles.getStartedText}>
-                {`It's Playtime!`}
-              </Text>
-            </TouchableHighlight>
-          </View>
 
+              <Text style={styles.getStartedText}>
+                {"It's Playtime!"}
+              </Text>
+
+          </View>
+        </View>
+      </TouchableOpacity>
+        <ScrollView style={styles.container}>
+          <View style={styles.upcoming}><Text style={styles.upcomingText}>Upcoming Playtimes:</Text></View>
         </ScrollView>
       </View>
     );
@@ -49,18 +48,6 @@ export default class HomeScreen extends React.Component {
   _goToPlaytime() {
     this.props.navigator.push('playtimeView');
   }
-
-  _handleLearnMorePress = () => {
-    Linking.openURL(
-      'https://docs.expo.io/versions/latest/guides/development-mode'
-    );
-  };
-
-  _handleHelpPress = () => {
-    Linking.openURL(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
 }
 
 const styles = StyleSheet.create({
@@ -68,85 +55,41 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 15,
-    textAlign: 'center',
-  },
+
   contentContainer: {
-    paddingTop: 80,
+    paddingTop: 0,
   },
   welcomeContainer: {
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
+    paddingVertical: 20,
+    borderBottomWidth: 5,
+    borderTopWidth: 5,
+    borderColor: Colors.orange,
   },
   welcomeImage: {
-    width: 140,
-    height: 38,
+    width: 64,
+    height: 64,
     resizeMode: 'contain',
     marginTop: 3,
     marginLeft: -10,
   },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
   getStartedText: {
     fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
+    color: Colors.orange,
     lineHeight: 23,
     textAlign: 'center',
   },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
+  upcoming: {
     alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
+    justifyContent: 'center',
+    backgroundColor: Colors.black,
+    height: 50,
+    borderBottomWidth: 1,
+    borderColor: Colors.white,
   },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
+  upcomingText: {
+    fontSize: 18,
+    color: Colors.white,
+  }
+
 });
