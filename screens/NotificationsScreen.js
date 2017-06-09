@@ -36,6 +36,15 @@ export default class NotificationsScreen extends React.Component {
         loading: false
       });
     });
+
+    noteRef.on('child_removed', snapshot => {
+      _this.state.notifications.forEach((notif, idx) => {
+        if(notif.id === snapshot.key) {
+          _this.state.notifications.splice(idx, 1);
+          this.setState({notifications: _this.state.notifications});
+        }
+      })
+    });
   }
 
   render() {
