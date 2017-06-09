@@ -155,8 +155,8 @@ export default class DogViewScreen extends React.Component {
       </TouchableOpacity>
       )
     }
-
-   if(this.state.loading === false) {
+// if(this.state.loading === false)
+   if(true) {
 
     return(
       <View style={styles.mainContainer}>
