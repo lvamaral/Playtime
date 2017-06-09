@@ -8,6 +8,9 @@ import {
 } from 'react-native';
 import * as firebase from 'firebase';
 import firebaseApp from '../api/firebaseApp';
+import Colors from '../constants/Colors';
+const icon = require('../assets/icons/app-icon.png');
+
 
 export default class DogViewScreen extends React.Component {
   constructor(props){
@@ -21,7 +24,8 @@ export default class DogViewScreen extends React.Component {
     navigationBar: {
       title(params) {
         return params.name
-      }
+      },
+
     },
   };
 
@@ -126,10 +130,10 @@ export default class DogViewScreen extends React.Component {
       followComponent = (<Button title="Follow" color="#841584" onPress={this.handleFollow.bind(this)}></Button>)
     }
 
-    if(this.state.loading === false) {
-      return(
-        <View style={styles.container}>
-        <View><Image source={{ uri: this.state.image}} style={{ width: 200, height: 200 }} /></View>
+   if(this.state.loading === false) {
+    return(
+      <View style={styles.mainContainer}>
+        <View><Image source={{ uri: this.state.image}} style={{ width: 100, height: 100, borderRadius: 50 }} /></View>
         <View><Text>{`Owner: ${this.state.owner}`}</Text></View>
         <View><Text>{`Breed: ${this.state.breed}`}</Text></View>
         <View><Text>{`Age: ${this.state.age}`}</Text></View>
@@ -147,6 +151,11 @@ export default class DogViewScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 45,
   },
+  mainContainer: {
+    display: 'flex',
+    flex: 1,
+    
+    alignItems: 'center'
+  }
 });
