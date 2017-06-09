@@ -3,12 +3,13 @@ import {
   View,
   Image,
   Text,
-  TouchableHighlight,
-  StyleSheet
+  TouchableOpacity,
+  StyleSheet, Dimensions
 } from 'react-native';
 import firebaseApp from '../api/firebaseApp';
 import DogsIndex from '../components/dogs/DogsIndex';
 import Colors from '../constants/Colors';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default class ParksViewScreen extends React.Component {
   state = {
@@ -133,21 +134,28 @@ export default class ParksViewScreen extends React.Component {
     return(
       <View style={styles.mainContainer}>
         <View style={styles.infoContainer}>
+
           <Image source={{uri: park.photoUrl}}
                  style={styles.parkImage} />
-               <View style={styles.parkTextBox}>
+               <View style={styles.joinPark} >
+                 <TouchableOpacity onPress={this._handleClick.bind(this)}>
+                   <View style={styles.mainContainer}>
+                  </View>
+                  <View style={styles.mainContainer}>
+                    <Text style={styles.joinParkText}>{ this.state.following ? `Unfollow` : `Join Park`}</Text>
+                  </View>
+               </TouchableOpacity>
+               </View>
+          <View style={styles.parkTextBox}>
             <Text style={styles.parkText}>{park.name}</Text>
             <Text style={styles.parkText}>{park.address}</Text>
           </View>
+          <View style={styles.dogList}>
+            <Text style={styles.dogListText}>Dogs that go here:</Text>
+          </View>
         </View>
 
-        <TouchableHighlight style={styles.joinPark} onPress={this._handleClick.bind(this)}>
-          <Text>{ this.state.following ? `Unfollow` : `Join Park`}</Text>
-        </TouchableHighlight>
 
-        <View style={styles.dogList}>
-          <Text>Dogs that go here:</Text>
-        </View>
         <DogsIndex
           dogs={this.state.dogs}
           navigator={this.props.navigator} />
@@ -155,38 +163,65 @@ export default class ParksViewScreen extends React.Component {
     );
   }
 }
+var {height, width} = Dimensions.get('window')
 
 const styles = StyleSheet.create({
   mainContainer: {
     display: 'flex',
     flex: 1,
+    justifyContent: 'center'
   },
   infoContainer: {
+    alignSelf: 'stretch',
     flex: 2,
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingBottom: 10,
+    // paddingBottom: 10,
   },
   parkImage: {
     alignSelf: 'stretch',
     height: 200,
+    position: "relative",
+    backgroundColor: 'rgba(0,0,0,0)',
   },
   parkTextBox: {
     backgroundColor: Colors.white,
     alignSelf: 'stretch',
     alignItems: 'center',
-    padding: 5
+    padding: 5,
   },
   parkText: {
+    fontSize: 16,
+  },
+  joinParkText: {
     fontSize: 20,
+    color: Colors.orange,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
   },
   joinPark: {
-    alignSelf: 'stretch',
+    padding: 5,
+    display: 'flex',
     alignItems: 'center',
+    position: 'absolute',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    zIndex: 20,
+    top: 100,
+    left: 100,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   dogList: {
+    height: 40,
+    backgroundColor: Colors.black,
     alignSelf: 'stretch',
     alignItems: 'center',
+    justifyContent: 'center'
+  },
+  dogListText: {
+    color: Colors.white,
+    fontSize: 16,
   }
 })

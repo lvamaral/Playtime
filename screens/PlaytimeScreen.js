@@ -1,8 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableHighlight, Picker, ScrollView } from 'react-native';
+import { View, Text, TouchableHighlight,
+Picker, ScrollView, StyleSheet } from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import CheckBox from 'react-native-checkbox';
 import firebaseApp from '../api/firebaseApp';
+import Colors from '../constants/Colors';
+import { StackNavigation, NavigationProvider } from '@expo/ex-navigation';
+
 
 export default class PlaytimeScreen extends React.Component {
   constructor(props) {
@@ -117,22 +121,34 @@ export default class PlaytimeScreen extends React.Component {
     if(this.state.user !== undefined && this.state.parks.length > 0) {
 
       return(
-        <View>
+        <View style={styles.mainContainer}>
           <ScrollView>
+            <View style={styles.label}>
+              <Text style={styles.labelText}>Choose a Park</Text>
+            </View>
+            <View>
+              { this._showPicker() }
+            </View>
+            <View style={styles.label}>
+              <Text style={styles.labelText}>Schedule for another time?</Text>
+            </View>
+            <View style={styles.containerTime}>
+              <TouchableHighlight style={{paddingTop: 0}}
+                                  onPress={this._showTimePicker.bind(this)}>
+                <Text style={styles.containerTimeText}>{this.state.date.toLocaleTimeString()}</Text>
+              </TouchableHighlight>
+            </View>
 
-            { this._showPicker() }
+            <View style={styles.containerTime}>
+              <TouchableHighlight style={{paddingTop: 0}}
+                                  onPress={this._showDatePicker.bind(this)}>
+                <Text style={styles.containerTimeText}>{this.state.date.toLocaleDateString()}</Text>
+              </TouchableHighlight>
+            </View>
 
-            <TouchableHighlight style={{paddingTop: 40}}
-                                onPress={this._showTimePicker.bind(this)}>
-              <Text>{this.state.date.toLocaleTimeString()}</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={{paddingTop: 40}}
-                                onPress={this._showDatePicker.bind(this)}>
-              <Text>{this.state.date.toLocaleDateString()}</Text>
-            </TouchableHighlight>
-
-            { this._showCheckboxes() }
+            <View style={styles.containerCheck}>
+              { this._showCheckboxes() }
+            </View>
 
             <DateTimePicker
               isVisible={this.state.timePickerVisible}
@@ -149,9 +165,11 @@ export default class PlaytimeScreen extends React.Component {
               titleIOS={'Select date'}
             />
 
+          <View style={styles.label}>
             <TouchableHighlight onPress={this._createPlaytime}>
-              <Text>Create Playtime</Text>
+              <Text style={styles.labelText}>Create Playtime</Text>
             </TouchableHighlight>
+          </View>
           </ScrollView>
         </View>
       );
@@ -161,7 +179,7 @@ export default class PlaytimeScreen extends React.Component {
     else if(this.state.user !== undefined) {
       return(
         <View>
-          <TouchableHighlight style={{paddingTop: 40}}
+          <TouchableHighlight style={{paddingTop: 0}}
                               onPress={this.props.closeModal}>
             <Text>Click to exit</Text>
           </TouchableHighlight>
@@ -227,6 +245,7 @@ export default class PlaytimeScreen extends React.Component {
     }
 
     this._handleNotifications();
+    this.props.navigator.push('home')
   }
 
   _handleNotifications() {
@@ -261,3 +280,42 @@ export default class PlaytimeScreen extends React.Component {
     });
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignSelf: 'stretch',
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    // justifyContent: 'flex-start',
+  },
+  containerTime: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  containerTimeText: {
+    fontSize: 18,
+  },
+  containerCheck: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: Colors.white,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  label: {
+    paddingTop: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  labelText: {
+    fontSize: 18,
+    color: Colors.orange,
+  }
+})
