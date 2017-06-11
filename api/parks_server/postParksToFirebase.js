@@ -1,6 +1,8 @@
 import * as firebase from 'firebase';
-import secrets from './secrets2';
+var secrets = require('./secrets2');
 var request = require('superagent');
+var sha1 = require('sha1');
+var cloudinary = require('cloudinary');
 
 document.addEventListener('DOMContentLoaded', () => {
   var config = {
@@ -11,6 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     storageBucket: secrets.storageBucket,
     messagingSenderId: secrets.messagingSenderId
   };
+
+  cloudinary.config({
+    cloud_name: 'dfuh8ucrc',
+    api_key: secrets.cloudinaryAPIKey,
+    api_secret: secrets.cloudinarySecret
+  });
+
   const db = firebase.initializeApp(config).database();
 
   const sf = new google.maps.LatLng(37.757693, -122.437797);
@@ -44,7 +53,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function callback(place, status) {
           if(status === 'OK') {
-            let photoUrl = place.photos[0].getUrl({maxHeight: place.photos[0].height, maxWidth: place.photos[0].width});
+            let photoUrl = place.photos[0].getUrl({maxHeight: (place.photos[0].height), maxWidth: (place.photos[0].width)});
+            //
+            // let formData = new FormData();
+            // formData.append('file', photoUrl);
+            // formData.append('upload_preset', 'wwjtxpa2');
+
+            // fetch('https://api.cloudinary.com/v1_1/dfuh8ucrc/image/upload',
+            //   {
+            //     method: 'POST',
+            //     body: formData,
+            //     headers: {
+            //       'Accept': 'application/json',
+            //       'Content-Type': 'multipart/form-data'
+            //     }
+            //   }
+            // ).then(
+            //   res => {
+            //     console.log(res);
+            //   }
+            // )
+
+            // let signature = sha1(`public_id=` + place.name + '&timestamp=' + Date.now() + secrets.cloudinarySecret);
+            //
+            // let formData = new FormData();
+            // formData.append(`timestamp`, `${Date.now()}`);
+            // formData.append(`public_id`, place.name);
+            // formData.append(`api_key`, `${secrets.cloudinaryAPIKey}`);
+            // formData.append('file', photoUrl);
+            // // formData.append(`signature`, signature);
+            // formData.append('upload_preset', 'wwjtxpa2');
+            //
+            // debugger
+
+            // fetch('https://api.cloudinary.com/v1_1/dfuh8ucrc/image/upload', {
+            //   method: 'POST',
+            //   body: {
+            //     upload_preset: 'wwjtxpa2',
+            //     file: photoUrl
+            //   },
+            //   header: {
+            //     'content-type': 'multipart/form-data',
+            //   }
+            // }).then(res => {
+            //   debugger
+            // });
+
             let parkId = db.ref().child('parks').push().key;
             db.ref('parks/' + parkId).set({
               name: place.name,

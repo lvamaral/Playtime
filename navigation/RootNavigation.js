@@ -11,8 +11,13 @@ import { Foundation, Entypo } from '@expo/vector-icons';
 
 import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
+import { sendPush } from '../api/push_handler';
 
 export default class RootNavigation extends React.Component {
+  state = {
+    notifications: []
+  }
+
 
   componentDidMount() {
     // this._notificationSubscription = this._registerForPushNotifications();
@@ -20,7 +25,24 @@ export default class RootNavigation extends React.Component {
 
   componentWillMount() {
     this._registerForPushNotificationsAsync();
+
+    this._sendPush('Welcome to playtime!');
+
+    this._notificationSubscription = Notifications.addListener(this._handleNotification);
   }
+
+  _sendPush(message) {
+    const uid = firebaseApp.auth().currentUser.uid;
+    sendPush(message, uid);
+  }
+
+  _handleNotification = ({origin, data}) => {
+    this.setState({notification: notification});
+    this.props.navigator.showLocalAlert(
+      `Push notification ${origin} with data: ${JSON.stringify(data)}`,
+      Alerts.notice
+    );
+  };
 
   componentWillUnmount() {
     this._notificationSubscription && this._notificationSubscription.remove();
@@ -51,54 +73,53 @@ export default class RootNavigation extends React.Component {
       },
       body: {
         token: {
-          value: token.slice(0, token.length - 1).split('[')[1]
+          value: token
         }
       }
     });
-
   };
 
   render() {
     return (
-      <TabNavigation tabBarHeight={56} initialTab="parks">
+      <TabNavigation tabBarHeight={50} initialTab="parks">
         <TabNavigationItem
           id="home"
-          renderIcon={isSelected => this._renderIcon('home', 'foundation', isSelected)}>
+          renderIcon={isSelected => this._renderIcon('home', 'foundation', isSelected, 34)}>
           <StackNavigation initialRoute="home" />
         </TabNavigationItem>
 
         <TabNavigationItem
           id="parks"
-          renderIcon={isSelected => this._renderIcon('trees', 'foundation', isSelected)}>
+          renderIcon={isSelected => this._renderIcon('trees', 'foundation', isSelected, 33)}>
           <StackNavigation initialRoute="parks" />
         </TabNavigationItem>
 
         <TabNavigationItem
           id="notificationsView"
-          renderIcon={isSelected => this._renderIcon('bell', 'entypo', isSelected)}>
+          renderIcon={isSelected => this._renderIcon('bell', 'entypo', isSelected, 31)}>
           <StackNavigation initialRoute="notificationsView" />
         </TabNavigationItem>
 
         <TabNavigationItem
           id="user"
-          renderIcon={isSelected => this._renderIcon('baidu', 'entypo', isSelected)}>
+          renderIcon={isSelected => this._renderIcon('baidu', 'entypo', isSelected, 31)}>
           <StackNavigation initialRoute="user" />
         </TabNavigationItem>
       </TabNavigation>
     );
   }
 
-  _renderIcon(name, type, isSelected) {
+  _renderIcon(name, type, isSelected, size) {
     return (type === 'foundation') ? (
       <Foundation
         name={name}
-        size={32}
+        size={size || 32}
         color={isSelected ? Colors.tabIconSelected : Colors.tabIconDefault}
       />
     ) : (
       <Entypo
         name={name}
-        size={32}
+        size={size || 30}
         color={isSelected ? Colors.tabIconSelected : Colors.tabIconDefault}
       />
     )

@@ -15,6 +15,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Styles from '../assets/stylesheets/pageLayout';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
+const sha1 = require('sha1');
+import secrets from '../secrets';
+// var request = require('request');
+// import uploadImageAsync from '../api/uploadImage';
 
 
 export default class AddDogScreen extends React.Component {
@@ -45,7 +49,7 @@ export default class AddDogScreen extends React.Component {
 
  handleSubmit(){
    var lastDog = firebase.database().ref('dogs/').push(this.state.dog).key
-   firebase.database().ref(`users/${this.user.uid}/dogs/${lastDog}`).set(this.state.dog)
+   firebase.database().ref(`users/${this.user.uid}/dogs/${lastDog}`).set(this.state.dog);
    this.props.navigator.push('rootNavigation');
  }
 
@@ -60,8 +64,11 @@ export default class AddDogScreen extends React.Component {
     this.setState( {oldState} );
   }
 
-  let dogName = "";
-  // var storageRef = firebase.storage().ref('images/' + dogName)
+    let dogName = "";
+    const uploadResponse = await this._uploadImageAsync(this.state.dog.image);
+    debugger
+    // var storageRef = firebase.storage().ref('images/' + dogName);
+
 
   // const Blob = RNFetchBlob.polyfill.Blob;
   // const fs = RNFetchBlob.fs;
@@ -75,13 +82,13 @@ export default class AddDogScreen extends React.Component {
   //     // upload image using Firebase SDK
   //     storageRef.put(blob, { contentType : 'image/png' })
   //   })
-};
+  };
 
-update(category, text){
-  let oldState = this.state
-  oldState.dog[category] = text
-  this.setState( {oldState} );
-}
+  update(category, text){
+    let oldState = this.state
+    oldState.dog[category] = text
+    this.setState( {oldState} );
+  }
 
   render() {
     let image = this.state.dog.image;
@@ -139,6 +146,23 @@ update(category, text){
       </KeyboardAwareScrollView>
     );
   }
+
+  async _uploadImageAsync(uri) {
+    return fetch('http://localhost:3000/images',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          uri: uri
+        })
+      }
+    );
+  }
+
 }
 
 const styles = StyleSheet.create({

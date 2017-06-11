@@ -6,7 +6,7 @@ import CheckBox from 'react-native-checkbox';
 import firebaseApp from '../api/firebaseApp';
 import Colors from '../constants/Colors';
 import { StackNavigation, NavigationProvider } from '@expo/ex-navigation';
-
+import { sendPush } from '../api/push_handler';
 
 export default class PlaytimeScreen extends React.Component {
   constructor(props) {
@@ -255,7 +255,6 @@ export default class PlaytimeScreen extends React.Component {
       firebaseApp.database().ref(`/followDogToUser/${dog.id}`).once('value')
         .then(snapshot => {
         snapshot.forEach(childSnap => {
-          debugger
           if(childSnap.val().status === 'APPROVED') {
             let userRef = firebaseApp.database().ref(`/users/${childSnap.key}`);
             userRef.once('value').then(snap => {
@@ -282,6 +281,10 @@ export default class PlaytimeScreen extends React.Component {
       type: 'NEW_PLAYTIME',
       status: 'UNSEEN'
     });
+    sendPush(
+      `${dog.dogName} is going to ${park.name}!`,
+      uid
+    )
   }
 }
 
