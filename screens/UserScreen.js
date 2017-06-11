@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Text,
   View, ScrollView, TextInput,
-  Button, Image, FlatList, TouchableHighlight
+  Button, Image, FlatList,
+  TouchableOpacity, Modal
 } from 'react-native';
 
 import * as firebase from 'firebase';
@@ -13,26 +14,79 @@ import firebaseApp from '../api/firebaseApp';
 import {isEqual} from 'lodash';
 import Styles from '../assets/stylesheets/pageLayout';
 import Colors from '../constants/Colors';
+import { FontAwesome} from '@expo/vector-icons';
+
+
 
 export default class UserScreen extends React.Component {
   constructor(props){
     super(props);
     this.user = firebase.auth().currentUser;
     this.firstName = this.user.displayName.split(" ")[0]
-    this.state = {dogList: {}, following: {}, followers: {}}
+    this.state = {dogList: {}, following: {}, followers: {}, modalVisible: false}
   }
+
 
   static route = {
     navigationBar: {
       title: "Your Profile",
+      renderRight: (state: ExNavigationState) => {
+        const { config: { eventEmitter }  } = state;
+
+        return (
+          <TouchableOpacity onPress={() => eventEmitter.emit('drop')}>
+               <View>
+                 <FontAwesome
+               style={styles.menu}
+               name={"sign-out"}
+               size={24}
+               color={Colors.blue}
+               />
+             </View>
+           </TouchableOpacity>
+        );
+      },
+      renderLeft: (state: ExNavigationState) => {
+        const { config: { eventEmitter }  } = state;
+
+        return (
+          <TouchableOpacity onPress={() => eventEmitter.emit('add')}>
+               <View>
+                 <FontAwesome
+               style={styles.menu}
+               name={"plus-circle"}
+               size={24}
+               color={Colors.blue}
+               />
+             </View>
+           </TouchableOpacity>
+        );
+      },
     },
   };
 
+    _subscriptionDone: EventSubscription;
+
   componentDidMount(){
+     this._dropdown = this.props.route.getEventEmitter().addListener('drop', this._handleDrop.bind(this));
+     this._add = this.props.route.getEventEmitter().addListener('add', this._handleAddDog.bind(this));
     if (this.user) {
       this.getDogList();
     }
   }
+
+  _handleDrop(){
+    this.setState({modalVisible: true});
+  }
+
+  _handleAddDog(){
+    this.props.navigator.push('addDog');
+  }
+
+  setModalVisible(visible) {
+  this.setState({modalVisible: visible});
+}
+
 
   getDogList(){
     let _this = this
@@ -68,31 +122,63 @@ export default class UserScreen extends React.Component {
       var list =
       dogs.map( (dog, i) => {
         return (
-        <TouchableHighlight key={ids[i]} onPress={ () => this.goTo(ids[i], dog.dogName)}>
+        <TouchableOpacity key={ids[i]} onPress={ () => this.goTo(ids[i], dog.dogName)}>
           <View style={styles.dogsList}>
             <View style={styles.dogsListItem}>
               <View style={styles.container}><Image source={{ uri: dog.image}} style={{ width: 100, height: 100, borderRadius: 50, }}/></View>
               <View style={styles.container}><Text style={styles.text}>{dog.dogName}</Text></View>
             </View>
           </View>
-       </TouchableHighlight>
+       </TouchableOpacity>
       )}
       )
     }
 
     return(
       <View style={styles.mainContainer}>
+        <Modal
+         animationType={"none"}
+         transparent={false}
+         visible={this.state.modalVisible}
+         onRequestClose={() => {alert("Modal has been closed.")}}
+         >
+        <View style={styles.modal}>
+         <View style={styles.container}>
+           <Image style={{marginBottom: 10}} source={require('../assets/icons/long-haired-dog-head.png')}/>
+           <Text style={styles.modalText}>Do you really want to logout?</Text>
+
+           <View style={styles.innerModal}>
+             <TouchableOpacity onPress={() => {
+               firebaseApp.auth().signOut().then(()=> this.props.navigator.push('login'))
+             }}>
+               <Text style={styles.modalText2}>Yes</Text>
+             </TouchableOpacity>
+
+           <TouchableOpacity onPress={() => {
+             this.setModalVisible(!this.state.modalVisible)
+           }}>
+             <Text style={styles.modalText2}>No</Text>
+           </TouchableOpacity>
+         </View>
+         </View>
+        </View>
+       </Modal>
+
         <View style={styles.following}>
           <Button title="Following" color={Colors.white} onPress={() => this.goToFollowing(this.user.uid)}></Button>
           <Text style={styles.followingText}>|</Text>
           <Button title="Followers" color={Colors.white} onPress={() => this.goToFollowers(this.user.uid)}></Button>
         </View>
-        <View style={styles.container}>
+        <View style={styles.container2}>
           <Text style={styles.text}>Hi, {this.firstName}!</Text>
+        </View>
+        <View style={styles.container}>
+          <Text>Add Dog</Text>
         </View>
         <View style={{ alignItems: 'center', alignSelf: 'stretch', height: 400}}>
           <ScrollView style={{alignSelf: 'stretch'}}>{list}</ScrollView>
         </View>
+
 
       </View>
     )
@@ -105,7 +191,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-
+  },
+  container2: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
   },
   mainContainer: {
     display: 'flex',
@@ -115,6 +206,7 @@ const styles = StyleSheet.create({
     text: {
     fontWeight: 'bold',
     fontSize: 30,
+    marginVertical: 10,
   },
   dogsList: {
     flex: 4,
@@ -145,6 +237,43 @@ const styles = StyleSheet.create({
   followingText: {
     fontSize: 25,
     color: Colors.white
+  },
+  menu: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 10,
+  },
+  modal: {
+    backgroundColor: Colors.orange,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // position: 'absolute',
+    // top: 15,
+    // right: 0,
+    alignSelf: 'stretch',
+    flex: 1,
+    marginTop: 40,
+  },
+  innerModal: {
+    marginTop: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalText: {
+    color: Colors.white,
+    textAlign: 'center',
+    fontSize: 26,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalText2: {
+    color: Colors.white,
+    textAlign: 'center',
+    fontSize: 18,
+    marginHorizontal: 15,
   }
 
 

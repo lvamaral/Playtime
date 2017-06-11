@@ -17,3 +17,5 @@ export default {
   blue: 'rgba(63, 136, 197, 1)',
   green: 'rgba(68, 187, 164, 1)',
 };
+
+// #fe7f2d

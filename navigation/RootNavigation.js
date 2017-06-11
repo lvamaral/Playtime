@@ -47,6 +47,11 @@ export default class RootNavigation extends React.Component {
   componentWillUnmount() {
     this._notificationSubscription && this._notificationSubscription.remove();
   }
+  static route = {
+    navigationBar: {
+      visible: false,
+    }
+  };
 
   async _registerForPushNotificationsAsync() {
     // Android remote notification permissions are granted during the app
@@ -81,7 +86,7 @@ export default class RootNavigation extends React.Component {
 
   render() {
     return (
-      <TabNavigation tabBarHeight={50} initialTab="parks">
+      <TabNavigation tabBarHeight={50} initialTab="home">
         <TabNavigationItem
           id="home"
           renderIcon={isSelected => this._renderIcon('home', 'foundation', isSelected, 34)}>
