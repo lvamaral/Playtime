@@ -13,6 +13,7 @@ import { Platform } from 'react-native';
 import { Permissions, Notifications } from 'expo';
 const icon = require('../assets/icons/app-icon.png');
 import { Foundation, Entypo } from '@expo/vector-icons';
+import { sendPush } from '../api/push_handler';
 
 
 export default class DogViewScreen extends React.Component {
@@ -87,14 +88,30 @@ export default class DogViewScreen extends React.Component {
       }
     });
 
+    let _followingDogs = [];
     firebaseApp.database().ref(`/users/${_this.user.uid}/dogs`).once('value').then(function(snapshot){
       firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}`).set({status: 'PENDING'});
       snapshot.forEach(function(childSnapshot) {
         // userDogs.push(childSnapshot.val())
         let childKey = childSnapshot.key;
         let childData = childSnapshot.val();
+        _followingDogs.push(childData.dogName);
         firebaseApp.database().ref(`/followDogToUser/${_this.state.id}/${_this.user.uid}/dogs/${childKey}`).set(childData);
       });
+      let dogNames;
+
+      if(_followingDogs.length === 1) {
+        dogNames = `${_followingDogs[0]} wants`;
+      } else if(_followingDogs.length === 3) {
+        dogNames = `${_followingDogs[0]} and ${_followingDogs[1]} want`;
+      } else {
+        dogNames = `${_followingDogs.slice(0, _followingDogs.length - 2).join(', ')} and ${_followingDogs[_followingDogs.length - 1]} want`
+      }
+
+      sendPush(
+        `${dogNames} to follow ${_this.state.dogName}!`,
+        _this.state.ownerId
+      )
     });
 
     ref = firebaseApp.database().ref(`/users/${_this.state.ownerId}/notifications`).push();

@@ -6,11 +6,14 @@ import * as firebase from 'firebase';
 import firebaseApp from '../api/firebaseApp';
 import { FontAwesome } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
+import cacheAssetsAsync from '../utilities/cacheAssetsAsync';
 
 export default class ParkScreen extends React.Component {
   state = {
     parks: null,
-    keyword: ''
+    keyword: '',
+    loading: true,
+    images: []
   };
 
   static route = {
@@ -24,21 +27,39 @@ export default class ParkScreen extends React.Component {
     const ref = firebaseApp.database().ref('/parks');
     ref.once('value').then(snapshot => {
       var parks = [];
+      var images = [];
       snapshot.forEach(child => {
         parks.push(child.val());
+        images.push(child.val().photoUrl);
       })
-      that.setState({parks: parks});
+      that.setState({
+        parks: parks,
+        images: images
+      });
     });
   }
 
   render() {
+
+    if(this.state.images.length > 0 && this.state.loading) {
+      // this._loadAssetsAsync();
+      this.state.loading = false;
+    }
+
+    if(this.state.loading) {
+      return(
+        <View>
+
+        </View>
+      )
+    }
 
     return(
       <View style={styles.container}>
         <View style={styles.searchBox}>
           <FontAwesome
             name={"search"}
-            size={30}
+            size={28}
             color={Colors.orange}
           />
         <TextInput
@@ -58,7 +79,23 @@ export default class ParkScreen extends React.Component {
       </View>
     )
   }
-};
+
+  async _loadAssetsAsync() {
+    try {
+      await cacheAssetsAsync({
+        images: this.state.images
+      })
+    } catch(e) {
+      console.log(e)
+    } finally {
+      this.setState({
+        loading: false
+      });
+    }
+  }
+
+}
+
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
@@ -67,11 +104,11 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
      height: 50,
-     paddingLeft: 5,
-     fontSize: 30,
+     paddingLeft: 10,
+     fontSize: 18,
    },
    searchBox: {
-     paddingLeft: 5,
+     paddingLeft: 8,
      display: 'flex',
      flexDirection: 'row',
      borderColor: Colors.black,

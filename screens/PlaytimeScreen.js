@@ -6,7 +6,7 @@ import CheckBox from 'react-native-checkbox';
 import firebaseApp from '../api/firebaseApp';
 import Colors from '../constants/Colors';
 import { StackNavigation, NavigationProvider } from '@expo/ex-navigation';
-
+import { sendPush } from '../api/push_handler';
 
 export default class PlaytimeScreen extends React.Component {
   constructor(props) {
@@ -255,16 +255,18 @@ export default class PlaytimeScreen extends React.Component {
       firebaseApp.database().ref(`/followDogToUser/${dog.id}`).once('value')
         .then(snapshot => {
         snapshot.forEach(childSnap => {
-          let userRef = firebaseApp.database().ref(`/users/${childSnap.key}`);
-          userRef.once('value').then(snap => {
-            if(snap.val().parks !== undefined) {
-              snap.child('parks').forEach(park => {
-                if(park.key === _this.state.park.id) {
-                  _this._postNotification(snap.key, park, _dog);
-                }
-              });
-            }
-          });
+          if(childSnap.val().status === 'APPROVED') {
+            let userRef = firebaseApp.database().ref(`/users/${childSnap.key}`);
+            userRef.once('value').then(snap => {
+              if(snap.val().parks !== undefined) {
+                snap.child('parks').forEach(park => {
+                  if(park.key === _this.state.park.id) {
+                    _this._postNotification(snap.key, park, _dog);
+                  }
+                });
+              }
+            });
+          }
         });
       });
     });
@@ -276,8 +278,13 @@ export default class PlaytimeScreen extends React.Component {
     firebaseApp.database().ref(`users/${uid}/notifications`).push().set({
       dog: dog,
       park: park,
-      type: 'NEW_PLAYTIME'
+      type: 'NEW_PLAYTIME',
+      status: 'UNSEEN'
     });
+    sendPush(
+      `${dog.dogName} is going to ${park.name}!`,
+      uid
+    )
   }
 }
 
