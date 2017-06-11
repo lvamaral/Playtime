@@ -1,6 +1,6 @@
 import Expo from 'expo';
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, Text, Button } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { Permissions, Notifications } from 'expo';
@@ -9,6 +9,7 @@ import LoginScreen from './screens/LoginScreen';
 import cacheAssetsAsync from './utilities/cacheAssetsAsync';
 import { StackNavigation, NavigationProvider } from '@expo/ex-navigation';
 import Router from './navigation/Router';
+import Colors from './constants/Colors';
 
 class AppContainer extends React.Component {
   state = {
@@ -71,13 +72,24 @@ class AppContainer extends React.Component {
 
   };
 
+  doso(){
+
+  }
+
   render() {
+
     if (this.state.appIsReady) {
 
       return (
         <NavigationProvider router={Router}>
           <StackNavigation
             id="root"
+            defaultRouteConfig={{
+            navigationBar: {
+              renderRight: <Button title="hello" onPress={this.doso}></Button>
+
+            }
+            }}
             initialRoute={Router.getRoute('login')}
           />
         </NavigationProvider>
@@ -87,6 +99,7 @@ class AppContainer extends React.Component {
     }
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {

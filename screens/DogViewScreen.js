@@ -108,12 +108,6 @@ export default class DogViewScreen extends React.Component {
       }
     });
 
-    // firebaseApp.database().ref(`/users/${firebaseApp.auth().currentUser.uid}`).once('value').then(snapshot => {
-    //   snapshot.child('dogs').forEach(dog => {
-    //     firebaseApp.database().ref(`/users/${_this.state.ownerId}/notifications`)
-    //   });
-    // });
-
     let newState = _this.state;
     newState.follow = 'PENDING';
     _this.setState(newState);

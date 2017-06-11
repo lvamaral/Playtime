@@ -32,7 +32,7 @@ export default class HomeScreen extends React.Component {
           <View style={styles.getStartedContainer}>
 
               <Text style={styles.getStartedText}>
-                {"It's Playtime!"}
+                It's Playtime!
               </Text>
 
           </View>
@@ -74,7 +74,8 @@ const styles = StyleSheet.create({
     marginLeft: -10,
   },
   getStartedText: {
-    fontSize: 17,
+    fontSize: 20,
+    fontWeight: "800",
     color: Colors.orange,
     lineHeight: 23,
     textAlign: 'center',
