@@ -66,7 +66,7 @@ export default class AddDogScreen extends React.Component {
 
     let dogName = "";
     const uploadResponse = await this._uploadImageAsync(this.state.dog.image);
-    debugger
+    // debugger
     // var storageRef = firebase.storage().ref('images/' + dogName);
 
 
