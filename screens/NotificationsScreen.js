@@ -30,8 +30,12 @@ export default class NotificationsScreen extends React.Component {
     noteRef.on('value', snapshot => {
       _notifs = [];
       snapshot.forEach(notif => {
-        _notifs.push(notif.val());
-        _notifs[_notifs.length - 1].id = notif.key;
+
+        if (notif.val().status === "UNSEEN") {
+          _notifs.push(notif.val());
+          _notifs[_notifs.length - 1].id = notif.key;
+        }
+
       });
       _this.setState({
         notifications: _notifs,
@@ -68,6 +72,7 @@ export default class NotificationsScreen extends React.Component {
   renderNotifications() {
     if(this.state.notifications.length > 0) {
       return(
+        <View style={styles.main}>
         <ScrollView>
           {this.state.notifications.map((notif, idx) => {
             if(notif.type === 'NEW_PLAYTIME') {
@@ -84,8 +89,9 @@ export default class NotificationsScreen extends React.Component {
               );
             }
           })}
-          <View style={{marginTop: 5}}><Text style={{color: 'gray', textAlign: 'center'}}>Swipe right to approve and left to deny</Text></View>
         </ScrollView>
+
+        </View>
       );
 
     } else {
@@ -111,5 +117,10 @@ const styles = StyleSheet.create({
     fontSize: 26,
     alignItems: 'center',
     color: Colors.white,
+  },
+  main: {
+    display: 'flex',
+    justifyContent: 'space-between',
   }
 })
+// <View style={{marginTop: 5}}><Text style={{color: 'gray', textAlign: 'center'}}>Swipe right to approve and left to deny</Text></View>

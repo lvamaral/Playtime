@@ -104,6 +104,10 @@ const styles = StyleSheet.create({
     display: 'flex',
   },
   notifications: {
+    borderLeftWidth: 5,
+    borderLeftColor: 'red',
+    borderRightWidth: 5,
+    borderRightColor: Colors.green,
     height: 70,
     padding: 5,
     display: 'flex',
@@ -111,24 +115,18 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     alignItems: 'center',
     backgroundColor: Colors.orange,
+    borderBottomWidth: 2,
+    borderColor: 'white',
   },
   part1: {
     flex: 4,
   },
   part2: {
     flex: 1,
+
   },
   notificationText: {
     fontSize: 16,
     color: Colors.white,
   }
 })
-
-// <View style={styles.part2}>
-//   <TouchableOpacity }>
-//     <Text>Approve</Text>
-//   </TouchableOpacity>
-//   <TouchableOpacity onPress={this._denyRequest.bind(this)}>
-//     <Text>Deny</Text>
-//   </TouchableOpacity>
-// </View>

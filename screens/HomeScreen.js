@@ -10,15 +10,84 @@ import {
   View
 } from 'react-native';
 import Colors from '../constants/Colors';
-
+import firebaseApp from '../api/firebaseApp';
+import HomePlaytime from '../components/notifications/HomePlaytime';
 import RootNavigation from '../navigation/RootNavigation';
 
 export default class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      notifications: [],
+      loading: true
+    }
+    this.renderNotifications = this.renderNotifications.bind(this);
+  }
+
   static route = {
     navigationBar: {
       title: 'Playtime'
     },
   };
+
+  componentWillMount() {
+    const currUID = firebaseApp.auth().currentUser.uid
+    const noteRef = firebaseApp.database().ref(`users/${currUID}/notifications`);
+    _this = this;
+
+    noteRef.on('value', snapshot => {
+      _notifs = [];
+      snapshot.forEach(notif => {
+
+        if (notif.val().status === "UNSEEN") {
+          _notifs.push(notif.val());
+          _notifs[_notifs.length - 1].id = notif.key;
+        }
+
+      });
+      _this.setState({
+        notifications: _notifs,
+        loading: false
+      });
+    });
+
+    noteRef.on('child_removed', snapshot => {
+      _this.state.notifications.forEach((notif, idx) => {
+        if(notif.id === snapshot.key) {
+          _this.state.notifications.splice(idx, 1);
+          this.setState({notifications: _this.state.notifications});
+        }
+      });
+    });
+  }
+
+  renderNotifications() {
+    if(this.state.notifications.length > 0) {
+      return(
+        <View style={styles.main}>
+        <ScrollView>
+          {this.state.notifications.map((notif, idx) => {
+            if(notif.type === 'NEW_PLAYTIME') {
+              return(
+                <HomePlaytime
+                  key={`playtime${idx}`}
+                  notif={notif} />
+              );
+            }
+          })}
+        </ScrollView>
+
+        </View>
+      );
+
+    } else {
+      return(
+        <View style={styles.noNew}>
+
+        </View>
+      )
+    }
+  }
 
   render() {
     return (
@@ -26,7 +95,7 @@ export default class HomeScreen extends React.Component {
         <TouchableOpacity onPress={this._goToPlaytime.bind(this)}>
           <View style={styles.welcomeContainer}>
             <Image
-              source={require('../assets/icons/orange2-dog-and-doggie.png')}
+              source={require('../assets/icons/002-dog-and-doggie.png')}
               style={styles.welcomeImage}
             />
           <View style={styles.getStartedContainer}>
@@ -38,8 +107,9 @@ export default class HomeScreen extends React.Component {
           </View>
         </View>
       </TouchableOpacity>
+      <View style={styles.upcoming}><Text style={styles.upcomingText}>Upcoming Playtimes:</Text></View>
         <ScrollView style={styles.container}>
-          <View style={styles.upcoming}><Text style={styles.upcomingText}>Upcoming Playtimes:</Text></View>
+            { this.renderNotifications() }
         </ScrollView>
       </View>
     );
@@ -62,9 +132,10 @@ const styles = StyleSheet.create({
   welcomeContainer: {
     alignItems: 'center',
     paddingVertical: 20,
-    borderBottomWidth: 5,
-    borderTopWidth: 5,
-    borderColor: Colors.orange,
+    // borderBottomWidth: 5,
+    // borderTopWidth: 5,
+    // borderColor: Colors.white,
+    backgroundColor: Colors.orange,
   },
   welcomeImage: {
     width: 64,
@@ -76,14 +147,14 @@ const styles = StyleSheet.create({
   getStartedText: {
     fontSize: 20,
     fontWeight: "800",
-    color: Colors.orange,
+    color: 'black',
     lineHeight: 23,
     textAlign: 'center',
   },
   upcoming: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.blue,
     height: 50,
     borderBottomWidth: 1,
     borderColor: Colors.white,
