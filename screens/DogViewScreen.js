@@ -34,6 +34,7 @@ export default class DogViewScreen extends React.Component {
   };
 
   componentDidMount(){
+
     let _this = this
     firebaseApp.database().ref("/dogs/"+this.props.route.params.id).once('value').then(function(snapshot) {
       var name = snapshot.val().dogName;
@@ -45,6 +46,11 @@ export default class DogViewScreen extends React.Component {
       var ownerId = snapshot.val().ownerId
       _this.setState({id: id, dogName: name, age: age, breed: breed, image: image, owner: owner, ownerId: ownerId, follow: ""})
       _this.checkFollow();
+      if(ownerId === firebaseApp.auth().currentUser.uid) {
+        _this.setState({
+          loading: false
+        });
+      }
 
     })
 
@@ -175,8 +181,9 @@ export default class DogViewScreen extends React.Component {
       </TouchableOpacity>
       )
     }
+
 // if(this.state.loading === false)
-   if(true) {
+   if(this.state.loading === false) {
 
     return(
       <View style={styles.mainContainer}>

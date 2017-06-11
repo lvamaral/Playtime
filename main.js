@@ -48,12 +48,6 @@ class AppContainer extends React.Component {
         <NavigationProvider router={Router}>
           <StackNavigation
             id="root"
-            defaultRouteConfig={{
-            navigationBar: {
-              renderRight: <Button title="hello" onPress={this.doso}></Button>
-
-            }
-            }}
             initialRoute={Router.getRoute('login')}
           />
         </NavigationProvider>
