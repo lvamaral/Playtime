@@ -3,7 +3,7 @@ import firebaseApp from './firebaseApp';
 export async function sendPush(message, uid) {
   firebaseApp.database().ref(`/users/${uid}/pushToken`).once('value').then(snapshot => {
     if(snapshot.exists()) {
-      fetch('http://localhost:3000/tokens',
+      fetch('https://playtimeserver.herokuapp.com/tokens',
         {
           method: 'POST',
           credentials: 'include',
