@@ -46,6 +46,22 @@ export default class UserScreen extends React.Component {
            </TouchableOpacity>
         );
       },
+      renderLeft: (state: ExNavigationState) => {
+        const { config: { eventEmitter }  } = state;
+
+        return (
+          <TouchableOpacity onPress={() => eventEmitter.emit('add')}>
+               <View>
+                 <FontAwesome
+               style={styles.menu}
+               name={"plus-circle"}
+               size={24}
+               color={Colors.blue}
+               />
+             </View>
+           </TouchableOpacity>
+        );
+      },
     },
   };
 
@@ -53,6 +69,7 @@ export default class UserScreen extends React.Component {
 
   componentDidMount(){
      this._dropdown = this.props.route.getEventEmitter().addListener('drop', this._handleDrop.bind(this));
+     this._add = this.props.route.getEventEmitter().addListener('add', this._handleAddDog.bind(this));
     if (this.user) {
       this.getDogList();
     }
@@ -60,6 +77,10 @@ export default class UserScreen extends React.Component {
 
   _handleDrop(){
     this.setState({modalVisible: true});
+  }
+
+  _handleAddDog(){
+    this.props.navigator.push('addDog');
   }
 
   setModalVisible(visible) {
@@ -151,12 +172,13 @@ export default class UserScreen extends React.Component {
         <View style={styles.container2}>
           <Text style={styles.text}>Hi, {this.firstName}!</Text>
         </View>
+        <View style={styles.container}>
+          <Text>Add Dog</Text>
+        </View>
         <View style={{ alignItems: 'center', alignSelf: 'stretch', height: 400}}>
           <ScrollView style={{alignSelf: 'stretch'}}>{list}</ScrollView>
         </View>
-        <View>
-          <Text>Add Dog</Text>
-        </View>
+
 
       </View>
     )

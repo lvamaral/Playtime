@@ -123,8 +123,8 @@ export default class PlaytimeScreen extends React.Component {
       return(
         <View style={styles.mainContainer}>
           <ScrollView>
-            <View style={styles.label}>
-              <Text style={styles.labelText}>Choose a Park</Text>
+            <View style={styles.label2}>
+              <Text style={styles.labelText2}>Choose a Park</Text>
             </View>
             <View>
               { this._showPicker() }
@@ -167,7 +167,7 @@ export default class PlaytimeScreen extends React.Component {
 
           <View style={styles.labelLast}>
             <TouchableHighlight onPress={this._createPlaytime}>
-              <Text style={styles.labelText}>Create Playtime</Text>
+              <Text style={styles.labellastText}>Create Playtime</Text>
             </TouchableHighlight>
           </View>
           </ScrollView>
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   containerTimeText: {
-    fontSize: 18,
+    fontSize: 24,
     color: 'black',
   },
   containerCheck: {
@@ -312,19 +312,38 @@ const styles = StyleSheet.create({
   },
   label: {
     paddingTop: 5,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: Colors.blue,
+  },
+  label2: {
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.orange,
+  },
+  labelText2: {
+    fontSize: 30,
+    color: Colors.white,
   },
   labelText: {
-    fontSize: 20,
-    color: 'black',
+    fontSize: 25,
+    color: Colors.white,
   },
   labelLast: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 90,
+    marginTop: 20,
     alignSelf: 'stretch',
     backgroundColor: Colors.orange,
+    height: 60,
+  },
+  labellastText: {
+    fontSize: 30,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     color: Colors.white,
   }
 })
