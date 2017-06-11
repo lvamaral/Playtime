@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Text,
   View, ScrollView, TextInput,
-  Button, Image
+  Button, Image, TouchableOpacity,
 } from 'react-native';
 import { ImagePicker } from 'expo';
 import * as firebase from 'firebase';
@@ -50,7 +50,7 @@ export default class AddDogScreen extends React.Component {
  handleSubmit(){
    var lastDog = firebase.database().ref('dogs/').push(this.state.dog).key
    firebase.database().ref(`users/${this.user.uid}/dogs/${lastDog}`).set(this.state.dog);
-   this.props.navigator.push('rootNavigation');
+   this.props.navigator.replace("user");
  }
 
  _pickImage = async () => {
@@ -139,7 +139,9 @@ export default class AddDogScreen extends React.Component {
                 />
             </View>
             <View style={styles.lastContainer}>
-              <Button title="Add Dog" color={Colors.orange} onPress={this.handleSubmit.bind(this)} style={styles.button}></Button>
+              <TouchableOpacity onPress={this.handleSubmit.bind(this)} style={styles.button}>
+                <Text style={styles.buttonText}>Add Dog</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -171,6 +173,7 @@ const styles = StyleSheet.create({
   },
   mainConatiner: {
     position: 'relative',
+    display: 'flex',
     flex: 1,
     justifyContent: 'space-between'
   },
@@ -193,6 +196,8 @@ const styles = StyleSheet.create({
     color: Colors.black,
     paddingLeft: 5,
     height: 50,
+  },
+  borderInput: {
     borderBottomWidth: 1,
     borderBottomColor: 'black',
   },
@@ -202,12 +207,21 @@ const styles = StyleSheet.create({
   },
   lastContainer: {
     flex: 1,
-    margin: 80,
     justifyContent: 'flex-end'
   },
   button: {
-    backgroundColor: Colors.black,
-
+    backgroundColor: Colors.orange,
+    alignSelf: 'stretch',
+    display: 'flex',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 35,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: Colors.white,
+    textAlign: 'center',
   }
 
 });
