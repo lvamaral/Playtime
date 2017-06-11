@@ -101,7 +101,7 @@ export default class HomeScreen extends React.Component {
           <View style={styles.getStartedContainer}>
 
               <Text style={styles.getStartedText}>
-                It's Playtime!
+                Going Out?
               </Text>
 
           </View>

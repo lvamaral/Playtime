@@ -207,7 +207,8 @@ const styles = StyleSheet.create({
   },
   lastContainer: {
     flex: 1,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    marginTop: 30,
   },
   button: {
     backgroundColor: Colors.orange,

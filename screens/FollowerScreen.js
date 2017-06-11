@@ -9,6 +9,7 @@ import {
 import * as firebase from 'firebase';
 import firebaseApp from '../api/firebaseApp';
 import DogsIndex from '../components/dogs/DogsIndex';
+import Colors from '../constants/Colors';
 
 
 export default class FollowerScreen extends React.Component {
@@ -51,8 +52,8 @@ export default class FollowerScreen extends React.Component {
 
 
   render(){
-    let dogIndex = (<View></View>)
-    if (this.state.dogs !== undefined) {
+    let dogIndex = (<View style={styles.noDogContainer}><Text style={styles.noDog}>No dogs yet!</Text></View>)
+    if (this.state.dogs.length !== 0) {
       dogIndex = (
          <DogsIndex
           dogs={this.state.dogs}
@@ -61,11 +62,23 @@ export default class FollowerScreen extends React.Component {
     }
 
     return (
-      <View>
+      <View style={styles.container}>
         {dogIndex}
       </View>
     )
-
   }
-
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex:1,
+  },
+  noDog: {
+    textAlign: 'center',
+    color: Colors.tabIconDefault,
+    fontSize: 20,
+  },
+  noDogContainer: {
+    paddingVertical: 20,
+  }
+});
