@@ -3,6 +3,7 @@ import { TouchableHighlight, Text, View, StyleSheet, Image } from 'react-native'
 import firebaseApp from '../../api/firebaseApp';
 import Colors from '../../constants/Colors';
 import Swipeout from 'react-native-swipeout';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default class NewPlaytime extends React.Component {
 
@@ -15,16 +16,21 @@ export default class NewPlaytime extends React.Component {
       }
     ]
     return(
-      <Swipeout right={approveBtns}>
         <View style={styles.notifications}>
           <View style={styles.part2}>
-            <Image source={require('../../assets/icons/003-dog-walker.png')} style={{width: 35, height: 35}}/>
+            <FontAwesome
+              name={"clock-o"}
+              size={35}
+              color={Colors.orange}
+            />
+            <View>
+              <Text>{this.props.notif.dog.dogName}</Text>
+            </View>
           </View>
           <View style={styles.part1}>
             <Text style={styles.notificationsText}>{`${this.props.notif.dog.dogName} is going to ${this.props.notif.park.name}`}</Text>
           </View>
         </View>
-    </Swipeout>
     );
   }
 
@@ -47,18 +53,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: "stretch",
     alignItems: 'center',
-    backgroundColor: Colors.white,
-    borderRightWidth: 5,
-    borderRightColor: Colors.tabIconDefault,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderColor: 'white',
+    backgroundColor: Colors.white,
   },
   part1: {
+    paddingLeft: 5,
     flex: 4,
   },
   part2: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
-
+    // padding: 5,
   },
   notificationsText: {
     fontSize: 16,
