@@ -8,20 +8,25 @@ import Colors from '../constants/Colors';
 
 class LoginScreen extends React.Component {
   state = {
-    noUser: false
-  };
-  static route = {
-    navigationBar: {
-      visible: false
-    },
+    noUser: false,
+    loading: false
   };
 
   componentWillMount(){
     const that = this;
     firebase.auth().onAuthStateChanged((user) => {
+      that.setState({loading: true});
       if (user != null) {
         console.log("We are authenticated now!");
-        this.props.navigator.push('rootNavigation');
+        firebaseApp.database().ref(`users/${user.uid}`).once('value').then(snapshot => {
+          if(snapshot.exists()) {
+            that.setState({loading: false});
+            that.props.navigator.push('rootNavigation');
+          } else {
+            that.setState({loading: false});
+            that.props.navigator.push('addDog');
+          }
+        })
       } else {
         this.setState({noUser: true});
       }
@@ -29,6 +34,10 @@ class LoginScreen extends React.Component {
   }
 
   render(){
+    if(this.state.loading) {
+      return <Expo.AppLoading />
+    }
+
     if(this.state.noUser) {
       return(
         <View style={styles.mainContainer}>
@@ -37,13 +46,19 @@ class LoginScreen extends React.Component {
             <View style={styles.fb}>
               <Button
               title='Continue with Facebook'
-              onPress={logInToFacebook} color="white" style={styles.btext}/>
+              onPress={() => {
+                logInToFacebook();
+                this.setState({loading: true});
+              } } color="white" style={styles.btext}/>
 
             </View>
             <View style={styles.android}>
             <Button
               title='Continue with Google'
-              onPress={signInWithGoogleAsync} color="white" />
+              onPress={() => {
+                signInWithGoogleAsync();
+                this.setState({loading: true});
+              } } color="white" />
 
             </View>
           </View>
@@ -51,7 +66,7 @@ class LoginScreen extends React.Component {
       );
     } else {
       return(
-        <View></View>
+        <Expo.AppLoading />
       )
     }
   }
@@ -61,7 +76,7 @@ class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: 40,
+    bottom: 60,
 
   },
   mainContainer: {
@@ -73,11 +88,10 @@ const styles = StyleSheet.create({
   },
   fb: {
     backgroundColor: Colors.blue,
-    marginVertical: 5,
+    marginVertical: 10,
   },
   android: {
     backgroundColor: 'red',
-
   },
   bText: {
     fontSize: 40,
