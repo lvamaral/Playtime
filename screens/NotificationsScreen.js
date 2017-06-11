@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Text,
+StyleSheet, Image } from 'react-native';
 import firebaseApp from '../api/firebaseApp';
 import NewPlaytime from '../components/notifications/NewPlaytime';
 import FollowRequest from '../components/notifications/FollowRequest';
+import Colors from '../constants/Colors';
 
 export default class NotificationsScreen extends React.Component {
   constructor(props) {
@@ -56,8 +58,8 @@ export default class NotificationsScreen extends React.Component {
       );
     } else {
       return(
-        <View>
-          <Text>No new notifications!</Text>
+        <View style={styles.noNew}>
+          <Text style={styles.noNewText}>No new notifications!</Text>
         </View>
       );
     }
@@ -82,13 +84,32 @@ export default class NotificationsScreen extends React.Component {
               );
             }
           })}
+          <View style={{marginTop: 5}}><Text style={{color: 'gray', textAlign: 'center'}}>Swipe right to approve and left to deny</Text></View>
         </ScrollView>
       );
 
     } else {
       return(
-        <Text>No notifications!</Text>
+        <View style={styles.noNew}>
+          <Text style={styles.noNewText}>No new notifications!</Text>
+        </View>
       )
     }
   }
 }
+const styles = StyleSheet.create({
+  noNew: {
+    height: 50,
+    alignSelf: "stretch",
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: Colors.blue,
+  },
+  noNewText: {
+    marginTop: 5,
+    fontSize: 26,
+    alignItems: 'center',
+    color: Colors.white,
+  }
+})

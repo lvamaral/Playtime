@@ -1,6 +1,8 @@
 import React from 'react';
-import { TouchableHighlight, Text, View } from 'react-native';
+import { TouchableOpacity, Text, View, StyleSheet, Image } from 'react-native';
 import firebaseApp from '../../api/firebaseApp';
+import Colors from '../../constants/Colors';
+import Swipeout from 'react-native-swipeout';
 
 export default class FollowRequest extends React.Component {
   state = {
@@ -22,6 +24,24 @@ export default class FollowRequest extends React.Component {
   }
 
   render() {
+    var approveBtns = [
+      {
+        text: 'Approve',
+        backgroundColor: Colors.green,
+        onPress: this._approveRequest.bind(this)
+      }
+    ]
+    var denyBtns = [
+      {
+        text: 'Deny',
+        backgroundColor: 'red',
+        onPress: this._denyRequest.bind(this)
+      }
+    ]
+
+
+
+
     if(this.state.loading) {
       return(
         <View></View>
@@ -41,15 +61,18 @@ export default class FollowRequest extends React.Component {
       }
 
       return(
-        <View>
-        <Text>{`${text} to follow ${this.props.notif.dog.name}`}</Text>
-        <TouchableHighlight onPress={this._approveRequest.bind(this)}>
-          <Text>Approve</Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={this._denyRequest.bind(this)}>
-          <Text>Deny</Text>
-        </TouchableHighlight>
-        </View>
+
+        <Swipeout  left={denyBtns} right={approveBtns}>
+          <View style={styles.notifications}>
+            <View style={styles.part2}>
+              <Image source={require('../../assets/icons/couple-of-dogs.png')} style={{width: 35, height: 35}}/>
+            </View>
+            <View style={styles.part1}>
+              <Text style={styles.notificationText}>{`${text} to follow ${this.props.notif.dog.name}`}</Text>
+            </View>
+          </View>
+        </Swipeout>
+
       );
     }
   }
@@ -72,3 +95,40 @@ export default class FollowRequest extends React.Component {
     firebaseApp.database().ref(`/users/${currUser}/notifications/${notif.id}`).remove();
   }
 }
+
+
+
+const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    display: 'flex',
+  },
+  notifications: {
+    height: 70,
+    padding: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    alignSelf: "stretch",
+    alignItems: 'center',
+    backgroundColor: Colors.orange,
+  },
+  part1: {
+    flex: 4,
+  },
+  part2: {
+    flex: 1,
+  },
+  notificationText: {
+    fontSize: 16,
+    color: Colors.white,
+  }
+})
+
+// <View style={styles.part2}>
+//   <TouchableOpacity }>
+//     <Text>Approve</Text>
+//   </TouchableOpacity>
+//   <TouchableOpacity onPress={this._denyRequest.bind(this)}>
+//     <Text>Deny</Text>
+//   </TouchableOpacity>
+// </View>

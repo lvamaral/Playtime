@@ -1,6 +1,7 @@
 import React from 'react';
-import { TouchableHighlight, Text, View } from 'react-native';
+import { TouchableHighlight, Text, View, StyleSheet } from 'react-native';
 import firebaseApp from '../../api/firebaseApp';
+// import Colors from '../constants/Colors';
 
 export default class NewPlaytime extends React.Component {
 
