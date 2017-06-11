@@ -21,10 +21,15 @@ export default class RootNavigation extends React.Component {
   componentWillUnmount() {
     this._notificationSubscription && this._notificationSubscription.remove();
   }
+  static route = {
+    navigationBar: {
+      visible: false,
+    }
+  };
 
   render() {
     return (
-      <TabNavigation tabBarHeight={56} initialTab="parks">
+      <TabNavigation tabBarHeight={56} initialTab="home">
         <TabNavigationItem
           id="home"
           renderIcon={isSelected => this._renderIcon('home', 'foundation', isSelected)}>

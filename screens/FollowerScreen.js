@@ -10,6 +10,7 @@ import * as firebase from 'firebase';
 import firebaseApp from '../api/firebaseApp';
 import DogsIndex from '../components/dogs/DogsIndex';
 
+
 export default class FollowerScreen extends React.Component {
   constructor(props){
     super(props);

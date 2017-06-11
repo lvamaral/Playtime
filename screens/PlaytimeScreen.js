@@ -165,7 +165,7 @@ export default class PlaytimeScreen extends React.Component {
               titleIOS={'Select date'}
             />
 
-          <View style={styles.label}>
+          <View style={styles.labelLast}>
             <TouchableHighlight onPress={this._createPlaytime}>
               <Text style={styles.labelText}>Create Playtime</Text>
             </TouchableHighlight>
@@ -300,11 +300,12 @@ const styles = StyleSheet.create({
   },
   containerTimeText: {
     fontSize: 18,
+    color: 'black',
   },
   containerCheck: {
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: Colors.white,
+    backgroundColor: 'black',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -315,7 +316,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   labelText: {
-    fontSize: 18,
-    color: Colors.orange,
+    fontSize: 20,
+    color: 'black',
+  },
+  labelLast: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 90,
+    alignSelf: 'stretch',
+    backgroundColor: Colors.orange,
+    color: Colors.white,
   }
 })
