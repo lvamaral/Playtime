@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableHighlight,
+import { View, Text, TouchableOpacity,
 Picker, ScrollView, StyleSheet } from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import CheckBox from 'react-native-checkbox';
 import firebaseApp from '../api/firebaseApp';
 import Colors from '../constants/Colors';
 import { StackNavigation, NavigationProvider } from '@expo/ex-navigation';
 import { sendPush } from '../api/push_handler';
+import Expo from 'expo';
 
 export default class PlaytimeScreen extends React.Component {
   constructor(props) {
@@ -16,17 +16,19 @@ export default class PlaytimeScreen extends React.Component {
       datePickerVisible: false,
       date: new Date(),
       parks: [],
-      dogs: []
+      dogs: [],
+      pickerVisible: false
     }
     this._handleCheck = this._handleCheck.bind(this);
     this._handleNotifications = this._handleNotifications.bind(this);
     this._createPlaytime = this._createPlaytime.bind(this);
     this._postNotification = this._postNotification.bind(this);
+    this.togglePicker = this.togglePicker.bind(this);
   }
 
   static route = {
     navigationBar: {
-      title: 'Create Playtime'
+      title: 'New Playtime!'
     },
   };
 
@@ -64,34 +66,36 @@ export default class PlaytimeScreen extends React.Component {
   }
 
   _showPicker() {
-    return(
-      <Picker
-        selectedValue={this.state.park}
-        onValueChange={(itemValue, itemIndex) => this.setState({park: itemValue})}
-      >
-        { this.state.parks.map(park => (
-          <Picker.Item
-            key={`park${park.id}`}
-            label={`${park.name}`}
-            value={`${park.id}`} />
-        ))}
-      </Picker>
-    );
-  }
-
-  _showCheckboxes() {
-    if(this.state.dogs.length > 1) {
+    let that = this;
+    if(this.state.parks.length > 1) {
+      if(!that.state.pickerVisible) {
+        return(
+          <View style={styles.label2}>
+            <Text
+              onPress={that.togglePicker}
+              style={styles.labelText2}>Head to a different park</Text>
+          </View>
+        );
+      } else {
+        return(
+          <View>
+            <Picker
+              selectedValue={that.state.park}
+              onValueChange={(itemValue, itemIndex) => that.setState({park: itemValue})}
+              >
+              { that.state.parks.map(park => (
+                <Picker.Item
+                  key={`park${park.id}`}
+                  label={`${park.name}`}
+                  value={`${park.id}`} />
+              ))}
+            </Picker>
+          </View>
+        );
+      }
+    } else {
       return(
-        <View>
-          {this.state.dogs.map(dog => (
-            <CheckBox
-              key={`dog${dog.id}`}
-              label={dog.dogName}
-              checked={dog.checked}
-              onChange={ (checked) => this._handleCheck(checked, dog.id) } />
-          ))}
-
-        </View>
+        <View></View>
       )
     }
   }
@@ -116,89 +120,10 @@ export default class PlaytimeScreen extends React.Component {
     }
   }
 
-  render() {
-    // user has dogs and has parks
-    if(this.state.user !== undefined && this.state.parks.length > 0) {
-
-      return(
-        <View style={styles.mainContainer}>
-          <ScrollView>
-            <View style={styles.label2}>
-              <Text style={styles.labelText2}>Choose a Park</Text>
-            </View>
-            <View>
-              { this._showPicker() }
-            </View>
-            <View style={styles.label}>
-              <Text style={styles.labelText}>Schedule for another time?</Text>
-            </View>
-            <View style={styles.containerTime}>
-              <TouchableHighlight style={{paddingTop: 0}}
-                                  onPress={this._showTimePicker.bind(this)}>
-                <Text style={styles.containerTimeText}>{this.state.date.toLocaleTimeString()}</Text>
-              </TouchableHighlight>
-            </View>
-
-            <View style={styles.containerTime}>
-              <TouchableHighlight style={{paddingTop: 0}}
-                                  onPress={this._showDatePicker.bind(this)}>
-                <Text style={styles.containerTimeText}>{this.state.date.toLocaleDateString()}</Text>
-              </TouchableHighlight>
-            </View>
-
-            <View style={styles.containerCheck}>
-              { this._showCheckboxes() }
-            </View>
-
-            <DateTimePicker
-              isVisible={this.state.timePickerVisible}
-              onConfirm={this._updateDateTime.bind(this)}
-              mode={'time'}
-              onCancel={this._hideTimePicker.bind(this)}
-              titleIOS={'Select time'}
-            />
-
-            <DateTimePicker
-              isVisible={this.state.datePickerVisible}
-              onConfirm={this._updateDateTime.bind(this)}
-              onCancel={this._hideDatePicker.bind(this)}
-              titleIOS={'Select date'}
-            />
-
-          <View style={styles.labelLast}>
-            <TouchableHighlight onPress={this._createPlaytime}>
-              <Text style={styles.labellastText}>Create Playtime</Text>
-            </TouchableHighlight>
-          </View>
-          </ScrollView>
-        </View>
-      );
-
-    }
-    // user has dogs but follows no parks
-    else if(this.state.user !== undefined) {
-      return(
-        <View>
-          <TouchableHighlight style={{paddingTop: 0}}
-                              onPress={this.props.closeModal}>
-            <Text>Click to exit</Text>
-          </TouchableHighlight>
-
-          <Text>
-            Join some parks!
-          </Text>
-        </View>
-      )
-    }
-
-    // user has not created a dog
-    else {
-      return(
-        <View>
-        </View>
-      )
-    }
+  togglePicker() {
+    this.setState({pickerVisible: !this.state.pickerVisible});
   }
+
 
   _updateDateTime(date) {
     this.setState({
@@ -286,7 +211,75 @@ export default class PlaytimeScreen extends React.Component {
       uid
     )
   }
+
+  render() {
+    let _this = this;
+    // user has dogs and has parks
+    if(this.state.user !== undefined && this.state.parks.length > 0) {
+
+      return(
+        <View style={styles.mainContainer}>
+          <View>
+            <Text style={styles.headerLabel}
+              >Heading to {this.state.park.name} right now?</Text>
+          </View>
+
+          <View style={styles.labelLast}>
+            <TouchableOpacity onPress={this._createPlaytime}>
+              <Text style={styles.labellastText}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.containerTime}>
+            <TouchableOpacity style={{paddingTop: 0}}
+              onPress={this._showTimePicker.bind(this)}>
+              <Text style={styles.containerTimeText}>{`Schedule for a different time`}</Text>
+            </TouchableOpacity>
+          </View>
+
+          {_this._showPicker()}
+
+          <DateTimePicker
+            isVisible={this.state.timePickerVisible}
+            onConfirm={this._updateDateTime.bind(this)}
+            mode={'time'}
+            onCancel={this._hideTimePicker.bind(this)}
+            titleIOS={'Select time'}
+            />
+        </View>
+
+
+      );
+
+    }
+    // user has dogs but follows no parks
+    else if(this.state.user !== undefined) {
+      return(
+        <View>
+          <TouchableOpacity style={{paddingTop: 0}}
+            onPress={this.props.closeModal}>
+            <Text>Click to exit</Text>
+          </TouchableOpacity>
+
+          <Text>
+            Join some parks!
+          </Text>
+        </View>
+      )
+    }
+
+  // user has not created a dog
+    else {
+      return(
+        <View>
+          <Expo.AppLoading />
+        </View>
+      )
+    }
+  }
+
 }
+
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -317,12 +310,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  header: {
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   label: {
     paddingTop: 5,
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.blue
+  },
+  headerLabel: {
+    textAlign: 'center',
+    marginTop: 16,
+    fontSize: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8
   },
   label2: {
     height: 60,

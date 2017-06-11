@@ -134,6 +134,9 @@ export default class UserScreen extends React.Component {
       )
     }
 
+    let navigator = this.props.navigator;
+    let _this = this;
+
     return(
       <View style={styles.mainContainer}>
         <Modal
@@ -149,8 +152,9 @@ export default class UserScreen extends React.Component {
 
            <View style={styles.innerModal}>
              <TouchableOpacity onPress={() => {
+               navigator.push('login');
+               _this.setState({modalVisible: false});
                firebaseApp.auth().signOut();
-               this.props.navigator.push('login');
              }}>
                <Text style={styles.modalText2}>Yes</Text>
              </TouchableOpacity>
