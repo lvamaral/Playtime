@@ -101,7 +101,7 @@ export default class HomeScreen extends React.Component {
           <View style={styles.getStartedContainer}>
 
               <Text style={styles.getStartedText}>
-                It's Playtime!
+                Going Out?
               </Text>
 
           </View>
@@ -154,13 +154,13 @@ const styles = StyleSheet.create({
   upcoming: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.black,
     height: 50,
     borderBottomWidth: 1,
     borderColor: Colors.white,
   },
   upcomingText: {
-    fontSize: 18,
+    fontSize: 20,
     color: Colors.white,
   }
 

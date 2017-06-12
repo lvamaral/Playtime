@@ -11,10 +11,12 @@ import Expo from 'expo';
 export default class PlaytimeScreen extends React.Component {
   constructor(props) {
     super(props);
+    let originalDate = this.parseDate(new Date())
     this.state = {
       timePickerVisible: false,
       datePickerVisible: false,
-      date: new Date(),
+      date: originalDate,
+      originalDate: originalDate,
       parks: [],
       dogs: [],
       pickerVisible: false
@@ -28,7 +30,7 @@ export default class PlaytimeScreen extends React.Component {
 
   static route = {
     navigationBar: {
-      title: 'New Playtime!'
+      title: 'New Playtime'
     },
   };
 
@@ -70,10 +72,10 @@ export default class PlaytimeScreen extends React.Component {
     if(this.state.parks.length > 1) {
       if(!that.state.pickerVisible) {
         return(
-          <View style={styles.label2}>
+          <View style={styles.labelPark}>
             <Text
               onPress={that.togglePicker}
-              style={styles.labelText2}>Head to a different park</Text>
+              style={styles.labelParkText}>Going to a different park</Text>
           </View>
         );
       } else {
@@ -87,7 +89,7 @@ export default class PlaytimeScreen extends React.Component {
                 <Picker.Item
                   key={`park${park.id}`}
                   label={`${park.name}`}
-                  value={`${park.id}`} />
+                  value={park} />
               ))}
             </Picker>
           </View>
@@ -100,6 +102,7 @@ export default class PlaytimeScreen extends React.Component {
     }
   }
 
+  //FUTURE ADDITION: CHECKING DOGS
   _handleCheck(checked, id) {
     for(let i = 0; i < this.state.dogs.length; i++) {
       if(id === this.state.dogs[i].id) {
@@ -124,14 +127,23 @@ export default class PlaytimeScreen extends React.Component {
     this.setState({pickerVisible: !this.state.pickerVisible});
   }
 
+  parseDate(date){
+    let minutes = date.getMinutes().toString()
+    if (minutes.length < 2) {
+      minutes = "0"+minutes
+    }
+    return `${date.getHours()}:${minutes}`
+
+  }
 
   _updateDateTime(date) {
+    let newDate = this.parseDate(date)
     this.setState({
       timePickerVisible: false,
       datePickerVisible: false,
-      date: date
+      date: newDate,
     });
-    console.log(date);
+
   }
 
   _showTimePicker() {
@@ -185,9 +197,9 @@ export default class PlaytimeScreen extends React.Component {
             userRef.once('value').then(snap => {
               if(snap.val().parks !== undefined) {
                 snap.child('parks').forEach(park => {
-                  if(park.key === _this.state.park.id) {
+                    console.log("did we get here");
                     _this._postNotification(snap.key, park, _dog);
-                  }
+
                 });
               }
             });
@@ -198,42 +210,54 @@ export default class PlaytimeScreen extends React.Component {
   }
 
   _postNotification(uid, parkSnap, dog) {
+    console.log("THIS RAN");
     let park = parkSnap.val();
     park.id = parkSnap.key;
     firebaseApp.database().ref(`users/${uid}/notifications`).push().set({
       dog: dog,
       park: park,
       type: 'NEW_PLAYTIME',
-      status: 'UNSEEN'
+      status: 'UNSEEN',
+      date: this.state.date
     });
     sendPush(
       `${dog.dogName} is going to ${park.name}!`,
       uid
     )
   }
+  renderDate(){
+    if (this.state.date === this.state.originalDate) {
+      return `right now`
+    } else {
+      return `at ${this.state.date} `
+    }
+  }
 
   render() {
+    // console.log("STATE PARK", this.state.park);
+    // console.log("STATE TIME", this.state.date);
     let _this = this;
     // user has dogs and has parks
     if(this.state.user !== undefined && this.state.parks.length > 0) {
 
       return(
         <View style={styles.mainContainer}>
-          <View>
-            <Text style={styles.headerLabel}
-              >Heading to {this.state.park.name} right now?</Text>
+          <View style={styles.headerBox}>
+            <Text style={styles.headerLabel}>
+              Heading to {this.state.park.name + " " + this.renderDate()}
+            </Text>
           </View>
 
-          <View style={styles.labelLast}>
+          <View style={styles.labelConfirm}>
             <TouchableOpacity onPress={this._createPlaytime}>
-              <Text style={styles.labellastText}>Confirm</Text>
+              <Text style={styles.labelConfirmText}>Confirm</Text>
             </TouchableOpacity>
           </View>
 
-          <View style={styles.containerTime}>
-            <TouchableOpacity style={{paddingTop: 0}}
+          <View style={styles.labelTime}>
+            <TouchableOpacity
               onPress={this._showTimePicker.bind(this)}>
-              <Text style={styles.containerTimeText}>{`Schedule for a different time`}</Text>
+              <Text style={styles.labelTimeText}>{`Schedule for a different time`}</Text>
             </TouchableOpacity>
           </View>
 
@@ -245,6 +269,7 @@ export default class PlaytimeScreen extends React.Component {
             mode={'time'}
             onCancel={this._hideTimePicker.bind(this)}
             titleIOS={'Select time'}
+            format={'YYYY-MM-DD'}
             />
         </View>
 
@@ -256,8 +281,7 @@ export default class PlaytimeScreen extends React.Component {
     else if(this.state.user !== undefined) {
       return(
         <View>
-          <TouchableOpacity style={{paddingTop: 0}}
-            onPress={this.props.closeModal}>
+          <TouchableOpacity onPress={this.props.closeModal}>
             <Text>Click to exit</Text>
           </TouchableOpacity>
 
@@ -288,75 +312,60 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flex: 1,
   },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    // justifyContent: 'flex-start',
-  },
-  containerTime: {
-    flex: 1,
+  labelTime: {
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: Colors.blue,
+    flex: 1,
+    paddingHorizontal: 10,
   },
-  containerTimeText: {
-    fontSize: 24,
-    color: 'black',
-  },
-  containerCheck: {
+  labelTimeText: {
+    fontSize: 20,
+
     display: 'flex',
-    flexDirection: 'row',
-    backgroundColor: 'black',
-    flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-  },
-  header: {
-    height: 60,
     alignItems: 'center',
-    justifyContent: 'center'
-  },
-  label: {
-    paddingTop: 5,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.blue
+    color: Colors.white,
   },
   headerLabel: {
     textAlign: 'center',
-    marginTop: 16,
     fontSize: 20,
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 8
-  },
-  label2: {
-    height: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.orange,
-  },
-  labelText2: {
-    fontSize: 30,
     color: Colors.white,
   },
-  labelText: {
-    fontSize: 25,
-    color: Colors.white,
+  headerBox: {
+    flex: 2,
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: Colors.black,
   },
-  labelLast: {
+  labelConfirm: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
     alignSelf: 'stretch',
     backgroundColor: Colors.orange,
-    height: 60,
+    flex: 2,
   },
-  labellastText: {
-    fontSize: 30,
+  labelConfirmText: {
+    fontSize: 20,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     color: Colors.white,
-  }
+  },
+  labelPark: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: Colors.green,
+    flex: 1,
+  },
+  labelParkText: {
+    fontSize: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: Colors.white,
+  },
 })

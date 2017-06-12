@@ -125,8 +125,8 @@ export default class UserScreen extends React.Component {
         <TouchableOpacity key={ids[i]} onPress={ () => this.goTo(ids[i], dog.dogName)}>
           <View style={styles.dogsList}>
             <View style={styles.dogsListItem}>
-              <View style={styles.container}><Image source={{ uri: dog.image}} style={{ width: 100, height: 100, borderRadius: 50, }}/></View>
-              <View style={styles.container}><Text style={styles.text}>{dog.dogName}</Text></View>
+              <View style={styles.container}><Image source={{ uri: dog.image}} style={{ width: 80, height: 80, borderRadius: 40, }}/></View>
+              <View style={styles.container2}><Text style={styles.text}>{dog.dogName} the {dog.breed}</Text></View>
             </View>
           </View>
        </TouchableOpacity>
@@ -170,16 +170,12 @@ export default class UserScreen extends React.Component {
        </Modal>
 
         <View style={styles.following}>
-          <Button title="Following" color={Colors.white} onPress={() => this.goToFollowing(this.user.uid)}></Button>
-          <Text style={styles.followingText}>|</Text>
-          <Button title="Followers" color={Colors.white} onPress={() => this.goToFollowers(this.user.uid)}></Button>
+          <TouchableOpacity style={styles.btn} onPress={() => this.goToFollowing(this.user.uid)}><Text style={styles.btnText} >Following</Text></TouchableOpacity>
+          <Text style={{fontSize: 25, color: Colors.white}}> | </Text>
+            <TouchableOpacity style={styles.btn} onPress={() => this.goToFollowers(this.user.uid)}><Text style={styles.btnText} >Followers</Text></TouchableOpacity>
         </View>
-        <View style={styles.container2}>
-          <Text style={styles.text}>Hi, {this.firstName}!</Text>
-        </View>
-        <View style={styles.container}>
-          <Text>Add Dog</Text>
-        </View>
+
+
         <View style={{ alignItems: 'center', alignSelf: 'stretch', height: 400}}>
           <ScrollView style={{alignSelf: 'stretch'}}>{list}</ScrollView>
         </View>
@@ -198,10 +194,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container2: {
-    flex: 1,
+    flex: 3,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 5,
   },
   mainContainer: {
     display: 'flex',
@@ -209,15 +204,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
     text: {
-    fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 20,
     marginVertical: 10,
   },
   dogsList: {
     flex: 4,
     display: 'flex',
     flexDirection: 'row',
-
   },
   dogsListItem: {
     padding: 5,
@@ -228,9 +221,8 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     borderBottomWidth: 0.5,
     borderColor: '#d6d7da',
-    // backgroundColor: Colors.white,
+    backgroundColor: Colors.white,
   },
-
   following: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -239,9 +231,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.orange,
     alignSelf: 'stretch',
   },
-  followingText: {
-    fontSize: 25,
-    color: Colors.white
+
+  btn: {
+
+  },
+  btnText: {
+    fontSize: 20,
+    color: Colors.white,
   },
   menu: {
     alignItems: 'center',
@@ -253,9 +249,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    // position: 'absolute',
-    // top: 15,
-    // right: 0,
     alignSelf: 'stretch',
     flex: 1,
     marginTop: 40,
@@ -284,3 +277,4 @@ const styles = StyleSheet.create({
 
 
 });
+        // <Button title="Following" color={Colors.white} ></Button>

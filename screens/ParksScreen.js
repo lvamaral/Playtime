@@ -111,8 +111,8 @@ const styles = StyleSheet.create({
      paddingLeft: 8,
      display: 'flex',
      flexDirection: 'row',
-     borderColor: Colors.black,
-     borderBottomWidth: 1,
+     borderColor: Colors.tabIconDefault,
+     borderBottomWidth: 2,
      height: 50,
      alignItems: 'center',
    }

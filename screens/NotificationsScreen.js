@@ -110,17 +110,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: Colors.blue,
   },
   noNewText: {
     marginTop: 5,
-    fontSize: 26,
+    fontSize: 20,
     alignItems: 'center',
-    color: Colors.white,
+    color: Colors.tabIconDefault,
   },
   main: {
     display: 'flex',
     justifyContent: 'space-between',
   }
 })
-// <View style={{marginTop: 5}}><Text style={{color: 'gray', textAlign: 'center'}}>Swipe right to approve and left to deny</Text></View>
