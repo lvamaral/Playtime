@@ -182,7 +182,7 @@ export default class PlaytimeScreen extends React.Component {
     }
 
     this._handleNotifications();
-    this.props.navigator.push('home')
+    this.props.navigator.replace("home");
   }
 
   _handleNotifications() {
