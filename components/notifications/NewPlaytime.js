@@ -57,6 +57,9 @@ const styles = StyleSheet.create({
     flex: 4,
   },
   part2: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
 
   },

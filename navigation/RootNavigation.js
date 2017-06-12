@@ -37,8 +37,7 @@ export default class RootNavigation extends React.Component {
   }
 
   _handleNotification = ({origin, data}) => {
-    // console.log(origin);
-    // console.log(data);
+
     Alert.alert(
       `${data}`,
       `${data}`
