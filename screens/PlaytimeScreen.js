@@ -11,10 +11,12 @@ import Expo from 'expo';
 export default class PlaytimeScreen extends React.Component {
   constructor(props) {
     super(props);
+    let originalDate = this.parseDate(new Date())
     this.state = {
       timePickerVisible: false,
       datePickerVisible: false,
-      date: new Date(),
+      date: originalDate,
+      originalDate: originalDate,
       parks: [],
       dogs: [],
       pickerVisible: false
@@ -125,14 +127,21 @@ export default class PlaytimeScreen extends React.Component {
     this.setState({pickerVisible: !this.state.pickerVisible});
   }
 
+  parseDate(date){
+    let minutes = date.getMinutes().toString()
+    if (minutes.length < 2) {
+      minutes = "0"+minutes
+    }
+    return `${date.getHours()}:${minutes}`
+
+  }
 
   _updateDateTime(date) {
-    console.log("DATE", date)
-    // debugger
+    let newDate = this.parseDate(date)
     this.setState({
       timePickerVisible: false,
       datePickerVisible: false,
-      date: date
+      date: newDate,
     });
 
   }
@@ -188,9 +197,9 @@ export default class PlaytimeScreen extends React.Component {
             userRef.once('value').then(snap => {
               if(snap.val().parks !== undefined) {
                 snap.child('parks').forEach(park => {
-                  if(park.key === _this.state.park.id) {
+                    console.log("did we get here");
                     _this._postNotification(snap.key, park, _dog);
-                  }
+
                 });
               }
             });
@@ -201,20 +210,27 @@ export default class PlaytimeScreen extends React.Component {
   }
 
   _postNotification(uid, parkSnap, dog) {
+    console.log("THIS RAN");
     let park = parkSnap.val();
     park.id = parkSnap.key;
-    console.log("DATA", this.state.date);
-    debugger
     firebaseApp.database().ref(`users/${uid}/notifications`).push().set({
       dog: dog,
       park: park,
       type: 'NEW_PLAYTIME',
-      status: 'UNSEEN'
+      status: 'UNSEEN',
+      date: this.state.date
     });
     sendPush(
       `${dog.dogName} is going to ${park.name}!`,
       uid
     )
+  }
+  renderDate(){
+    if (this.state.date === this.state.originalDate) {
+      return `right now`
+    } else {
+      return `at ${this.state.date} `
+    }
   }
 
   render() {
@@ -228,7 +244,8 @@ export default class PlaytimeScreen extends React.Component {
         <View style={styles.mainContainer}>
           <View style={styles.headerBox}>
             <Text style={styles.headerLabel}>
-              Heading to {this.state.park.name} right now?</Text>
+              Heading to {this.state.park.name + " " + this.renderDate()}
+            </Text>
           </View>
 
           <View style={styles.labelConfirm}>
@@ -238,7 +255,7 @@ export default class PlaytimeScreen extends React.Component {
           </View>
 
           <View style={styles.labelTime}>
-            <TouchableOpacity style={{paddingTop: 0}}
+            <TouchableOpacity
               onPress={this._showTimePicker.bind(this)}>
               <Text style={styles.labelTimeText}>{`Schedule for a different time`}</Text>
             </TouchableOpacity>
@@ -252,6 +269,7 @@ export default class PlaytimeScreen extends React.Component {
             mode={'time'}
             onCancel={this._hideTimePicker.bind(this)}
             titleIOS={'Select time'}
+            format={'YYYY-MM-DD'}
             />
         </View>
 
@@ -300,9 +318,11 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: Colors.blue,
     flex: 1,
+    paddingHorizontal: 10,
   },
   labelTimeText: {
     fontSize: 20,
+
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -347,5 +367,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     color: Colors.white,
-  }
+  },
 })
