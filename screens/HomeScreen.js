@@ -121,14 +121,14 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.welcomeContainer}>
-          <TouchableOpacity style={styles.playtimeButton}
+          <TouchableOpacity style={styles.playtimeButton2}
             onPress={this._goToPlaytime.bind(this)}>
-            <View>
+            <View style={styles.getStartedContainer}>
               <Image
                 source={require('../assets/icons/002-dog-and-doggie.png')}
                 style={styles.welcomeImage}
               />
-              <View style={styles.getStartedContainer}>
+              <View >
                 <Text style={styles.getStartedText}>
                   Going Out?
                 </Text>
@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.orange,
   },
   playtimeButton: {
+    backgroundColor: Colors.orange,
     alignItems: 'center',
     borderWidth: 1,
     padding: 7,
