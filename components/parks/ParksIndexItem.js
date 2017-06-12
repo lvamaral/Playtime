@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
     height: 65,
     padding: 5,
     borderBottomWidth: 1,
-    borderColor: Colors.white
+    borderColor: Colors.white,
+    
   },
   container: {
     flex: 4,

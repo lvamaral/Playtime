@@ -24,7 +24,7 @@ export default class NewPlaytime extends React.Component {
               color={Colors.orange}
             />
             <View>
-              <Text>{this.props.notif.dog.date}</Text>
+              <Text>{this.props.notif.date}</Text>
             </View>
           </View>
           <View style={styles.part1}>
