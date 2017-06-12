@@ -1,10 +1,11 @@
 import React from 'react';
 import Expo from 'expo';
-import { View, Text, StyleSheet, TouchableHighlight, Alert, Button, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Button, Image } from 'react-native';
 import { logInToFacebook, signInWithGoogleAsync } from '../api/logIn';
 import firebaseApp from '../api/firebaseApp';
 import * as firebase from 'firebase';
 import Colors from '../constants/Colors';
+import { FontAwesome} from '@expo/vector-icons';
 
 class LoginScreen extends React.Component {
   state = {
@@ -13,6 +14,7 @@ class LoginScreen extends React.Component {
   };
 
   componentWillMount(){
+
     const that = this;
     firebase.auth().onAuthStateChanged((user) => {
       // that.setState({loading: true});
@@ -41,26 +43,40 @@ class LoginScreen extends React.Component {
     if(this.state.noUser) {
       return(
         <View style={styles.mainContainer}>
-          <Image style={{marginTop: 0}} source={require('../assets/icons/dog-sleeping.png')}/>
+
+          <Image style={{marginTop: 30}} source={require('../assets/icons/dog-sleeping.png')}/>
+
           <View style={styles.container}>
-            <View style={styles.fb}>
-              <Button
-              title='Continue with Facebook'
-              onPress={() => {
-                logInToFacebook();
-                this.setState({loading: true});
-              } } color="white" style={styles.btext}/>
+            <TouchableOpacity onPress={() => {
+              logInToFacebook();
+              this.setState({loading: true});
+            } }>
+              <View style={styles.fb}>
 
-            </View>
-            <View style={styles.android}>
-            <Button
-              title='Continue with Google'
-              onPress={() => {
-                signInWithGoogleAsync();
-                this.setState({loading: true});
-              } } color="white" />
+                  <FontAwesome
+                style={styles.bText}
+                name={"facebook"}
+                size={32}
+                color={Colors.white}
+                />
+                <Text style={styles.bText}>Continue with Facebook</Text>
 
-            </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              signInWithGoogleAsync();
+              this.setState({loading: true});
+            } }>
+              <View style={styles.android}>
+                <FontAwesome
+                style={styles.bText}
+                name={"google"}
+                size={32}
+                color={Colors.white}
+                />
+              <Text style={styles.bText}>Continue with Google</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       );
@@ -87,17 +103,46 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.orange
   },
   fb: {
-    borderRadius: 3,
+
+    paddingLeft: 7,
+    height: 40,
+    width: 280,
+
     backgroundColor: Colors.blue,
     marginVertical: 10,
+    borderRadius: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: "center",
   },
   android: {
-    borderRadius: 3,
+
+    height: 40,
+    width: 280,
+
     backgroundColor: 'red',
+    borderRadius: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: "center",
   },
   bText: {
-    fontSize: 40,
+    fontSize: 20,
     color: Colors.white,
+  },
+  mainText: {
+    fontSize: 30,
+    color: Colors.white,
+  },
+  bIcon: {
+    flex: 1,
+    alignItems: "center",
+  },
+  bBoxText:{
+    flex: 4,
+    alignItems: "center",
   }
 
 });
