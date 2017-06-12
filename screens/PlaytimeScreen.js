@@ -187,19 +187,17 @@ export default class PlaytimeScreen extends React.Component {
 
   _handleNotifications() {
     _this = this;
+    _postNotif = this._postNotification;
     this.state.dogs.forEach(dog => {
       _dog = dog;
-      firebaseApp.database().ref(`/followDogToUser/${dog.id}`).once('value')
-        .then(snapshot => {
+      firebaseApp.database().ref(`/followDogToUser/${dog.id}`).once('value').then(snapshot => {
         snapshot.forEach(childSnap => {
           if(childSnap.val().status === 'APPROVED') {
             let userRef = firebaseApp.database().ref(`/users/${childSnap.key}`);
             userRef.once('value').then(snap => {
               if(snap.val().parks !== undefined) {
                 snap.child('parks').forEach(park => {
-
-                    _this._postNotification(snap.key, park, _dog);
-
+                  _postNotif(childSnap.key, park, _dog);
                 });
               }
             });
@@ -210,7 +208,6 @@ export default class PlaytimeScreen extends React.Component {
   }
 
   _postNotification(uid, parkSnap, dog) {
-
     let park = parkSnap.val();
     park.id = parkSnap.key;
     firebaseApp.database().ref(`users/${uid}/notifications`).push().set({
@@ -220,11 +217,9 @@ export default class PlaytimeScreen extends React.Component {
       status: 'UNSEEN',
       date: this.state.date
     });
-    sendPush(
-      `${dog.dogName} is going to ${park.name}!`,
-      uid
-    )
+    sendPush(`${dog.dogName} is going to ${park.name}!`, uid);
   }
+
   renderDate(){
     if (this.state.date === this.state.originalDate) {
       return `right now`

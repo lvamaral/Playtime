@@ -35,7 +35,7 @@ export default class HomeScreen extends React.Component {
     const noteRef = firebaseApp.database().ref(`users/${currUID}/notifications`);
     _this = this;
 
-    noteRef.on('value', snapshot => {
+    noteRef.orderByChild('height').on('value', snapshot => {
       _notifs = [];
       snapshot.forEach(notif => {
 
