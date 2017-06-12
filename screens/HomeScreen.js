@@ -83,7 +83,7 @@ export default class HomeScreen extends React.Component {
     } else {
       return(
         <View style={styles.noNew}>
-
+          <Text style={styles.noNewText}>No upcoming playtimes</Text>
         </View>
       )
     }
@@ -132,9 +132,6 @@ const styles = StyleSheet.create({
   welcomeContainer: {
     alignItems: 'center',
     paddingVertical: 20,
-    // borderBottomWidth: 5,
-    // borderTopWidth: 5,
-    // borderColor: Colors.white,
     backgroundColor: Colors.orange,
   },
   welcomeImage: {
@@ -162,6 +159,11 @@ const styles = StyleSheet.create({
   upcomingText: {
     fontSize: 20,
     color: Colors.white,
+  },
+  noNewText: {
+    textAlign: 'center',
+    color: Colors.tabIconDefault,
+    fontSize: 20,
   }
 
 });
