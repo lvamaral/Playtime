@@ -1,6 +1,6 @@
 {
   "name": "playtime",
-  "description": "No description",
+  "description": "The easiest way for dogs to find their friends!",
   "slug": "playtime",
   "privacy": "public",
   "sdkVersion": "17.0.0",
@@ -9,7 +9,7 @@
   "primaryColor": "#cccccc",
   "icon": "./assets/icons/dog-sleeping.png",
   "notification": {
-    "icon": "./assets/icons/notification-icon.png",
+    "icon": "./assets/icons/dog-sleeping.png",
     "color": "#000000"
   },
   "loading": {
