@@ -154,13 +154,13 @@ const styles = StyleSheet.create({
   upcoming: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.black,
     height: 50,
     borderBottomWidth: 1,
     borderColor: Colors.white,
   },
   upcomingText: {
-    fontSize: 18,
+    fontSize: 20,
     color: Colors.white,
   }
 

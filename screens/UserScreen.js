@@ -170,9 +170,9 @@ export default class UserScreen extends React.Component {
        </Modal>
 
         <View style={styles.following}>
-          <Button title="Following" color={Colors.white} onPress={() => this.goToFollowing(this.user.uid)}></Button>
-          <Text style={styles.followingText}>|</Text>
-          <Button title="Followers" color={Colors.white} onPress={() => this.goToFollowers(this.user.uid)}></Button>
+          <TouchableOpacity style={styles.btn} onPress={() => this.goToFollowing(this.user.uid)}><Text style={styles.btnText} >Following</Text></TouchableOpacity>
+          <Text style={{fontSize: 25, color: Colors.white}}> | </Text>
+            <TouchableOpacity style={styles.btn} onPress={() => this.goToFollowers(this.user.uid)}><Text style={styles.btnText} >Followers</Text></TouchableOpacity>
         </View>
 
 
@@ -211,7 +211,6 @@ const styles = StyleSheet.create({
     flex: 4,
     display: 'flex',
     flexDirection: 'row',
-
   },
   dogsListItem: {
     padding: 5,
@@ -224,7 +223,6 @@ const styles = StyleSheet.create({
     borderColor: '#d6d7da',
     backgroundColor: Colors.white,
   },
-
   following: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -233,9 +231,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.orange,
     alignSelf: 'stretch',
   },
-  followingText: {
-    fontSize: 25,
-    color: Colors.white
+
+  btn: {
+
+  },
+  btnText: {
+    fontSize: 20,
+    color: Colors.white,
   },
   menu: {
     alignItems: 'center',
@@ -247,9 +249,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    // position: 'absolute',
-    // top: 15,
-    // right: 0,
     alignSelf: 'stretch',
     flex: 1,
     marginTop: 40,
@@ -278,3 +277,4 @@ const styles = StyleSheet.create({
 
 
 });
+        // <Button title="Following" color={Colors.white} ></Button>

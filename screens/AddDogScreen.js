@@ -115,28 +115,30 @@ export default class AddDogScreen extends React.Component {
     return (
       <KeyboardAwareScrollView style={styles.container}>
         <View style={styles.mainContainer}>
-            <View style={styles.container}>
-              {hasImage}
-            </View>
-            <View style={styles.container}>
-              <TextInput
-                 style={styles.textInput}
-                 placeholder="Dog Name"
-                 onChangeText={(text) => this.update("dogName", text)}
-                 maxLength={15}
-               />
-               <TextInput
-                  style={styles.textInput}
-                  placeholder="Breed"
-                  onChangeText={(text) => this.update("breed", text)}
-                  maxLength={20}
-                />
-                <TextInput keyboardType={'numeric'}
+          <View style={styles.upperContainer}>
+              <View style={styles.container}>
+                {hasImage}
+              </View>
+              <View style={styles.container}>
+                <TextInput
                    style={styles.textInput}
-                   placeholder="Age"
-                   onChangeText={(text) => this.update("age", text)}
-                   maxLength={2}
-                />
+                   placeholder="Dog Name"
+                   onChangeText={(text) => this.update("dogName", text)}
+                   maxLength={15}
+                 />
+                 <TextInput
+                    style={styles.textInput}
+                    placeholder="Breed"
+                    onChangeText={(text) => this.update("breed", text)}
+                    maxLength={20}
+                  />
+                  <TextInput keyboardType={'numeric'}
+                     style={styles.textInput}
+                     placeholder="Age"
+                     onChangeText={(text) => this.update("age", text)}
+                     maxLength={2}
+                  />
+              </View>
             </View>
             <View style={styles.lastContainer}>
               <TouchableOpacity onPress={this.handleSubmit.bind(this)} style={styles.button}>
@@ -170,6 +172,7 @@ export default class AddDogScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    display: 'flex',
   },
   mainConatiner: {
     position: 'relative',
@@ -207,22 +210,26 @@ const styles = StyleSheet.create({
   },
   lastContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
-    marginTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.orange,
+    height: 60,
+    marginTop: 22,
   },
   button: {
-    backgroundColor: Colors.orange,
+    flex: 1,
     alignSelf: 'stretch',
     display: 'flex',
-    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 35,
   },
   buttonText: {
     fontSize: 20,
     color: Colors.white,
     textAlign: 'center',
+  },
+  upperContainer: {
+    flex: 8,
   }
 
 });

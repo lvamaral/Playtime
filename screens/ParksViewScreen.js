@@ -219,6 +219,6 @@ const styles = StyleSheet.create({
   },
   dogListText: {
     color: Colors.white,
-    fontSize: 16,
+    fontSize: 20,
   }
 })
