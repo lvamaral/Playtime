@@ -12,10 +12,12 @@ import { Foundation, Entypo } from '@expo/vector-icons';
 import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
 import { sendPush } from '../api/push_handler';
+import firebaseApp from '../api/firebaseApp';
 
 export default class RootNavigation extends React.Component {
   state = {
-    notifications: []
+    notifications: [],
+    newNotifs: false
   }
 
 
@@ -27,6 +29,14 @@ export default class RootNavigation extends React.Component {
     this._registerForPushNotificationsAsync();
 
     this._sendPush('Welcome to playtime!');
+
+    _this = this;
+    const userRef = firebaseApp.database().ref(`users/${firebaseApp.auth().currentUser.uid}/notifications`);
+    userRef.on('child_added', snapshot => {
+      if(snapshot.val().status === 'UNSEEN') {
+        _this.setState({newNotifs: true});
+      }
+    });
 
     this._notificationSubscription = Notifications.addListener(this._handleNotification);
   }
@@ -86,6 +96,8 @@ export default class RootNavigation extends React.Component {
   };
 
   render() {
+    _pending = this.state.newNotifs;
+
     return (
       <TabNavigation tabBarHeight={50} initialTab="home">
         <TabNavigationItem
@@ -102,7 +114,13 @@ export default class RootNavigation extends React.Component {
 
         <TabNavigationItem
           id="notificationsView"
-          renderIcon={isSelected => this._renderIcon('bell', 'entypo', isSelected, 31)}>
+          renderIcon={isSelected => {
+            if(_pending) {
+              return this._renderIcon('bell', 'entypo', isSelected, 22)
+            } else {
+              return this._renderIcon('bell', 'entypo', isSelected, 31);
+            }
+          }}>
           <StackNavigation initialRoute="notificationsView" />
         </TabNavigationItem>
 
