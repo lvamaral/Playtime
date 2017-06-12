@@ -14,14 +14,18 @@
   },
   "loading": {
     "icon": "./assets/icons/dog-sleeping-loader.png",
-    "backgroundColor": "rgba(254, 127, 45, 1)",
+    "backgroundColor": "#fe7f2d",
     "hideExponentText": true
   },
   "packagerOpts": {
     "assetExts": ["ttf"]
   },
   "ios": {
-    "supportsTablet": true
+    "supportsTablet": true,
+    "bundleIdentifier": "com.playtime.playtimeapp"
   },
+  "android": {
+     "package": "com.playtime.playtimeapp",
+   },
   "facebookScheme": "fb235266226961381"
 }

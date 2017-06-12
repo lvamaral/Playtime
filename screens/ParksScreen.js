@@ -7,6 +7,7 @@ import firebaseApp from '../api/firebaseApp';
 import { FontAwesome } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import cacheAssetsAsync from '../utilities/cacheAssetsAsync';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default class ParkScreen extends React.Component {
   state = {
@@ -42,41 +43,40 @@ export default class ParkScreen extends React.Component {
   render() {
 
     if(this.state.images.length > 0 && this.state.loading) {
-      // this._loadAssetsAsync();
-      this.state.loading = false;
+      this._loadAssetsAsync();
+      // this.state.loading = false;
     }
 
     if(this.state.loading) {
-      return(
-        <View>
-
-        </View>
-      )
+      return <Expo.AppLoading />;
     }
 
     return(
-      <View style={styles.container}>
-        <View style={styles.searchBox}>
-          <FontAwesome
-            name={"search"}
-            size={28}
-            color={Colors.orange}
+      <KeyboardAwareScrollView style={styles.container}>
+        <View style={styles.container}>
+          <View style={styles.searchBox}>
+            <FontAwesome
+              name={"search"}
+              size={28}
+              color={Colors.orange}
+            />
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => this.setState({keyword: text})}
+            value={this.state.keyword}
+            defaultValue={"Search for parks..."}
+            maxLength={20}
           />
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => this.setState({keyword: text})}
-          value={this.state.keyword}
-          defaultValue={"Search for parks..."}
-          maxLength={15}
-        />
-      </View>
+        </View>
 
-        <ParksIndex
-          navigator={this.props.navigator}
-          parks={this.state.parks}
-          keyword={this.state.keyword}
-        />
-      </View>
+          <ParksIndex
+            navigator={this.props.navigator}
+            parks={this.state.parks}
+            keyword={this.state.keyword}
+          />
+        </View>
+
+      </KeyboardAwareScrollView>
     )
   }
 

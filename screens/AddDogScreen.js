@@ -1,9 +1,7 @@
 import React from 'react';
 import {findNodeHandle} from 'react-native';
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
+  StyleSheet, Text, Alert,
   View, ScrollView, TextInput,
   Button, Image, TouchableOpacity,
 } from 'react-native';
@@ -47,10 +45,34 @@ export default class AddDogScreen extends React.Component {
 
  }
 
- handleSubmit(){
-   var lastDog = firebase.database().ref('dogs/').push(this.state.dog).key
-   firebase.database().ref(`users/${this.user.uid}/dogs/${lastDog}`).set(this.state.dog);
-   this.props.navigator.replace("user");
+ handleSubmit() {
+   if(this.state.dog.dogName !== "" &&
+    this.state.dog.age !== "" &&
+    this.state.dog.breed !== "") {
+      if(parseInt(this.state.dog.age) > 0 && parseInt(this.state.dog.age) < 25) {
+        if(this.state.dog.image === null) {
+          Alert.alert(
+            'Invalid form!',
+            'Please upload an image.'
+          );
+          return;
+        }
+        var lastDog = firebase.database().ref('dogs/').push(this.state.dog).key
+        firebase.database().ref(`users/${this.user.uid}/dogs/${lastDog}`).set(this.state.dog);
+        this.props.navigator.replace("user");
+      } else {
+        Alert.alert(
+          'Invalid form',
+          'Please select a valid age.'
+        )
+      }
+    } else {
+      Alert.alert(
+        'Invalid form!',
+        'Please fill out all fields.'
+      )
+    }
+
  }
 
  _pickImage = async () => {
@@ -65,7 +87,7 @@ export default class AddDogScreen extends React.Component {
   }
 
     let dogName = "";
-    const uploadResponse = await this._uploadImageAsync(this.state.dog.image);
+    // const uploadResponse = await this._uploadImageAsync(this.state.dog.image);
     // debugger
     // var storageRef = firebase.storage().ref('images/' + dogName);
 
@@ -149,21 +171,21 @@ export default class AddDogScreen extends React.Component {
     );
   }
 
-  async _uploadImageAsync(uri) {
-    return fetch('http://localhost:3000/images',
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          uri: uri
-        })
-      }
-    );
-  }
+  // async _uploadImageAsync(uri) {
+  //   return fetch('http://localhost:3000/images',
+  //     {
+  //       method: 'POST',
+  //       credentials: 'include',
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         uri: uri
+  //       })
+  //     }
+  //   );
+  // }
 
 }
 

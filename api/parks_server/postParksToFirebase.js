@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   service.radarSearch(request, (results, status) => {
     if (status === 'OK') {
-      for(let i = 0; i < 5; i++) {
+      for(let i = 0; i < 15; i++) {
         (function (j) {
           let request = {
             placeId: results[i]['place_id']
@@ -98,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // }).then(res => {
             //   debugger
             // });
-
             let parkId = db.ref().child('parks').push().key;
             db.ref('parks/' + parkId).set({
               name: place.name,
