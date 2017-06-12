@@ -15,6 +15,7 @@ import { Ionicons, Foundation } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 const sha1 = require('sha1');
 import secrets from '../secrets';
+import { RNS3 } from 'react-native-aws3';
 // var request = require('request');
 // import uploadImageAsync from '../api/uploadImage';
 
@@ -87,7 +88,7 @@ export default class AddDogScreen extends React.Component {
   }
 
     let dogName = "";
-    // const uploadResponse = await this._uploadImageAsync(this.state.dog.image);
+    this._uploadImageAsync(this.state.dog.image);
     // debugger
     // var storageRef = firebase.storage().ref('images/' + dogName);
 
@@ -173,21 +174,40 @@ export default class AddDogScreen extends React.Component {
     );
   }
 
-  // async _uploadImageAsync(uri) {
-  //   return fetch('http://localhost:3000/images',
-  //     {
-  //       method: 'POST',
-  //       credentials: 'include',
-  //       headers: {
-  //         'Accept': 'application/json',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         uri: uri
-  //       })
-  //     }
-  //   );
-  // }
+  _uploadImageAsync(uri) {
+    _this = this;
+    const file = {
+      // `uri` can also be a file system path (i.e. file://)
+      uri: `${uri}`,
+      name: `${firebaseApp.auth().currentUser.displayName}`,
+      type: "image/png"
+    }
+
+    const options = {
+      keyPrefix: "uploads/",
+      bucket: "playtimebucket",
+      region: "us-west-1",
+      accessKey: secrets.awsAccess,
+      secretKey: secrets.awsSecret,
+      successActionStatus: 201
+    }
+
+    RNS3.put(file, options).then(response => {
+      if (response.status !== 201)
+        throw new Error("Failed to upload image to S3");
+      _this.state.dog.image = response.body.postResponse.location;
+      /**
+       * {
+       *   postResponse: {
+       *     bucket: "your-bucket",
+       *     etag : "9f620878e06d28774406017480a59fd4",
+       *     key: "uploads/image.png",
+       *     location: "https://your-bucket.s3.amazonaws.com/uploads%2Fimage.png"
+       *   }
+       * }
+       */
+    });
+  }
 
 }
 
