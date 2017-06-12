@@ -15,7 +15,7 @@ class LoginScreen extends React.Component {
   componentWillMount(){
     const that = this;
     firebase.auth().onAuthStateChanged((user) => {
-      that.setState({loading: true});
+      // that.setState({loading: true});
       if (user != null) {
         console.log("We are authenticated now!");
         firebaseApp.database().ref(`users/${user.uid}`).once('value').then(snapshot => {
@@ -41,7 +41,7 @@ class LoginScreen extends React.Component {
     if(this.state.noUser) {
       return(
         <View style={styles.mainContainer}>
-          <Image style={{marginTop: 30}} source={require('../assets/icons/dog-sleeping.png')}/>
+          <Image style={{marginTop: 0}} source={require('../assets/icons/dog-sleeping.png')}/>
           <View style={styles.container}>
             <View style={styles.fb}>
               <Button
@@ -87,10 +87,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.orange
   },
   fb: {
+    borderRadius: 3,
     backgroundColor: Colors.blue,
     marginVertical: 10,
   },
   android: {
+    borderRadius: 3,
     backgroundColor: 'red',
   },
   bText: {

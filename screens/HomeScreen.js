@@ -26,7 +26,7 @@ export default class HomeScreen extends React.Component {
 
   static route = {
     navigationBar: {
-      title: 'Playtime'
+      title: 'Dashboard'
     },
   };
 
@@ -44,6 +44,34 @@ export default class HomeScreen extends React.Component {
           _notifs[_notifs.length - 1].id = notif.key;
         }
 
+      });
+      _notifs = _notifs.filter(notif => notif.type === 'NEW_PLAYTIME');
+      _notifs = _notifs.filter(notif => {
+        let date = new Date();
+        if(date.getHours() > notif.date.slice(0, 2)) {
+          return false;
+        } else if(date.getHours() < notif.date.slice(0, 2)){
+          return true;
+        } else {
+          if(date.getMinutes() > notif.date.slice(3, 5)) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+      })
+      _notifs = _notifs.sort((a,b) => {
+        if(a.date.slice(0, 2) > b.date.slice(0, 2)) {
+          return -1;
+        } else if(a.date.slice(0, 2) < b.date.slice(0, 2)) {
+          return 1;
+        } else {
+          if(a.date.slice(3, 5) > b.date.slice(3, 5)) {
+            return -1;
+          } else if(a.date.slice(3, 5) <= b.date.slice(3, 5)) {
+            return 1;
+          }
+        }
       });
       _this.setState({
         notifications: _notifs,
@@ -92,21 +120,22 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this._goToPlaytime.bind(this)}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={require('../assets/icons/002-dog-and-doggie.png')}
-              style={styles.welcomeImage}
-            />
-          <View style={styles.getStartedContainer}>
-
-              <Text style={styles.getStartedText}>
-                Going Out?
-              </Text>
-
-          </View>
+        <View style={styles.welcomeContainer}>
+          <TouchableOpacity style={styles.playtimeButton}
+            onPress={this._goToPlaytime.bind(this)}>
+            <View>
+              <Image
+                source={require('../assets/icons/002-dog-and-doggie.png')}
+                style={styles.welcomeImage}
+              />
+              <View style={styles.getStartedContainer}>
+                <Text style={styles.getStartedText}>
+                  Going Out?
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
       <View style={styles.upcoming}><Text style={styles.upcomingText}>Upcoming Playtimes:</Text></View>
         <ScrollView style={styles.container}>
             { this.renderNotifications() }
@@ -134,12 +163,30 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     backgroundColor: Colors.orange,
   },
+  playtimeButton: {
+    alignItems: 'center',
+    borderWidth: 1,
+    padding: 7,
+    paddingLeft: 12,
+    paddingRight: 10,
+    borderRadius: 5,
+    borderColor: '#000000',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: -5,
+      height: 5
+    },
+    shadowOpacity: .8,
+    shadowRadius: 5,
+    elevation: 1
+  },
   welcomeImage: {
     width: 64,
     height: 64,
     resizeMode: 'contain',
     marginTop: 3,
-    marginLeft: -10,
+    marginLeft: 18,
+    marginBottom: 2,
   },
   getStartedText: {
     fontSize: 20,
@@ -163,7 +210,8 @@ const styles = StyleSheet.create({
   noNewText: {
     textAlign: 'center',
     color: Colors.tabIconDefault,
-    fontSize: 20,
+    marginTop: 20,
+    fontSize: 20
   }
 
 });
