@@ -197,7 +197,7 @@ export default class PlaytimeScreen extends React.Component {
             userRef.once('value').then(snap => {
               if(snap.val().parks !== undefined) {
                 snap.child('parks').forEach(park => {
-                    console.log("did we get here");
+
                     _this._postNotification(snap.key, park, _dog);
 
                 });
@@ -210,7 +210,7 @@ export default class PlaytimeScreen extends React.Component {
   }
 
   _postNotification(uid, parkSnap, dog) {
-    console.log("THIS RAN");
+
     let park = parkSnap.val();
     park.id = parkSnap.key;
     firebaseApp.database().ref(`users/${uid}/notifications`).push().set({
