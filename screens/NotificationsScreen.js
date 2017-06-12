@@ -37,6 +37,7 @@ export default class NotificationsScreen extends React.Component {
         }
 
       });
+
       _this.setState({
         notifications: _notifs,
         loading: false
