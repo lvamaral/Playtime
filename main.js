@@ -43,7 +43,6 @@ class AppContainer extends React.Component {
   render() {
 
     if (this.state.appIsReady) {
-
       return (
         <NavigationProvider router={Router}>
           <StackNavigation
