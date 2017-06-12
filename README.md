@@ -67,6 +67,25 @@ The bonus is that we get to iterate down a path to grab exactly the data we need
 Removing a dog is a bit more costly, since it must be removed from the park as well, but seriously, how often are users removing their dogs?
 
 
+### Hacky push notifications
+
+Firebase does not support push notifications in conjunction with Expo, so we built a small Rails server in order to handle pushes. It has one controller (tokens) with a single route:
+
+```ruby
+def create
+  exponent.publish(
+    exponentPushToken: params[:token],
+    message: params[:message],
+    data: {a: params[:message]}
+  )
+
+  render json: {success: true}
+end
+```
+
+The Exponent SDK takes care of the rest. We send the message in the params object from the client, along with the id (represented by `params[:token]`) of the user who will receive the push.
+
+
 ## Further Improvements
 
 Building an iOS app in a week is hard--that's one major takeaway from this project. So there's still lots of room for cool functionality, though we have a strong core in place:
