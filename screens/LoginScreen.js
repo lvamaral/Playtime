@@ -45,6 +45,7 @@ class LoginScreen extends React.Component {
         <View style={styles.mainContainer}>
 
           <Image style={{marginTop: 30}} source={require('../assets/icons/dog-sleeping.png')}/>
+
           <View style={styles.container}>
             <TouchableOpacity onPress={() => {
               logInToFacebook();
@@ -102,9 +103,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.orange
   },
   fb: {
+
     paddingLeft: 7,
     height: 40,
     width: 280,
+
     backgroundColor: Colors.blue,
     marginVertical: 10,
     borderRadius: 5,
@@ -114,8 +117,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   android: {
+
     height: 40,
     width: 280,
+
     backgroundColor: 'red',
     borderRadius: 5,
     display: 'flex',

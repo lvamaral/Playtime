@@ -220,7 +220,7 @@ export default class PlaytimeScreen extends React.Component {
     sendPush(`${dog.dogName} is going to ${park.name}!`, uid);
   }
 
-  renderDate(){
+  renderDate() {
     if (this.state.date === this.state.originalDate) {
       return `right now`
     } else {
@@ -267,10 +267,7 @@ export default class PlaytimeScreen extends React.Component {
             format={'YYYY-MM-DD'}
             />
         </View>
-
-
       );
-
     }
     // user has dogs but follows no parks
     else if(this.state.user !== undefined) {
@@ -286,7 +283,6 @@ export default class PlaytimeScreen extends React.Component {
         </View>
       )
     }
-
   // user has not created a dog
     else {
       return(
@@ -296,7 +292,6 @@ export default class PlaytimeScreen extends React.Component {
       )
     }
   }
-
 }
 
 

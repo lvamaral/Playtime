@@ -44,7 +44,7 @@ export default class RootNavigation extends React.Component {
     );
     this.setState({notification: notification});
     this.props.navigator.showLocalAlert(
-      `Push notification ${origin} with data: ${JSON.stringify(data)}`,
+      `${data.a}`,
       Alerts.notice
     );
   };
