@@ -6,8 +6,19 @@ import Swipeout from 'react-native-swipeout';
 import { FontAwesome } from '@expo/vector-icons';
 
 export default class NewPlaytime extends React.Component {
-
   render() {
+    let text = '';
+    if(this.props.notif.owner && this.props.notif.owner === 'SELF') {
+      let notif = this.props.notif;
+      if(notif.dogs.length === 1) {
+        text = `${notif.dogs[0]}`;
+      } else if(notif.dogs.length === 2) {
+        text = `${notif.dogs[0]} and ${notif.dogs[1]}`;
+      } else {
+        text = `${notif.dogs.slice(0, notif.dogs.length - 2).join(', ')} and ${notif.dogs[notif.dogs.length - 1]}`
+      }
+    }
+
     var approveBtns = [
       {
         text: 'Ok',
@@ -15,6 +26,7 @@ export default class NewPlaytime extends React.Component {
         onPress: this._resolveRequest.bind(this)
       }
     ]
+    
     return(
         <View style={styles.notifications}>
           <View style={styles.part2}>
@@ -28,7 +40,12 @@ export default class NewPlaytime extends React.Component {
             </View>
           </View>
           <View style={styles.part1}>
-            <Text style={styles.notificationsText}>{`${this.props.notif.dog.dogName} is going to ${this.props.notif.park.name}`}</Text>
+            <Text style={styles.notificationsText}>{ this.props.notif.owner === 'SELF' ? (
+                `You're taking ${text} to ${this.props.notif.park.name}!`
+              ) : (
+                `${this.props.notif.dog.dogName} is going to ${this.props.notif.park.name}`
+              )
+            }</Text>
           </View>
         </View>
     );
