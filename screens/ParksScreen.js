@@ -52,14 +52,14 @@ export default class ParkScreen extends React.Component {
     }
 
     return(
-      <KeyboardAwareScrollView style={styles.container}>
-        <View style={styles.container}>
-          <View style={styles.searchBox}>
-            <FontAwesome
-              name={"search"}
-              size={28}
-              color={Colors.orange}
-            />
+
+      <View style={styles.container}>
+        <View style={styles.searchBox}>
+          <FontAwesome
+            name={"search"}
+            size={28}
+            color={Colors.orange}
+          />
           <TextInput
             style={styles.input}
             onChangeText={(text) => this.setState({keyword: text})}
@@ -69,14 +69,15 @@ export default class ParkScreen extends React.Component {
           />
         </View>
 
+        <KeyboardAwareScrollView style={styles.container}>
           <ParksIndex
             navigator={this.props.navigator}
             parks={this.state.parks}
             keyword={this.state.keyword}
           />
-        </View>
+        </KeyboardAwareScrollView>
 
-      </KeyboardAwareScrollView>
+      </View>
     )
   }
 
