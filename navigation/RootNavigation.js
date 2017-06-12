@@ -38,10 +38,10 @@ export default class RootNavigation extends React.Component {
 
   _handleNotification = ({origin, data}) => {
 
-    Alert.alert(
-      `${data}`,
-      `${data}`
-    );
+    // Alert.alert(
+    //   `${data}`,
+    //   `${data}`
+    // );
     this.setState({notification: notification});
     this.props.navigator.showLocalAlert(
       `${data.a}`,
