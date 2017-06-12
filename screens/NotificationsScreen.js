@@ -25,7 +25,7 @@ export default class NotificationsScreen extends React.Component {
   componentWillMount() {
     const currUID = firebaseApp.auth().currentUser.uid
     const noteRef = firebaseApp.database().ref(`users/${currUID}/notifications`);
-    _this = this;
+    const _this = this;
 
     noteRef.on('value', snapshot => {
       _notifs = [];

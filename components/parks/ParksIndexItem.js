@@ -3,7 +3,7 @@ import {
   View,
   Text,
   Image,
-  TouchableHighlight,
+  TouchableOpacity,
   StyleSheet
 } from 'react-native';
 import Colors from '../../constants/Colors';
@@ -13,7 +13,7 @@ export default class ParksIndexItem extends React.Component {
       const { park, navigator } = this.props;
 
       return(
-        <TouchableHighlight onPress={() => navigator.push('parksView', {park: park})}>
+        <TouchableOpacity onPress={() => navigator.push('parksView', {park: park})}>
           <View style={styles.row}>
             <View style={styles.container2}>
               <Image source={{uri: park.photoUrl}}
@@ -26,7 +26,7 @@ export default class ParksIndexItem extends React.Component {
 
 
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       );
     }
 };
