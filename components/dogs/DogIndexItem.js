@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableHighlight, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
 
 export default class DogIndexItem extends React.Component {
@@ -8,7 +8,7 @@ export default class DogIndexItem extends React.Component {
 
 
     return(
-      <TouchableHighlight onPress={() => navigator.push('dogView', {id: dog.id, name: dog.dogName})}>
+      <TouchableOpacity onPress={() => navigator.push('dogView', {id: dog.id, name: dog.dogName})}>
         <View style={styles.row}>
           <View style={styles.container2}>
             <Image source={{uri: dog.image}}
@@ -19,7 +19,7 @@ export default class DogIndexItem extends React.Component {
             <Text style={styles.dogText2}>Owner: {dog.ownerName}</Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   }
 }

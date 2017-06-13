@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
+    backgroundColor: Colors.white,
     display: 'flex',
     flex: 1,
     paddingTop: 10,
