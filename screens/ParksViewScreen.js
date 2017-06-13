@@ -95,7 +95,8 @@ export default class ParksViewScreen extends React.Component {
     firebaseApp.database().ref(`/users/${currUser.uid}`).once(`value`).then(function(snapshot) {
       if(snapshot.exists()) {
         firebaseApp.database().ref().child(`/users/${firebaseApp.auth().currentUser.uid}/parks/${_this.props.park.parkId}`).set({
-          name: _this.props.park.name
+          name: _this.props.park.name,
+          image: _this.props.park.photoUrl
         });
 
         snapshot.child('/dogs').forEach(childSnap => {
