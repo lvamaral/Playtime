@@ -68,7 +68,3 @@ const styles = StyleSheet.create({
     color: Colors.black,
   }
 })
-
-// <TouchableHighlight onPress={this._resolveRequest.bind(this)}>
-//   <Text>Ok</Text>
-// </TouchableHighlight>

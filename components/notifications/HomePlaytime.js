@@ -26,7 +26,7 @@ export default class NewPlaytime extends React.Component {
         onPress: this._resolveRequest.bind(this)
       }
     ]
-    
+
     return(
         <View style={styles.notifications}>
           <View style={styles.part2}>
@@ -90,7 +90,3 @@ const styles = StyleSheet.create({
     color: Colors.black,
   }
 })
-
-// <TouchableHighlight onPress={this._resolveRequest.bind(this)}>
-//   <Text>Ok</Text>
-// </TouchableHighlight>
