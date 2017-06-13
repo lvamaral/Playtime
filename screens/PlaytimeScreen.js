@@ -314,9 +314,11 @@ export default class PlaytimeScreen extends React.Component {
     // user has dogs but follows no parks
     else if(this.state.user !== undefined) {
       return(
+
         <View style={styles.noNew}>
           <Text style={styles.noNewText}>
             It looks like you aren't following any parks yet.
+
           </Text>
         </View>
       )
@@ -340,6 +342,13 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flex: 1,
     // backgroundColor: Colors.black,
+  },
+  noPark: {
+    marginTop: 20,
+    justifyContent: 'center',
+  },
+  noParkText: {
+    alignSelf: 'center'
   },
   labelTime: {
     alignItems: 'center',
