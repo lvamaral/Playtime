@@ -13,6 +13,10 @@ import Colors from '../constants/Colors';
 import firebaseApp from '../api/firebaseApp';
 import HomePlaytime from '../components/notifications/HomePlaytime';
 import RootNavigation from '../navigation/RootNavigation';
+import {
+  LinearGradient
+} from 'expo';
+import { FontAwesome} from '@expo/vector-icons';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -121,25 +125,31 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.welcomeContainer}>
-          <TouchableOpacity style={styles.playtimeButton2}
-            onPress={this._goToPlaytime.bind(this)}>
-            <View style={styles.getStartedContainer}>
-              <Image
-                source={require('../assets/icons/002-dog-and-doggie.png')}
-                style={styles.welcomeImage}
-              />
-              <View >
+          <TouchableOpacity onPress={this._goToPlaytime.bind(this)} style={{alignSelf: 'stretch'}}>
+          <View style={styles.inner}>
+            <FontAwesome
+            style={styles.menu}
+            name={"paw"}
+            size={80}
+            color={Colors.white}
+            />
+
+            <View style={styles.getStartedTextBox}>
                 <Text style={styles.getStartedText}>
                   Going Out?
                 </Text>
               </View>
-            </View>
+          </View>
           </TouchableOpacity>
-        </View>
+
+      </View>
+
+
       <View style={styles.upcoming}><Text style={styles.upcomingText}>Upcoming Playtimes:</Text></View>
-        <ScrollView style={styles.container}>
+      <ScrollView style={styles.container}>
             { this.renderNotifications() }
         </ScrollView>
+
       </View>
     );
   }
@@ -160,17 +170,21 @@ const styles = StyleSheet.create({
   },
   welcomeContainer: {
     alignItems: 'center',
-    paddingVertical: 20,
-    backgroundColor: Colors.orange,
+    display: 'flex',
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: Colors.white,
+    borderBottomWidth: 1,
+    height: 200,
+
   },
-  playtimeButton: {
-    backgroundColor: Colors.orange,
+  inner: {
+    display: 'flex',
     alignItems: 'center',
-    borderWidth: 1,
-    padding: 7,
-    paddingLeft: 12,
-    paddingRight: 10,
-    borderRadius: 5,
+    justifyContent: 'center',
+    backgroundColor: Colors.orange,
+    height: 150,
+    alignSelf: 'stretch',
     borderColor: '#000000',
     shadowColor: '#000000',
     shadowOffset: {
@@ -179,7 +193,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: .8,
     shadowRadius: 5,
-    elevation: 1
+    elevation: 1,
+    borderRadius: 10,
   },
   welcomeImage: {
     width: 64,
@@ -192,9 +207,12 @@ const styles = StyleSheet.create({
   getStartedText: {
     fontSize: 20,
     fontWeight: "800",
-    color: 'black',
+    color: Colors.white,
     lineHeight: 23,
     textAlign: 'center',
+  },
+  getStartedTextBox: {
+    marginTop: 10,
   },
   upcoming: {
     alignItems: 'center',
@@ -216,3 +234,14 @@ const styles = StyleSheet.create({
   }
 
 });
+
+// <Image
+//   source={require('../assets/icons/002-dog-and-doggie.png')}
+//   style={styles.welcomeImage}
+// />
+// <FontAwesome
+// style={styles.menu}
+// name={"paw"}
+// size={64}
+// color={Colors.white}
+// />

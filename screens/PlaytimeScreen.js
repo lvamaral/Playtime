@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity,
-Picker, ScrollView, StyleSheet } from 'react-native';
+Picker, ScrollView, StyleSheet, Image } from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import firebaseApp from '../api/firebaseApp';
 import Colors from '../constants/Colors';
@@ -54,6 +54,7 @@ export default class PlaytimeScreen extends React.Component {
           let park = user.parks[key];
           park.id = key;
           parkList.push(park);
+
         });
         _this.setState({
           user: user,
@@ -75,7 +76,7 @@ export default class PlaytimeScreen extends React.Component {
           <View style={styles.labelPark}>
             <Text
               onPress={that.togglePicker}
-              style={styles.labelParkText}>Going to a different park</Text>
+              style={styles.labelParkText}>Change park</Text>
           </View>
         );
       } else {
@@ -182,7 +183,7 @@ export default class PlaytimeScreen extends React.Component {
     }
 
     this._handleNotifications();
-    this.props.navigator.replace("home");
+    this.props.navigator.popToTop();
   }
 
   _handleNotifications() {
@@ -229,30 +230,26 @@ export default class PlaytimeScreen extends React.Component {
   }
 
   render() {
-    // console.log("STATE PARK", this.state.park);
-    // console.log("STATE TIME", this.state.date);
     let _this = this;
     // user has dogs and has parks
     if(this.state.user !== undefined && this.state.parks.length > 0) {
 
       return(
         <View style={styles.mainContainer}>
+          <View>
           <View style={styles.headerBox}>
             <Text style={styles.headerLabel}>
               Heading to {this.state.park.name + " " + this.renderDate()}
             </Text>
+
           </View>
 
-          <View style={styles.labelConfirm}>
-            <TouchableOpacity onPress={this._createPlaytime}>
-              <Text style={styles.labelConfirmText}>Confirm</Text>
-            </TouchableOpacity>
-          </View>
+
 
           <View style={styles.labelTime}>
             <TouchableOpacity
               onPress={this._showTimePicker.bind(this)}>
-              <Text style={styles.labelTimeText}>{`Schedule for a different time`}</Text>
+              <Text style={styles.labelTimeText}>{`Change time`}</Text>
             </TouchableOpacity>
           </View>
 
@@ -266,6 +263,13 @@ export default class PlaytimeScreen extends React.Component {
             titleIOS={'Select time'}
             format={'YYYY-MM-DD'}
             />
+        </View>
+
+            <View style={styles.labelConfirm}>
+              <TouchableOpacity onPress={this._createPlaytime}>
+                <Text style={styles.labelConfirmText}>Confirm</Text>
+              </TouchableOpacity>
+            </View>
         </View>
       );
     }
@@ -298,16 +302,18 @@ export default class PlaytimeScreen extends React.Component {
 const styles = StyleSheet.create({
   mainContainer: {
     display: 'flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignSelf: 'stretch',
     flex: 1,
+    // backgroundColor: Colors.black,
   },
   labelTime: {
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'stretch',
     backgroundColor: Colors.blue,
-    flex: 1,
+    // flex: 1,
+    height: 60,
     paddingHorizontal: 10,
   },
   labelTimeText: {
@@ -322,20 +328,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     alignItems: 'center',
-    color: Colors.white,
+    color: Colors.black,
   },
   headerBox: {
-    flex: 2,
+    // flex: 1,
+    height: 80,
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.white,
   },
   labelConfirm: {
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'stretch',
     backgroundColor: Colors.orange,
-    flex: 2,
+    // flex: 1,
+    height: 60,
   },
   labelConfirmText: {
     fontSize: 20,
@@ -349,7 +357,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'stretch',
     backgroundColor: Colors.green,
-    flex: 1,
+    // flex: 1,
+    height: 60,
+    borderColor: '#000000',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: -5,
+      height: 5
+    },
+    shadowOpacity: .8,
+    shadowRadius: 5,
+    elevation: 1,
   },
   labelParkText: {
     fontSize: 20,
@@ -358,4 +376,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: Colors.white,
   },
+
 })
