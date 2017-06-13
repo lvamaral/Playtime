@@ -16,6 +16,7 @@ import Colors from '../constants/Colors';
 const sha1 = require('sha1');
 import secrets from '../secrets';
 import { RNS3 } from 'react-native-aws3';
+import Alerts from '../constants/Alerts';
 // var request = require('request');
 // import uploadImageAsync from '../api/uploadImage';
 
@@ -58,20 +59,30 @@ export default class AddDogScreen extends React.Component {
           );
           return;
         }
-        var lastDog = firebase.database().ref('dogs/').push(this.state.dog).key
+        var lastDog = firebase.database().ref('dogs/').push(this.state.dog).key;
         firebase.database().ref(`users/${this.user.uid}/dogs/${lastDog}`).set(this.state.dog);
-        this.props.navigator.replace("user");
+        firebase.database().ref(`users/${this.user.uid}/dogs`).once('value').then(snapshot => {
+          if(snapshot.val().dogs.length === 1) {
+            this.props.navigator.push("parks");
+            this.props.navigator.showLocalAlert(
+              'Which parks do you go to?',
+              Alerts.notice
+            );
+          } else {
+            this.props.navigator.replace("user");
+          }
+        });
       } else {
         Alert.alert(
           'Invalid form',
           'Please select a valid age.'
-        )
+        );
       }
     } else {
       Alert.alert(
         'Invalid form!',
         'Please fill out all fields.'
-      )
+      );
     }
 
  }

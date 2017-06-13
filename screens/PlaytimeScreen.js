@@ -293,13 +293,9 @@ export default class PlaytimeScreen extends React.Component {
     // user has dogs but follows no parks
     else if(this.state.user !== undefined) {
       return(
-        <View>
-          <TouchableOpacity onPress={this.props.closeModal}>
-            <Text>Click to exit</Text>
-          </TouchableOpacity>
-
-          <Text>
-            Join some parks!
+        <View style={styles.noPark}>
+          <Text style={styles.noParkText}>
+            Join some parks first!
           </Text>
         </View>
       )
@@ -323,6 +319,13 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flex: 1,
     // backgroundColor: Colors.black,
+  },
+  noPark: {
+    marginTop: 20,
+    justifyContent: 'center',
+  },
+  noParkText: {
+    alignSelf: 'center'
   },
   labelTime: {
     alignItems: 'center',

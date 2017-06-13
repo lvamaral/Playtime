@@ -51,6 +51,7 @@ export default class HomeScreen extends React.Component {
       });
       _notifs = _notifs.filter(notif => notif.type === 'NEW_PLAYTIME');
       _notifs = _notifs.filter(notif => {
+        debugger
         let date = new Date();
         if(date.getHours() > notif.date.slice(0, 2)) {
           if(date.getHours() - notif.date.slice(0, 2) === 1) {
