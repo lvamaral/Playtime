@@ -19,13 +19,15 @@ export default class PlaytimeScreen extends React.Component {
       originalDate: originalDate,
       parks: [],
       dogs: [],
-      pickerVisible: false
+      pickerVisible: false,
+      parkIndex: 0,
     }
     this._handleCheck = this._handleCheck.bind(this);
     this._handleNotifications = this._handleNotifications.bind(this);
     this._createPlaytime = this._createPlaytime.bind(this);
     this._postNotification = this._postNotification.bind(this);
     this.togglePicker = this.togglePicker.bind(this);
+
   }
 
   static route = {
@@ -100,6 +102,19 @@ export default class PlaytimeScreen extends React.Component {
       return(
         <View></View>
       )
+    }
+  }
+
+  changePark(){
+
+    console.log("PARKS", this.state.parks);
+    let current_i = this.state.parkIndex
+    if (current_i + 1 >= this.state.parks.length) {
+      this.setState({park: this.state.parks[0]})
+      this.setState({parkIndex: 0})
+    } else {
+        this.setState({park: this.state.parks[current_i + 1]})
+        this.setState({parkIndex: current_i + 1})
     }
   }
 
@@ -247,18 +262,19 @@ export default class PlaytimeScreen extends React.Component {
   }
 
   render() {
+
     let _this = this;
     // user has dogs and has parks
     if(this.state.user !== undefined && this.state.parks.length > 0) {
 
       return(
         <View style={styles.mainContainer}>
+          <Image source={{uri: this.state.park.image}} style={{alignSelf: 'stretch', height: 200}}/>
           <View>
           <View style={styles.headerBox}>
             <Text style={styles.headerLabel}>
               Heading to {this.state.park.name + " " + this.renderDate()}
             </Text>
-
           </View>
 
 
@@ -270,7 +286,12 @@ export default class PlaytimeScreen extends React.Component {
             </TouchableOpacity>
           </View>
 
-          {_this._showPicker()}
+          <View style={styles.labelPark}>
+            <Text
+              onPress={this.changePark.bind(this)}
+              style={styles.labelParkText}>Change park</Text>
+          </View>
+
 
           <DateTimePicker
             isVisible={this.state.timePickerVisible}
@@ -293,9 +314,11 @@ export default class PlaytimeScreen extends React.Component {
     // user has dogs but follows no parks
     else if(this.state.user !== undefined) {
       return(
-        <View style={styles.noPark}>
-          <Text style={styles.noParkText}>
-            Join some parks first!
+
+        <View style={styles.noNew}>
+          <Text style={styles.noNewText}>
+            It looks like you aren't following any parks yet.
+
           </Text>
         </View>
       )
@@ -315,7 +338,7 @@ export default class PlaytimeScreen extends React.Component {
 const styles = StyleSheet.create({
   mainContainer: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignSelf: 'stretch',
     flex: 1,
     // backgroundColor: Colors.black,
@@ -396,5 +419,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: Colors.white,
   },
+  noNew: {
+    marginTop: 5,
+    paddingHorizontal: 5,
+    height: 50,
+    alignSelf: "stretch",
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  noNewText: {
+
+    fontSize: 20,
+    alignItems: 'center',
+    color: Colors.tabIconDefault,
+  },
 
 })
+  // {_this._showPicker()}
