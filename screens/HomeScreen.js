@@ -49,11 +49,16 @@ export default class HomeScreen extends React.Component {
       _notifs = _notifs.filter(notif => {
         let date = new Date();
         if(date.getHours() > notif.date.slice(0, 2)) {
+          if(date.getHours() - notif.date.slice(0, 2) === 1) {
+            if(date.getMinutes() < 15 && notif.date.slice(3, 5) > 45) {
+              return true;
+            }
+          }
           return false;
         } else if(date.getHours() < notif.date.slice(0, 2)){
           return true;
         } else {
-          if(date.getMinutes() > notif.date.slice(3, 5)) {
+          if(date.getMinutes() - 15 > notif.date.slice(3, 5)) {
             return false;
           } else {
             return true;

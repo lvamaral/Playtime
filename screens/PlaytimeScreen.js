@@ -188,7 +188,23 @@ export default class PlaytimeScreen extends React.Component {
   _handleNotifications() {
     _this = this;
     _postNotif = this._postNotification;
+
+    const dogNames = [];
     this.state.dogs.forEach(dog => {
+      dogNames.push(dog.dogName);
+    })
+
+    firebaseApp.database().ref(`users/${firebaseApp.auth().currentUser.uid}/notifications`).push().set({
+      dogs: dogNames,
+      park: _this.state.park,
+      type: 'NEW_PLAYTIME',
+      status: 'UNSEEN',
+      date: this.state.date,
+      owner: 'SELF'
+    });
+
+    this.state.dogs.forEach(dog => {
+
       _dog = dog;
       firebaseApp.database().ref(`/followDogToUser/${dog.id}`).once('value').then(snapshot => {
         snapshot.forEach(childSnap => {
@@ -215,9 +231,10 @@ export default class PlaytimeScreen extends React.Component {
       park: park,
       type: 'NEW_PLAYTIME',
       status: 'UNSEEN',
-      date: this.state.date
+      date: this.state.date,
+      owner: "OTHER"
     });
-    sendPush(`${dog.dogName} is going to ${park.name}!`, uid);
+    // sendPush(`${dog.dogName} is going to ${park.name}!`, uid);
   }
 
   renderDate() {

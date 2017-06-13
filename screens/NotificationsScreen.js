@@ -76,13 +76,13 @@ export default class NotificationsScreen extends React.Component {
         <View style={styles.main}>
         <ScrollView>
           {this.state.notifications.map((notif, idx) => {
-            if(notif.type === 'NEW_PLAYTIME') {
+            if(notif.type === 'NEW_PLAYTIME' && notif.owner !== 'SELF') {
               return(
                 <NewPlaytime
                   key={`playtime${idx}`}
                   notif={notif} />
               );
-            } else {
+            } else if(notif.type === 'FOLLOW_REQUEST') {
               return(
                 <FollowRequest
                   key={`follow${idx}`}
