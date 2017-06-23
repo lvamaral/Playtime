@@ -1,8 +1,11 @@
+![PlaytimeTheme](./Docs/readme_images/dog.jpg)
+
 # Playtime
 
 Every dog owner knows that the best way to tire out their dog is to let it play with other dogs. A tired dog is a happy dog. Playtime makes it easier to coordinate playtimes by enabling users to follow each other's dogs. When taking your dog out, let the app know and it will automatically alert all your dog's friends, so they can meet up and hang out. It's Playtime, all the time.
 
 ## Technologies
+![PlaytimeImage](./Docs/readme_images/placeit.jpg)
 
 Playtime is built in React-Native using the Expo SDK. For our backend, we chose Firebase, a lightweight server maintained by Google. React-Native compiles to native code for both android and iOS, allowing us to create multi-platform apps using the JavaScript syntax we know and love. Expo, which is maintained by many core developers for React-Native, allows for fairly straightforward Facebook and Google Authentication schemes, as well as other benefits. Lastly, Firebase, as a 'real-time' database, listens for events (such as receiving or deleting data) which can trigger events on the client.
 
@@ -13,6 +16,11 @@ Playtime is built in React-Native using the Expo SDK. For our backend, we chose 
 3. Users can approve and deny follow requests.
 4. Users can create playtimes, automatically alerting the users who follow their dogs and go to the same parks as them that they are now taking their dogs to the park.
 5. Users can log in through their Facebook or Google accounts.
+
+![Park](./Docs/readme_images/PlaytimePark.gif)
+![Friend](./Docs/readme_images/PlaytimeDogFriend.gif)
+![Schedule](./Docs/readme_images/PlaytimeSchedule.gif)
+![notification](./Docs/readme_images/Notifications.gif)
 
 ## Implementation
 
