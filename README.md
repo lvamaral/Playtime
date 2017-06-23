@@ -17,7 +17,7 @@ Playtime is built in React-Native using the Expo SDK. For our backend, we chose 
 4. Users can create playtimes, automatically alerting the users who follow their dogs and go to the same parks as them that they are now taking their dogs to the park.
 5. Users can log in through their Facebook or Google accounts.
 
-[See more features in action](http://www.playtimeapp.io)
+[See more features in action](http://www.playtimeapp.io#feature)
 
 ## Implementation
 
