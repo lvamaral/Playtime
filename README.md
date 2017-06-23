@@ -18,7 +18,7 @@ Playtime is built in React-Native using the Expo SDK. For our backend, we chose 
 5. Users can log in through their Facebook or Google accounts.
 
 [See more features in action](http://www.playtimeapp.io)
-<a href="playtimeapp.io" target="_blank">See more features in action</a>
+
 ## Implementation
 
 ### Real-time updates
